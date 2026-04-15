@@ -256,8 +256,14 @@ if ($format === 'html')
 		// J3.0+ tooltips (bootstrap based)
 		\Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 	}
+
+    // Performance: DNS prefetch for external resources
+    $document->addCustomTag('<link rel="dns-prefetch" href="//code.jquery.com">');
+    $document->addCustomTag('<link rel="dns-prefetch" href="//cdn.jsdelivr.net">');
+    $document->addCustomTag('<link rel="preconnect" href="https://code.jquery.com" crossorigin>');
+    
 	// FLEXIcontent Modern UI
-	if (FLEXI_J40GE) $document->getWebAssetManager()->registerAndUseStyle('fc-j4x-modern', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/j4x_modern.css', array('version' => FLEXI_VHASH));
+	if (FLEXI_J40GE) $document->getWebAssetManager()->registerAndUseStyle('fc-j4x-modern', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/j4x_modern.css' : 'administrator/components/com_flexicontent/assets/css/j4x_modern.min.css'), array('version' => FLEXI_VHASH));
 
 	// Add flexi-lib JS — must load AFTER jQuery UI
 	// Use WebAssetManager so jQuery UI CDN loads first via proper ordering

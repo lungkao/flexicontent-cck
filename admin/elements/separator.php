@@ -66,19 +66,19 @@ class JFormFieldSeparator extends JFormFieldSpacer
 			if (!\Joomla\CMS\Factory::getLanguage()->isRtl())
 			{
 				!$isAdmin ?
-					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/flexicontent.css', array('version' => FLEXI_VHASH)) :
-					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css', array('version' => FLEXI_VHASH));
+					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent.css' : 'components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH)) :
+					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.min.css'), array('version' => FLEXI_VHASH));
 			}
 			else
 			{
 				!$isAdmin
-					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent_rtl', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/flexicontent_rtl.css', array('version' => FLEXI_VHASH))
-					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css', array('version' => FLEXI_VHASH));
+					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent_rtl', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent_rtl.css' : 'components/com_flexicontent/assets/css/flexicontent_rtl.min.css'), array('version' => FLEXI_VHASH))
+					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.min.css'), array('version' => FLEXI_VHASH));
 			}
 
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
-				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : 'j3x.css'), array('version' => FLEXI_VHASH))
-				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : 'j3x_rtl.css'), array('version' => FLEXI_VHASH));
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : (JDEBUG ? 'j3x.css' : 'j3x.min.css')), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : (JDEBUG ? 'j3x_rtl.css' : 'j3x_rtl.min.css')), array('version' => FLEXI_VHASH));
 
 			// Add flexicontent specific TABBing to non-flexicontent views
 			$this->add_tab_css_js();
@@ -88,8 +88,8 @@ class JFormFieldSeparator extends JFormFieldSpacer
 
 		// Add js function to overload the joomla submitform validation
 		\Joomla\CMS\HTML\HTMLHelper::_('behavior.formvalidator');  // load default validation JS to make sure it is overriden
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-admin', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/js/admin.js', array('version' => FLEXI_VHASH));
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-validate', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/js/validate.js', array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-admin', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/js/admin.js' : 'administrator/components/com_flexicontent/assets/js/admin.min.js'), array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-validate', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/js/validate.js' : 'administrator/components/com_flexicontent/assets/js/validate.min.js'), array('version' => FLEXI_VHASH));
 
 		if ($option=='com_config' && $view=='component' && $component=='com_flexicontent')
 		{
@@ -104,8 +104,8 @@ class JFormFieldSeparator extends JFormFieldSpacer
 		$document = \Joomla\CMS\Factory::getDocument();
 		
 		// Load JS tabber lib
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-tabber-minimized', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/js/tabber-minimized.js', array('version' => FLEXI_VHASH));
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-tabber', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/tabber.css', array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-tabber-minimized', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/js/tabber-minimized.js' : 'components/com_flexicontent/assets/js/tabber-minimized.min.js'), array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-tabber', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/tabber.css' : 'components/com_flexicontent/assets/css/tabber.min.css'), array('version' => FLEXI_VHASH));
 		$document->addScriptDeclaration(' document.write(\'<style type="text/css">.fctabber{display:none;}<\/style>\'); ');  // temporarily hide the tabbers until javascript runs
 	}
 

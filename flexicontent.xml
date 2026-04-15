@@ -10,6 +10,7 @@
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
 	<version>6.1.0</version>
+	<!-- Performance: .min.css and .min.js files included for production -->
 	<php_minimum>8.1</php_minimum>
 	<!-- supported_db: MySQL 8.0.13+ / MariaDB 10.4+ -->
 	<!-- The description is optional and defaults to the name -->

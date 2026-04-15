@@ -176,19 +176,19 @@ class FlexicontentViewCategory extends \Joomla\CMS\MVC\View\HtmlView
 		// Add css files to the document <head> section (also load CSS joomla template override)
 		if (!$params->get('disablecss', ''))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexicontent', $this->baseurl.'/components/com_flexicontent/assets/css/flexicontent.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexicontent', $this->baseurl.(JDEBUG ? '/components/com_flexicontent/assets/css/flexicontent.css' : '/components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
-				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : 'j3x.css'), array('version' => FLEXI_VHASH))
-				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : 'j3x_rtl.css'), array('version' => FLEXI_VHASH));
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : (JDEBUG ? 'j3x.css' : 'j3x.min.css')), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : (JDEBUG ? 'j3x_rtl.css' : 'j3x_rtl.min.css')), array('version' => FLEXI_VHASH));
 		}
 
 		if (FLEXI_J40GE && file_exists(JPATH_SITE.DS.'media/templates/site'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/media/templates/site/'.$app->getTemplate().'/css/flexicontent.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/media/templates/site/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 		}
 		elseif (file_exists(JPATH_SITE.DS.'templates'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/templates/'.$app->getTemplate().'/css/flexicontent.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/templates/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 		}
 
 		// ********************************************************************************************

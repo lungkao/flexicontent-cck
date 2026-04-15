@@ -84,17 +84,17 @@ class FlexicontentViewGroup extends FlexicontentViewBaseRecord
 		if ($isAdmin)
 		{
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
-				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css', array('version' => FLEXI_VHASH))
-				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css', array('version' => FLEXI_VHASH));
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.min.css'), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.min.css'), array('version' => FLEXI_VHASH));
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
-				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : 'j3x.css'), array('version' => FLEXI_VHASH))
-				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : 'j3x_rtl.css'), array('version' => FLEXI_VHASH));
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : (JDEBUG ? 'j3x.css' : 'j3x.min.css')), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : (JDEBUG ? 'j3x_rtl.css' : 'j3x_rtl.min.css')), array('version' => FLEXI_VHASH));
 		}
 		else
 		{
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
-				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/flexicontent.css', array('version' => FLEXI_VHASH))
-				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent_rtl', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/flexicontent_rtl.css', array('version' => FLEXI_VHASH));
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent.css' : 'components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent_rtl', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent_rtl.css' : 'components/com_flexicontent/assets/css/flexicontent_rtl.min.css'), array('version' => FLEXI_VHASH));
 		}
 		
 		$this->addToolbar();

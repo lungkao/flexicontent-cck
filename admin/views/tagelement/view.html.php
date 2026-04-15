@@ -120,17 +120,17 @@ var $proxy_option   = 'com_tags';
 			if ($isAdmin)
 			{
 				!\Joomla\CMS\Factory::getLanguage()->isRtl()
-					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css', array('version' => FLEXI_VHASH))
-					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css', array('version' => FLEXI_VHASH));
+					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.min.css'), array('version' => FLEXI_VHASH))
+					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.min.css'), array('version' => FLEXI_VHASH));
 				!\Joomla\CMS\Factory::getLanguage()->isRtl()
-					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : 'j3x.css'), array('version' => FLEXI_VHASH))
-					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : 'j3x_rtl.css'), array('version' => FLEXI_VHASH));
+					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : (JDEBUG ? 'j3x.css' : 'j3x.min.css')), array('version' => FLEXI_VHASH))
+					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : (JDEBUG ? 'j3x_rtl.css' : 'j3x_rtl.min.css')), array('version' => FLEXI_VHASH));
 			}
 			else
 			{
 				!\Joomla\CMS\Factory::getLanguage()->isRtl()
-					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/flexicontent.css', array('version' => FLEXI_VHASH))
-					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent_rtl', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/flexicontent_rtl.css', array('version' => FLEXI_VHASH));
+					? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent.css' : 'components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH))
+					: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent_rtl', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent_rtl.css' : 'components/com_flexicontent/assets/css/flexicontent_rtl.min.css'), array('version' => FLEXI_VHASH));
 			}
 
 			// Add JS frameworks
@@ -141,8 +141,8 @@ var $proxy_option   = 'com_tags';
 			\Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 
 			// Add js function to overload the joomla submitform validation
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-admin', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/js/admin.js', array('version' => FLEXI_VHASH));
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-validate', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/js/validate.js', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-admin', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/js/admin.js' : 'administrator/components/com_flexicontent/assets/js/admin.min.js'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-validate', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/js/validate.js' : 'administrator/components/com_flexicontent/assets/js/validate.min.js'), array('version' => FLEXI_VHASH));
 		}
 
 

@@ -431,15 +431,15 @@ var $proxy_option = null;
 		if ($isAdmin)
 		{
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
-				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css', array('version' => FLEXI_VHASH))
-				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css', array('version' => FLEXI_VHASH));
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend.min.css'), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontentbackend_rtl', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.css' : 'administrator/components/com_flexicontent/assets/css/flexicontentbackend_rtl.min.css'), array('version' => FLEXI_VHASH));
 		}
 		!\Joomla\CMS\Factory::getLanguage()->isRtl()
-			? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : 'j3x.css'), array('version' => FLEXI_VHASH))
-			: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : 'j3x_rtl.css'), array('version' => FLEXI_VHASH));
+			? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : (JDEBUG ? 'j3x.css' : 'j3x.min.css')), array('version' => FLEXI_VHASH))
+			: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : (JDEBUG ? 'j3x_rtl.css' : 'j3x_rtl.min.css')), array('version' => FLEXI_VHASH));
 
 		// Fields common CSS
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexi_form_fields', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/flexi_form_fields.css', array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexi_form_fields', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/css/flexi_form_fields.css' : 'administrator/components/com_flexicontent/assets/css/flexi_form_fields.min.css'), array('version' => FLEXI_VHASH));
 
 		// Add JS frameworks
 		flexicontent_html::loadFramework('jQuery');
@@ -454,11 +454,11 @@ var $proxy_option = null;
 		\Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 
 		// Add js function to overload the joomla submitform validation
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-admin', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/js/admin.js', array('version' => FLEXI_VHASH));
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-validate', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/js/validate.js', array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-admin', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/js/admin.js' : 'administrator/components/com_flexicontent/assets/js/admin.min.js'), array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-validate', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/js/validate.js' : 'administrator/components/com_flexicontent/assets/js/validate.min.js'), array('version' => FLEXI_VHASH));
 
 		// Add js function for custom code used by FLEXIcontent item form
-		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-itemscreen', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/js/itemscreen.js', array('version' => FLEXI_VHASH));
+		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-itemscreen', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'administrator/components/com_flexicontent/assets/js/itemscreen.js' : 'administrator/components/com_flexicontent/assets/js/itemscreen.min.js'), array('version' => FLEXI_VHASH));
 
 
 		if ($isSite)
@@ -466,14 +466,14 @@ var $proxy_option = null;
 			/**
 			 * Add frontend CSS override files to the document (also load CSS joomla template override)
 			 */
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexicontent', $this->baseurl.'/components/com_flexicontent/assets/css/flexicontent.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexicontent', $this->baseurl.(JDEBUG ? '/components/com_flexicontent/assets/css/flexicontent.css' : '/components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 			if (FLEXI_J40GE && file_exists(JPATH_SITE.DS.'media/templates/site'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 			{
-				/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/media/templates/site/'.$app->getTemplate().'/css/flexicontent.css', array('version' => FLEXI_VHASH));
+				/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/media/templates/site/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 			}
 			elseif (file_exists(JPATH_SITE.DS.'templates'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 			{
-				/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/templates/'.$app->getTemplate().'/css/flexicontent.css', array('version' => FLEXI_VHASH));
+				/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/templates/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 			}
 
 			/**
@@ -2220,19 +2220,19 @@ var $proxy_option = null;
 		// Add css files to the document <head> section (also load CSS joomla template override)
 		if (!$params->get('disablecss', ''))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexicontent', $this->baseurl.'/components/com_flexicontent/assets/css/flexicontent.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexicontent', $this->baseurl.(JDEBUG ? '/components/com_flexicontent/assets/css/flexicontent.css' : '/components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
-				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : 'j3x.css'), array('version' => FLEXI_VHASH))
-				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : 'j3x_rtl.css'), array('version' => FLEXI_VHASH));
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : (JDEBUG ? 'j3x.css' : 'j3x.min.css')), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'administrator/components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : (JDEBUG ? 'j3x_rtl.css' : 'j3x_rtl.min.css')), array('version' => FLEXI_VHASH));
 		}
 
 		if (FLEXI_J40GE && file_exists(JPATH_SITE.DS.'media/templates/site'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/media/templates/site/'.$app->getTemplate().'/css/flexicontent.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/media/templates/site/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 		}
 		elseif (file_exists(JPATH_SITE.DS.'templates'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/templates/'.$app->getTemplate().'/css/flexicontent.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', $this->baseurl.'/templates/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 		}
 
 		// Add extra css/js for the item view

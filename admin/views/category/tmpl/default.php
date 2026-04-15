@@ -23,8 +23,8 @@ $tabSetStack = array();
 \Joomla\CMS\HTML\HTMLHelper::_('behavior.keepalive');
 
 // Load JS tabber lib
-/* J5/J6 WebAsset: */ $this->document->getWebAssetManager()->registerAndUseScript('fc-tabber-minimized', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/js/tabber-minimized.js', array('version' => FLEXI_VHASH));
-/* J5/J6 WebAsset: */ $this->document->getWebAssetManager()->registerAndUseStyle('fc-tabber', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/tabber.css', array('version' => FLEXI_VHASH));
+/* J5/J6 WebAsset: */ $this->document->getWebAssetManager()->registerAndUseScript('fc-tabber-minimized', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/js/tabber-minimized.js' : 'components/com_flexicontent/assets/js/tabber-minimized.min.js'), array('version' => FLEXI_VHASH));
+/* J5/J6 WebAsset: */ $this->document->getWebAssetManager()->registerAndUseStyle('fc-tabber', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/tabber.css' : 'components/com_flexicontent/assets/css/tabber.min.css'), array('version' => FLEXI_VHASH));
 $this->document->addScriptDeclaration(' document.write(\'<style type="text/css">.fctabber{display:none;}<\/style>\'); ');  // temporarily hide the tabbers until javascript runs
 $js = "
 	jQuery(document).ready(function(){
