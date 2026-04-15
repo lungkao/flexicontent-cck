@@ -2030,7 +2030,9 @@ class flexicontent_html
 
 				break;
 
-			case 'flexi-lib':
+			// Load modern CSS for all FC pages
+				$document->getWebAssetManager()->registerAndUseStyle('fc-flexi-modern', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/flexi_modern.css', array('version' => FLEXI_VHASH));
+				case 'flexi-lib':
 				if ($load_jquery) flexicontent_html::loadJQuery();
 
 				flexicontent_html::loadFramework('flexi_js_common');
