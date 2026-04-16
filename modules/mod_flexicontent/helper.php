@@ -114,7 +114,7 @@ class modFlexicontentHelper
 			$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
 
 			$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  \Joomla\CMS\Uri\Uri::base(true).'/' : '';
-			$thumb_default = \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
+			$thumb_default = \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
 
 			// Default image standard
 			$h		= '&amp;h=' . $mod_height_feat;
@@ -128,7 +128,7 @@ class modFlexicontentHelper
 			$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
 
 			$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  \Joomla\CMS\Uri\Uri::base(true).'/' : '';
-			$thumb_default_feat = \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
+			$thumb_default_feat = \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
 		}
 
 		// Retrieve custom displayed field data (including their parameters and access):  hits/voting/etc
@@ -504,7 +504,7 @@ class modFlexicontentHelper
 							$conf	= $w . $h . $aoe . $q . $zc . $f;
 
     					$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  \Joomla\CMS\Uri\Uri::base(true).'/' : '';
-    					$thumb = \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
+    					$thumb = \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
 		    		}
 					}
 					$lists[$ord]['featured'][$i] = new stdClass();
@@ -695,7 +695,7 @@ class modFlexicontentHelper
 							$conf	= $w . $h . $aoe . $q . $zc . $f;
 
     					$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  \Joomla\CMS\Uri\Uri::base(true).'/' : '';
-    					$thumb = \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
+    					$thumb = \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
 		    		}
 					}
 
@@ -2576,7 +2576,7 @@ class modFlexicontentHelper
 					$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
 					$conf	= $w . $h . $aoe . $q . $zc . $f;
 
-					$catimage = \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$src.$conf;
+					$catimage = \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$src.$conf;
 				}
 				elseif ($catconf->image_source!=1 && $src = flexicontent_html::extractimagesrc($catdata))
 				{
@@ -2590,7 +2590,7 @@ class modFlexicontentHelper
 					$conf	= $w . $h . $aoe . $q . $zc . $f;
 
 					$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  \Joomla\CMS\Uri\Uri::base(true).'/' : '';
-					$catimage = \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
+					$catimage = \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/librairies/phpthumb/phpThumb.php?src='.$base_url.$src.$conf;
 				}
 
 				$catdata->image = $catimage;

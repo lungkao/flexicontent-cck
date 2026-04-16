@@ -31,8 +31,8 @@ require_once JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARAT
 
 // Load JS tabber lib
 $doc = Factory::getDocument();
-/* J5/J6 WebAsset: */ $doc->getWebAssetManager()->registerAndUseScript('fc-tabber-minimized', Uri::root(true) . (JDEBUG ? '/components/com_flexicontent/assets/js/tabber-minimized.js' : '/components/com_flexicontent/assets/js/tabber-minimized.min.js'), ['version' => FLEXI_VHASH]);
-/* J5/J6 WebAsset: */ $doc->getWebAssetManager()->registerAndUseStyle('fc-tabber', Uri::root(true) . (JDEBUG ? '/components/com_flexicontent/assets/css/tabber.css' : '/components/com_flexicontent/assets/css/tabber.min.css'), ['version' => FLEXI_VHASH]);
+/* J5/J6 WebAsset: */ $doc->getWebAssetManager()->registerAndUseScript('fc-tabber-minimized', Uri::root() . (JDEBUG ? 'components/com_flexicontent/assets/js/tabber-minimized.js' : 'components/com_flexicontent/assets/js/tabber-minimized.min.js'), ['version' => FLEXI_VHASH]);
+/* J5/J6 WebAsset: */ $doc->getWebAssetManager()->registerAndUseStyle('fc-tabber', Uri::root() . (JDEBUG ? 'components/com_flexicontent/assets/css/tabber.css' : 'components/com_flexicontent/assets/css/tabber.min.css'), ['version' => FLEXI_VHASH]);
 $doc->addScriptDeclaration(' document.write(\'<style type="text/css">.fctabber{display:none;}<\/style>\'); ');
 
 /**

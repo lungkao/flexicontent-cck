@@ -297,7 +297,7 @@ foreach ($field->value as $index => $value)
 
 			$img_link = htmlspecialchars(phpThumbURL(
 				'src=' . $img_link . '&w=' . $preview_thumb_w . '&h=' . $preview_thumb_h . '&zc='.($thumb_method ? 1: 0).'&q=95&ar=x' . $f,
-				\Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/librairies/phpthumb/phpThumb.php'
+				\Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/librairies/phpthumb/phpThumb.php'
 			));
 		}
 	}

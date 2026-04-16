@@ -3199,7 +3199,7 @@ class flexicontent_html
 
 		// Some string and flags
 		$nullDate       =Factory::getContainer()->get(DatabaseInterface::class)->getNullDate();
-		$img_path       = \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/assets/images/';
+		$img_path       = \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/images/';
 		$use_font_icons = $isAdmin || ($params && $params->get('use_font_icons', 1));
 
 

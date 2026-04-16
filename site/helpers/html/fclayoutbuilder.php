@@ -1502,7 +1502,7 @@ abstract class JHtmlFclayoutbuilder
 		<span style="pointer: cursor; font-size: 48px;" class="btn"
 			onclick="this.style.display = \'none\'; this.nextElementSibling.style.display = \'\'; fclayout_init_builder(\'' . $editor_sfx . '\', \'' . $element_id . '\', ); return false;"
 		>
-			<img alt="Layout Builer" src="' . \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/assets/images/layout_builder.png" style="width: 64px; height: 64px; line-height: 100%;" />
+			<img alt="Layout Builer" src="' . \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/images/layout_builder.png" style="width: 64px; height: 64px; line-height: 100%;" />
 			<span style="font-size: 24px;">' . \Joomla\CMS\Language\Text::_('FLEXI_EDIT') . '</span>
 		</span>
 

@@ -694,7 +694,7 @@ class plgFlexicontent_fieldsImage extends FCField
 
 			flexicontent_html::loadFramework('flexi-lib');
 			\Joomla\CMS\HTML\HTMLHelper::addIncludePath(JPATH_SITE . '/components/com_flexicontent/helpers/html');
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-form', \Joomla\CMS\Uri\Uri::root(true) . (JDEBUG ? '/plugins/flexicontent_fields/image/js/form.js' : '/plugins/flexicontent_fields/image/js/form.min.js'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-form', \Joomla\CMS\Uri\Uri::root() . (JDEBUG ? 'plugins/flexicontent_fields/image/js/form.js' : '/plugins/flexicontent_fields/image/js/form.min.js'), array('version' => FLEXI_VHASH));
 		}
 
 		// Add field's CSS / JS

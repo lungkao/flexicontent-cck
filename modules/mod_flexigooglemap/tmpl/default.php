@@ -28,7 +28,7 @@ if (empty($renderedMapLocations) && (int)$params->get('hide_map_when_empty', '1'
 \Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 $document = \Joomla\CMS\Factory::getDocument();
 $modified = filemtime(__DIR__ . '/../assets/css/style.css');
-/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', Uri::root(true) . '/modules/mod_flexigooglemap/assets/css/style.css?v=' . $modified);
+/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', Uri::root() . 'modules/mod_flexigooglemap/assets/css/style.css?v=' . $modified);
 
 $itemmodel_name = 'FlexicontentModelItem';
 $itemmodel = new $itemmodel_name();
@@ -50,7 +50,7 @@ $apikey    = $params->get('apikey', '');
 
 $defaut_icon_url = $mapapi === 'googlemap'
 	? 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png'
-	: Uri::root(true) . '/components/com_flexicontent/librairies/leaflet/images/marker-icon.png';
+	: Uri::root() . 'components/com_flexicontent/librairies/leaflet/images/marker-icon.png';
 
 $maxzoommarker = (int) $params->get('maxzoommarker', 18);
 $mappadding    = (int) $params->get('mappadding', '50');
