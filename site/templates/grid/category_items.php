@@ -189,6 +189,15 @@ $lead_link_to_popup  = $this->params->get('lead_link_to_popup', 0);
 $intro_link_to_popup = $this->params->get('intro_link_to_popup', 0);
 	$_tmpl_ = ''; // PHP 8.x: init to prevent undefined variable warning
 
+// === FEATURED + STANDARD card design params (must be global — used before leadnum check) ===
+$feat_card_style     = $this->params->get('feat_card_style', 'hero');
+$feat_img_position   = $this->params->get('feat_img_position', 'left');
+$feat_img_width      = (int)$this->params->get('feat_img_width', 50);
+$feat_content_valign = $this->params->get('feat_content_valign', 'top');
+$feat_card_minheight = (int)$this->params->get('feat_card_minheight', 280);
+$feat_animation      = $this->params->get('feat_animation', 'fade-up');
+$std_animation       = $this->params->get('std_animation', 'fade-up');
+
 if ($lead_link_to_popup || $intro_link_to_popup) {
 	flexicontent_html::loadFramework('flexi-lib');
 }
