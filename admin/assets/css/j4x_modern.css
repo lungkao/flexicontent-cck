@@ -58,31 +58,34 @@
 }
 
 /* ── Table headers ──────────────────────────────────────────────── */
+/* ── Table headers — override flexicontentbackend.css (specificity win) ── */
+table.fcmanlist thead th,
 .com_flexicontent table.adminlist thead th,
+.com_flexicontent table.fcmanlist thead th,
 #adminForm table thead th,
-.com_flexicontent .table thead th,
 #flexicontent table thead th {
-  background: var(--fc-bg);
-  color: var(--fc-text);
-  font-size: .73rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  padding: .7rem 1rem;
-  border-bottom: 2px solid var(--fc-border);
-  border-top: none;
-  white-space: nowrap;
-  vertical-align: middle;
+  background: var(--fc-bg) !important;
+  color: var(--fc-text) !important;
+  font-size: .73rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+  padding: .65rem 1rem !important;
+  border-bottom: 2px solid var(--fc-border) !important;
+  border-top: none !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
 }
 
-/* Sort link inside th */
+/* Sort link inside th — override flexicontentbackend.css color */
+table.fcmanlist thead a,
+table.fcmanlist thead th a,
 .com_flexicontent table.adminlist thead th a,
-#adminForm table thead th a,
-.com_flexicontent table.adminlist thead th .ordering-asc,
-.com_flexicontent table.adminlist thead th .ordering-desc {
+.com_flexicontent table.fcmanlist thead a,
+#adminForm table thead th a {
   color: var(--fc-text) !important;
-  font-weight: 700;
-  text-decoration: none;
+  font-weight: 700 !important;
+  text-decoration: none !important;
   display: inline-flex;
   align-items: center;
   gap: .3rem;
