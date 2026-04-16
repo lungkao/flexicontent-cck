@@ -641,116 +641,183 @@ header.fc-edit-toolbar {
   right: 0 !important;
 }
 
+
+
 /* ═══════════════════════════════════════════════════════════════
-   Featured vs Standard Items — Visual Differentiation
-   Featured = hero cards (larger, prominent)
-   Standard = compact grid cards
+   Featured vs Standard — Hero Banner vs Compact Grid
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Featured block — hero layout ───────────────────────────── */
+/* ── FEATURED BLOCK — Hero layout ────────────────────────────── */
+/* Override grid: Featured items = full-width hero cards */
 .featured-block.fc-items-block {
-  --fc-card-radius: 16px;
-  margin-bottom: 2.5rem !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:1.5rem !important;
+  margin-bottom:2.5rem !important;
+  grid-template-columns:unset !important;
 }
 
-/* Featured wrapper — larger cards */
+/* Each featured item wrapper: full width */
+.featured-block.fc-items-block .fc-item-block-featured-wrapper {
+  width:100% !important;
+  float:none !important;
+}
+
+/* Featured card: horizontal split — image left, content right */
 .featured-block.fc-items-block .fc-item-block-featured-wrapper-innerbox {
-  border-radius: 16px !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 8px 32px rgba(0,0,0,.06) !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  min-height:280px !important;
+  border-radius:18px !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.07),0 8px 32px rgba(0,0,0,.06) !important;
+  border:1px solid var(--b,#e2e8f0) !important;
+  background:var(--card,#fff) !important;
+  overflow:hidden !important;
+  transition:box-shadow var(--tr),transform var(--tr) !important;
+  flex-direction:unset !important;
+  height:auto !important;
 }
 .featured-block.fc-items-block .fc-item-block-featured-wrapper:hover
   .fc-item-block-featured-wrapper-innerbox {
-  box-shadow: 0 16px 48px rgba(0,0,0,.14), 0 4px 16px rgba(0,0,0,.08) !important;
-  transform: translateY(-6px) !important;
+  box-shadow:0 16px 48px rgba(0,0,0,.13),0 4px 16px rgba(0,0,0,.07) !important;
+  transform:translateY(-5px) !important;
 }
 
-/* Featured image — taller ratio */
+/* Featured article: grid layout inside card */
+.featured-block.fc-items-block article.fc-item-featured {
+  display:contents !important;
+}
+
+/* Featured image: left side, full height */
 .featured-block.fc-items-block figure.image_featured {
-  aspect-ratio: 16/9 !important;
+  aspect-ratio:unset !important;
+  height:100% !important;
+  min-height:280px !important;
+  flex:none !important;
+  order:-1 !important;
+}
+.featured-block.fc-items-block figure.image_featured img,
+.featured-block.fc-items-block .image_featured img {
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
 }
 
-/* Featured title — larger */
-.featured-block.fc-items-block .fcitem_title a,
-.featured-block.fc-items-block .fc_item_title a {
-  font-size: 1.1rem !important;
-  font-weight: 800 !important;
-  -webkit-line-clamp: 2 !important;
-}
+/* Content side: right column */
 .featured-block.fc-items-block .fcitem_title_box {
-  padding: 1.125rem 1.25rem .625rem !important;
+  padding:1.75rem 1.75rem .75rem !important;
+  grid-column:2 !important;
+  grid-row:1 !important;
 }
 .featured-block.fc-items-block .fc_block.fcitem_text {
-  padding: 0 1.25rem .875rem !important;
-  font-size: .9rem !important;
-  -webkit-line-clamp: 4 !important;
+  padding:.25rem 1.75rem .875rem !important;
+  font-size:.9rem !important;
+  grid-column:2 !important;
+  -webkit-line-clamp:4 !important;
+  flex:1 !important;
+}
+.featured-block.fc-items-block footer.fc_block {
+  padding:.875rem 1.75rem !important;
+  grid-column:2 !important;
+  margin-top:auto !important;
+  align-self:end !important;
 }
 
-/* Featured badge — top-left corner */
-.featured-block.fc-items-block .fc-item-block-featured-wrapper-innerbox::before {
-  content: "Featured";
-  position: absolute;
-  top: .625rem;
-  left: .625rem;
-  z-index: 5;
-  background: var(--p, #2563eb);
-  color: #fff;
-  font-size: .65rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  padding: .2rem .55rem;
-  border-radius: 999px;
-  pointer-events: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+/* Featured title: larger + bolder */
+.featured-block.fc-items-block .fcitem_title a,
+.featured-block.fc-items-block .fc_item_title a {
+  font-size:1.2rem !important;
+  font-weight:800 !important;
+  -webkit-line-clamp:3 !important;
+  color:var(--t,#0f172a) !important;
 }
 
-/* ── Standard block — compact grid ─────────────────────────── */
+/* Featured badge */
+.featured-block.fc-items-block .fc_mublock,
+.featured-block.fc-items-block header.tool.fc-edit-toolbar {
+  z-index:10 !important;
+}
+.featured-block.fc-items-block .fc-item-block-featured-wrapper-innerbox::after {
+  content:"★ Featured";
+  position:absolute;
+  top:.875rem;
+  left:.875rem;
+  z-index:5;
+  background:#1d4ed8;
+  color:#fff;
+  font-size:.65rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:.2rem .65rem;
+  border-radius:999px;
+  pointer-events:none;
+}
+
+/* ── When no image: featured stacks vertically ──────────────── */
+.featured-block.fc-items-block
+  .fc-item-block-featured-wrapper-innerbox:not(:has(figure)) {
+  grid-template-columns:1fr !important;
+  min-height:auto !important;
+}
+
+/* ── Mobile: featured becomes vertical card ─────────────────── */
+@media(max-width:640px){
+  .featured-block.fc-items-block .fc-item-block-featured-wrapper-innerbox{
+    grid-template-columns:1fr !important;
+    min-height:auto !important;
+  }
+  .featured-block.fc-items-block figure.image_featured{
+    min-height:200px !important;
+    height:200px !important;
+  }
+  .featured-block.fc-items-block .fcitem_title_box,
+  .featured-block.fc-items-block .fc_block.fcitem_text,
+  .featured-block.fc-items-block footer.fc_block{
+    grid-column:1 !important;
+    grid-row:unset !important;
+    padding-left:1.125rem !important;
+    padding-right:1.125rem !important;
+  }
+}
+
+/* ── STANDARD BLOCK — Compact grid (unchanged but refined) ──── */
 .standard-block.fc-items-block {
-  --fc-card-radius: 12px;
+  gap:1.25rem !important;
 }
-
-/* Standard wrapper — lighter shadow */
 .standard-block.fc-items-block .fc-item-block-standard-wrapper-innerbox {
-  border-radius: 12px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 2px 12px rgba(0,0,0,.04) !important;
-  border: 1px solid var(--b, #e2e8f0) !important;
+  border-radius:12px !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.05),0 2px 10px rgba(0,0,0,.04) !important;
+  border:1px solid var(--b,#e2e8f0) !important;
 }
 .standard-block.fc-items-block .fc-item-block-standard-wrapper:hover
   .fc-item-block-standard-wrapper-innerbox {
-  box-shadow: 0 8px 24px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.06) !important;
-  transform: translateY(-4px) !important;
-  border-color: #bfdbfe !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.1),0 2px 8px rgba(0,0,0,.05) !important;
+  transform:translateY(-4px) !important;
+  border-color:#bfdbfe !important;
 }
-
-/* Standard image — compact ratio */
 .standard-block.fc-items-block figure.image_standard {
-  aspect-ratio: 4/3 !important;
+  aspect-ratio:4/3 !important;
 }
-
-/* Standard title — medium weight */
-.standard-block.fc-items-block .fcitem_title a,
-.standard-block.fc-items-block .fc_item_title a {
-  font-size: .95rem !important;
-  font-weight: 700 !important;
-  -webkit-line-clamp: 2 !important;
+.standard-block.fc-items-block .fcitem_title a {
+  font-size:.95rem !important;
+  font-weight:700 !important;
 }
 .standard-block.fc-items-block .fcitem_title_box {
-  padding: .875rem 1rem .375rem !important;
+  padding:.875rem 1rem .375rem !important;
 }
 .standard-block.fc-items-block .fc_block.fcitem_text {
-  padding: 0 1rem .75rem !important;
-  font-size: .845rem !important;
-  -webkit-line-clamp: 3 !important;
+  padding:0 1rem .625rem !important;
+  font-size:.845rem !important;
+  -webkit-line-clamp:3 !important;
+}
+.standard-block.fc-items-block footer.fc_block {
+  padding:.625rem 1rem !important;
 }
 
-/* ── Divider between sections ────────────────────────────────── */
-.standard-block.fc-items-block::before {
-  display: none; /* no label needed */
-}
-
-/* Section separator when both exist */
+/* ── Section separator ───────────────────────────────────────── */
 .featured-block.fc-items-block + .standard-block.fc-items-block {
-  padding-top: .5rem;
-  border-top: 1px solid var(--b, #e2e8f0);
-  margin-top: .5rem !important;
+  border-top:1px solid var(--b,#e2e8f0);
+  padding-top:.5rem;
+  margin-top:.25rem !important;
 }
