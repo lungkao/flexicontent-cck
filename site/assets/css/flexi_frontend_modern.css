@@ -134,110 +134,221 @@ footer.fc_block,.news.fc-items-block footer.fc_block{
   background:var(--bg);border:1px solid var(--b);border-radius:var(--r)
 }
 
-/* ── Alpha Index — modern pill row ──────────────────────── */
+/* ── Alpha Index ─────────────────────────────────────────── */
+/* ข้อสำคัญ: .aichargrp ต้องไม่ใช้ display:contents
+   เพราะ flex container จะ clip ตัวอักษรที่เกิน width
+   ใช้ display:flex + flex-wrap:wrap แทน และ #fc_alpha เป็น block */
 #fc_alpha{
-  display:flex;flex-wrap:wrap;align-items:center;
-  gap:.3rem;margin:.75rem 0 1.25rem;padding:.875rem 1rem;
-  background:var(--card);border:1px solid var(--b);
-  border-radius:var(--rsm);box-shadow:0 1px 3px rgba(0,0,0,.05)
+  display:block;
+  margin:.75rem 0 1.25rem;
+  padding:.875rem 1rem 0;
+  background:var(--card);
+  border:1px solid var(--b);
+  border-radius:var(--rsm);
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+  overflow:visible
 }
-#fc_alpha .aichargrp{display:contents}
+/* แต่ละ group (letters, numbers) เป็น flex row ของตัวเอง */
+#fc_alpha .aichargrp{
+  display:flex;flex-wrap:wrap;
+  align-items:center;gap:.3rem;
+  margin-bottom:.625rem
+}
+/* ทุก letter pill */
 #fc_alpha a.fc_alpha_index,
 #fc_alpha span.fc_alpha_index{
   display:inline-flex;align-items:center;justify-content:center;
-  min-width:32px;height:32px;padding:0 .5rem;
-  font-size:.8rem;font-weight:700;
+  min-width:34px;height:34px;padding:0 .55rem;
+  font-size:.8rem;font-weight:700;letter-spacing:.01em;
   border:1.5px solid var(--b);border-radius:var(--rsm);
   background:var(--bg);color:var(--tm);
   text-decoration:none;cursor:pointer;
-  transition:all var(--tr);white-space:nowrap
+  transition:all var(--tr);white-space:nowrap;flex-shrink:0
 }
 #fc_alpha a.fc_alpha_index:hover{
   background:var(--pl);border-color:var(--p);color:var(--p);
-  transform:translateY(-1px);box-shadow:0 3px 8px rgba(37,99,235,.2)
+  transform:translateY(-2px);box-shadow:0 4px 10px rgba(37,99,235,.2)
 }
 #fc_alpha a.fc_alpha_index.current,
 #fc_alpha a.fc_alpha_index.active{
   background:var(--p) !important;border-color:var(--p) !important;
-  color:#fff !important;box-shadow:0 2px 8px rgba(37,99,235,.35)
+  color:#fff !important;box-shadow:0 2px 8px rgba(37,99,235,.35) !important
 }
+/* inactive span (no items) */
 #fc_alpha span.fc_alpha_index{
-  color:var(--tl);border-style:dashed;cursor:default
+  color:var(--tl);border-style:dashed;cursor:default;opacity:.55
 }
 #fc_alpha span.fc_alpha_index_sep{
-  color:var(--tl);font-size:.75rem;padding:0 .1rem
+  color:var(--tl);font-size:.7rem;padding:0;flex-shrink:0
 }
-.fcclear{display:none}
+/* separator div between groups — show as thin line */
+.fcclear{
+  display:block;width:100%;height:1px;
+  background:var(--b);margin:.15rem 0 .5rem;border:none
+}
 
-/* ── Controls Bar (Results, Per Page, Order) ────────────── */
+/* ── Controls Bar (Results / Per Page / Order) ───────────── */
 #item_total{
   display:flex;flex-wrap:wrap;align-items:center;
   gap:.625rem;margin:.75rem 0 1.25rem;padding:.75rem 1rem;
-  background:var(--card);border:1px solid var(--b);
-  border-radius:var(--rsm);box-shadow:0 1px 3px rgba(0,0,0,.05);
-  font-size:.85rem
+  background:var(--card);
+  border:1px solid var(--b);
+  border-radius:var(--rsm);
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+  font-size:.875rem
 }
+/* Results counter: "Results 1-1 of 1" */
 .fc_item_total_data{
-  color:var(--tm);font-weight:600;font-size:.85rem;
-  white-space:nowrap;margin-right:auto
+  color:var(--t);font-weight:700;font-size:.875rem;
+  white-space:nowrap;margin-right:auto;
+  padding:.2rem .625rem;
+  background:var(--bg);
+  border:1px solid var(--b);
+  border-radius:var(--rpill)
 }
-.fc_item_total_data strong,.fc_item_total_data b{color:var(--t)}
+.fc_item_total_data strong,.fc_item_total_data b{color:var(--p)}
+
+/* Each select group */
 .fc_limit_box,.fc_orderby_box,.fc_clayout_box{
   display:flex;align-items:center;gap:.4rem
 }
+
+/* Select dropdowns */
 .fc_limit_selector select,
 .fc_orderby_selector select,
 .fc_clayout_selector select,
 #item_total select{
   border:1.5px solid var(--b) !important;
   border-radius:var(--rsm) !important;
-  padding:.35rem .75rem .35rem .6rem !important;
-  font-size:.82rem !important;font-weight:500 !important;
-  background:var(--bg) !important;color:var(--t) !important;
-  height:34px !important;cursor:pointer !important;
+  padding:.4rem .875rem .4rem .7rem !important;
+  font-size:.83rem !important;font-weight:600 !important;
+  background:var(--card) !important;color:var(--t) !important;
+  height:36px !important;cursor:pointer !important;
   transition:border-color var(--tr),box-shadow var(--tr) !important;
-  appearance:auto
+  box-shadow:0 1px 2px rgba(0,0,0,.05) !important
+}
+.fc_limit_selector select:hover,
+.fc_orderby_selector select:hover,
+#item_total select:hover{
+  border-color:#94a3b8 !important
 }
 .fc_limit_selector select:focus,
-.fc_orderby_selector select:focus{
+.fc_orderby_selector select:focus,
+#item_total select:focus{
   border-color:var(--p) !important;
   box-shadow:0 0 0 3px rgba(37,99,235,.15) !important;
   outline:none !important
 }
+/* Page counter badge */
 .fc_pages_counter .label{
-  font-size:.78rem;color:var(--tl);
+  font-size:.78rem;color:var(--tm);
   background:var(--bg);border:1px solid var(--b);
-  border-radius:var(--rpill);padding:.2rem .65rem
+  border-radius:var(--rpill);padding:.25rem .75rem;
+  font-weight:600
 }
+/* Order level 1/2 badge */
 .fc_orderby_level_lbl.label{
-  font-size:.7rem;font-weight:700;
+  font-size:.7rem;font-weight:800;
   background:var(--pl);color:var(--p);
-  border:none;border-radius:var(--rpill);
-  padding:.15rem .5rem
+  border:1.5px solid var(--bf);border-radius:var(--rpill);
+  padding:.15rem .55rem
 }
 
 /* ── Filter bar ──────────────────────────────────────────── */
-#flexicontent .fc_filter_box,#flexicontent #fc_filter_box,.fc-filter-box-modern{
+#flexicontent .fc_filter_box,
+#flexicontent #adminForm_filter_box,
+#flexicontent [id$="_filter_box"],
+.fc_filter_box.floattext{
   background:var(--card);border:1px solid var(--b);
-  border-radius:var(--rsm);padding:1rem 1.125rem;
-  margin-bottom:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.05)
+  border-radius:var(--rsm);padding:1.125rem 1.25rem 1rem;
+  margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.05);
+  clear:both
 }
-#flexicontent .fc_filter_set{border:none !important;margin:0 !important;padding:0 !important}
-#flexicontent .fc_filter_label{
-  font-size:.7rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:.07em;color:var(--tl);margin-bottom:.3rem
+#flexicontent .fc_filter_set,
+.fc_filter_box .fc_filter_set{border:none !important;margin:0 !important;padding:0 !important}
+
+/* Search row layout */
+.fc_filter_box .fc_filter_line,
+#flexicontent .fc_filter_line{
+  display:flex;align-items:center;flex-wrap:wrap;gap:.625rem;
+  margin-bottom:.5rem
 }
-#flexicontent .fc_text_filter,#flexicontent input.fc_text_filter{
-  border:1.5px solid var(--b) !important;border-radius:var(--rsm) !important;
-  padding:.55rem .875rem !important;font-size:.9rem !important;
+
+/* TEXT SEARCH label */
+#flexicontent .fc_filter_label,
+.fc_filter_box .fc_filter_label{
+  font-size:.72rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--tm) !important;
+  white-space:nowrap;flex-shrink:0
+}
+
+/* Search input */
+#flexicontent .fc_text_filter,
+#flexicontent input.fc_text_filter,
+.fc_filter_box input.fc_text_filter{
+  border:1.5px solid var(--b) !important;
+  border-radius:var(--rsm) !important;
+  padding:.5rem .9rem !important;
+  font-size:.9rem !important;
   background:var(--bg) !important;color:var(--t) !important;
-  width:100% !important;height:42px !important;
-  transition:border-color var(--tr),box-shadow var(--tr) !important
+  min-width:200px;height:40px !important;
+  transition:border-color var(--tr),box-shadow var(--tr) !important;
+  flex:1
 }
-#flexicontent .fc_text_filter:focus{
+#flexicontent .fc_text_filter:focus,
+.fc_filter_box input.fc_text_filter:focus{
   border-color:var(--p) !important;
   box-shadow:0 0 0 3px rgba(37,99,235,.15) !important;
   outline:none !important;background:#fff !important
+}
+
+/* Search GO button — primary solid */
+.fc_filter_box .fc_buttons .btn-success,
+#flexicontent .fc_buttons .btn-success,
+.fc_filter_buttons_box .btn-success{
+  display:inline-flex !important;align-items:center !important;
+  gap:.35rem !important;
+  background:var(--p) !important;color:#fff !important;
+  border:none !important;border-radius:var(--rsm) !important;
+  padding:.5rem 1.125rem !important;height:40px !important;
+  font-size:.875rem !important;font-weight:700 !important;
+  cursor:pointer !important;white-space:nowrap !important;
+  transition:all var(--tr) !important;
+  box-shadow:0 2px 8px rgba(37,99,235,.25) !important
+}
+.fc_filter_box .fc_buttons .btn-success:hover,
+#flexicontent .fc_buttons .btn-success:hover{
+  background:var(--pd) !important;
+  box-shadow:0 4px 14px rgba(37,99,235,.4) !important;
+  transform:translateY(-1px) !important
+}
+
+/* Reset button — outline */
+.fc_filter_box .fc_buttons .btn:not(.btn-success),
+#flexicontent .fc_buttons .btn:not(.btn-success),
+.fc_filter_buttons_box .btn:not(.btn-success){
+  display:inline-flex !important;align-items:center !important;
+  gap:.35rem !important;
+  background:var(--card) !important;color:var(--tm) !important;
+  border:1.5px solid var(--b) !important;
+  border-radius:var(--rsm) !important;
+  padding:.5rem 1rem !important;height:40px !important;
+  font-size:.875rem !important;font-weight:600 !important;
+  cursor:pointer !important;white-space:nowrap !important;
+  transition:all var(--tr) !important
+}
+.fc_filter_box .fc_buttons .btn:not(.btn-success):hover,
+#flexicontent .fc_buttons .btn:not(.btn-success):hover{
+  border-color:var(--p) !important;color:var(--p) !important;
+  background:var(--pl) !important
+}
+
+/* Buttons group */
+.fc_filter_buttons_box,
+#flexicontent .fc_filter_buttons_box{margin-top:.125rem}
+#flexicontent .fc_buttons,
+.fc_filter_box .fc_buttons{
+  display:flex;gap:.5rem;flex-wrap:wrap;align-items:center
 }
 
 /* ── Pagination ──────────────────────────────────────────── */
