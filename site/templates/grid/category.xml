@@ -16,7 +16,13 @@
 
 			<field name="items_sets_head_break" type="separator" level="level_br" />
 
-			<field name="lead_num" type="text" size="3" default="" label="# Featured" description="Number of featured items. Note effects items until featured number of items is reached, then all remains items in current and in next pages will be shown with 'standard' configuration" class="input-small" />
+			<field name="lead_num" type="list" default="1" label="# Featured items" description="Max 4. Each count triggers a distinct hero layout automatically." class="">
+					<option value="0">0 — disabled</option>
+					<option value="1">1 — Single hero</option>
+					<option value="2">2 — Side by side</option>
+					<option value="3">3 — Magazine</option>
+					<option value="4">4 — Hero + grid</option>
+				</field>
 
 			<!--field name="templatehtmlmode" type="separator" default="FLEXI_TEMPLATE_HTML_MODE" level="level2" /-->
 	
@@ -83,14 +89,66 @@
 
 					<field name="items_tab_featured_placement" type="separator" default="FLEXI_PLACEMENT" icon_class="icon-grid" level="tab_open" box_type="1" />
 
-						<field name="items_featured_basic" type="separator" default="FLEXI_BASIC" icon_class="icon-cog" level="level2" />
-						<field name="ibox_minsize_feat" type="list" cssprep="less" default="260px" label="Columns layout" description="Select number of columns — auto adjusts to screen width" class="">
-							<option value="100%">1 column (full width)</option>
-							<option value="480px">2 columns (large)</option>
-							<option value="300px">2–3 columns (medium)</option>
-							<option value="220px">3–4 columns (standard)</option>
-							<option value="160px">4–5 columns (small cards)</option>
-							<option value="120px">5–6 columns (mini grid)</option>
+						<field name="items_featured_basic" type="separator" default="Featured Card Design" icon_class="icon-grid" level="level2" />
+
+						<!-- === FEATURED CARD STYLE === -->
+						<field name="feat_card_style" type="list" default="hero" label="Card style" description="Visual style for featured cards">
+							<option value="hero">Hero (image + content side by side)</option>
+							<option value="overlay">Overlay (text over image)</option>
+							<option value="card">Card (image top, content below)</option>
+							<option value="minimal">Minimal (no image, text only)</option>
+						</field>
+
+						<!-- === IMAGE POSITION (for hero style) === -->
+						<field name="feat_img_position" type="radio" default="left" label="Image position" description="Where image sits relative to content (Hero style only)" class="btn-group">
+							<option value="left">Left</option>
+							<option value="right">Right</option>
+							<option value="top">Top</option>
+							<option value="bottom">Bottom</option>
+						</field>
+
+						<!-- === IMAGE WIDTH % (hero left/right only) === -->
+						<field name="feat_img_width" type="list" default="50" label="Image width %" description="Image column width when position is Left or Right" class="">
+							<option value="25">25%</option>
+							<option value="33">33%</option>
+							<option value="40">40%</option>
+							<option value="50">50%</option>
+							<option value="60">60%</option>
+							<option value="70">70%</option>
+						</field>
+
+						<!-- === CONTENT VERTICAL ALIGN === -->
+						<field name="feat_content_valign" type="radio" default="top" label="Content alignment" description="Vertical alignment of text content inside the card" class="btn-group">
+							<option value="top">Top</option>
+							<option value="center">Center</option>
+							<option value="bottom">Bottom</option>
+							<option value="between">Between (title top, excerpt bottom)</option>
+						</field>
+
+						<!-- === CARD MIN HEIGHT === -->
+						<field name="feat_card_minheight" type="list" default="280" label="Card min height" description="Minimum card height in pixels" class="">
+							<option value="180">180px (compact)</option>
+							<option value="240">240px (medium)</option>
+							<option value="280">280px (default)</option>
+							<option value="340">340px (tall)</option>
+							<option value="420">420px (very tall)</option>
+						</field>
+
+						<!-- === ENTER ANIMATION === -->
+						<field name="feat_animation" type="list" default="fade-up" label="Scroll animation" description="Animation when card enters viewport" class="">
+							<option value="">None</option>
+							<option value="fade-up">Fade up</option>
+							<option value="fade-in">Fade in</option>
+							<option value="slide-left">Slide from left</option>
+							<option value="slide-right">Slide from right</option>
+							<option value="zoom-in">Zoom in</option>
+						</field>
+
+						<field name="ibox_minsize_feat" type="list" cssprep="less" default="260px" label="Fallback columns" description="Grid columns for standard grid fallback (4+ items rest)" class="">
+							<option value="480px">2 columns</option>
+							<option value="300px">2–3 columns</option>
+							<option value="220px">3–4 columns (default)</option>
+							<option value="160px">4–5 columns</option>
 						</field>
 						<field name="item_placement_feat" type="radio" default="" hint="0" label="FLEXI_ITEMS_PLACEMENT" description="FLEXI_ITEMS_PLACEMENT_DESC" class="btn-group group-fcinfo">
 							<option value="">FLEXI_USE_GLOBAL</option>
@@ -260,6 +318,22 @@
 					<field name="items_tab_standard_placement" type="separator" default="FLEXI_PLACEMENT" icon_class="icon-grid" level="tab_open" box_type="1" />
 		
 						<field name="items_standard_basic" type="separator" default="FLEXI_BASIC" icon_class="icon-cog" level="level2" />
+						<field name="std_animation" type="list" default="fade-up" label="Scroll animation" description="Animation when standard cards enter viewport" class="">
+							<option value="">None</option>
+							<option value="fade-up">Fade up</option>
+							<option value="fade-in">Fade in</option>
+							<option value="zoom-in">Zoom in</option>
+							<option value="slide-left">Slide from left</option>
+						</field>
+
+						<field name="std_animation" type="list" default="fade-up" label="Scroll animation" description="Animation when standard cards enter viewport" class="">
+							<option value="">None</option>
+							<option value="fade-up">Fade up</option>
+							<option value="fade-in">Fade in</option>
+							<option value="zoom-in">Zoom in</option>
+							<option value="slide-left">Slide from left</option>
+						</field>
+
 						<field name="ibox_minsize_std" type="list" cssprep="less" default="260px" label="Columns layout" description="Select number of columns — auto adjusts to screen width" class="">
 							<option value="100%">1 column (full width)</option>
 							<option value="480px">2 columns (large)</option>

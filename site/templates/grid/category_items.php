@@ -323,7 +323,12 @@ if ($leadnum) :
 	$_ibox_min_feat = $this->params->get('ibox_minsize_feat', '260px');
 	$_grid_style_feat = 'style="--fc-col-min:' . htmlspecialchars($_ibox_min_feat) . ';"';
 	?>
-	<div class="featured-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_feat ? ' '.$cols_class_feat : ''); ?>" <?php echo $_grid_style_feat; ?>>
+	<?php
+	$_feat_css_vars = '--fc-feat-img-w:'.intval($feat_img_width).'%;'
+		. '--fc-feat-minheight:'.intval($feat_card_minheight).'px;';
+	$_feat_style = $_grid_style_feat ? rtrim(substr($_grid_style_feat, 7, -1), '"').$_feat_css_vars.'"' : 'style="'.$_feat_css_vars.'"';
+	?>
+	<div class="featured-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_feat ? ' '.$cols_class_feat : ''); ?> fc-feat-style-<?php echo $feat_card_style; ?> fc-feat-img-<?php echo $feat_img_position; ?> fc-feat-valign-<?php echo $feat_content_valign; ?>" style="<?php echo $_feat_css_vars; ?>" data-feat-anim="<?php echo htmlspecialchars($feat_animation); ?>">
 
 		<?php
 		if ($lead_use_image && $this->params->get('lead_image'))
@@ -866,7 +871,7 @@ if ($count > $leadnum) :
 	$_ibox_min_std = $this->params->get('ibox_minsize_std', '260px');
 	$_grid_style_std = 'style="--fc-col-min:' . htmlspecialchars($_ibox_min_std) . ';"';
 	?>
-	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?>" <?php echo $_grid_style_std; ?>>
+	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?>" <?php echo $_grid_style_std; ?> data-std-anim="<?php echo htmlspecialchars($std_animation); ?>">
 
 		<?php
 		if ($intro_use_image && $this->params->get('intro_image'))
