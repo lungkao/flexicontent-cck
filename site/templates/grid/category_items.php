@@ -318,7 +318,11 @@ if ($leadnum) :
 	<!-- BOF DIV featured-block (featured items) -->
 	<?php $oe_class = $rowtoggler ? 'odd' : 'even'; ?>
 
-	<div class="featured-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_feat ? ' '.$cols_class_feat : ''); ?>" >
+	<?php
+	$_ibox_min_feat = $this->params->get('ibox_minsize_feat', '260px');
+	$_grid_style_feat = 'style="--fc-col-min:' . htmlspecialchars($_ibox_min_feat) . ';"';
+	?>
+	<div class="featured-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_feat ? ' '.$cols_class_feat : ''); ?>" <?php echo $_grid_style_feat; ?>>
 
 		<?php
 		if ($lead_use_image && $this->params->get('lead_image'))
@@ -857,7 +861,11 @@ if ($count > $leadnum) :
 
 	<!-- BOF DIV standard-block (standard items) -->
 
-	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?>">
+	<?php
+	$_ibox_min_std = $this->params->get('ibox_minsize_std', '260px');
+	$_grid_style_std = 'style="--fc-col-min:' . htmlspecialchars($_ibox_min_std) . ';"';
+	?>
+	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?>" <?php echo $_grid_style_std; ?>>
 
 		<?php
 		if ($intro_use_image && $this->params->get('intro_image'))

@@ -84,7 +84,14 @@
 					<field name="items_tab_featured_placement" type="separator" default="FLEXI_PLACEMENT" icon_class="icon-grid" level="tab_open" box_type="1" />
 
 						<field name="items_featured_basic" type="separator" default="FLEXI_BASIC" icon_class="icon-cog" level="level2" />
-						<field name="ibox_minsize_feat" type="text" cssprep="less" default="200px" label="columns size" description="min size of column" />
+						<field name="ibox_minsize_feat" type="list" cssprep="less" default="260px" label="Columns layout" description="Select number of columns — auto adjusts to screen width" class="">
+							<option value="100%">1 column (full width)</option>
+							<option value="480px">2 columns (large)</option>
+							<option value="300px">2–3 columns (medium)</option>
+							<option value="220px">3–4 columns (standard)</option>
+							<option value="160px">4–5 columns (small cards)</option>
+							<option value="120px">5–6 columns (mini grid)</option>
+						</field>
 						<field name="item_placement_feat" type="radio" default="" hint="0" label="FLEXI_ITEMS_PLACEMENT" description="FLEXI_ITEMS_PLACEMENT_DESC" class="btn-group group-fcinfo">
 							<option value="">FLEXI_USE_GLOBAL</option>
 							<option value="0">FLEXI_CLEARED</option>
@@ -253,7 +260,14 @@
 					<field name="items_tab_standard_placement" type="separator" default="FLEXI_PLACEMENT" icon_class="icon-grid" level="tab_open" box_type="1" />
 		
 						<field name="items_standard_basic" type="separator" default="FLEXI_BASIC" icon_class="icon-cog" level="level2" />
-						<field name="ibox_minsize_std" type="text" cssprep="less" default="200px" label="columns size" description="min size of column" />
+						<field name="ibox_minsize_std" type="list" cssprep="less" default="260px" label="Columns layout" description="Select number of columns — auto adjusts to screen width" class="">
+							<option value="100%">1 column (full width)</option>
+							<option value="480px">2 columns (large)</option>
+							<option value="300px">2–3 columns (medium)</option>
+							<option value="220px">3–4 columns (standard)</option>
+							<option value="160px">4–5 columns (small cards)</option>
+							<option value="120px">5–6 columns (mini grid)</option>
+						</field>
 						<field name="item_placement" type="radio" default="" hint="1" label="FLEXI_ITEMS_PLACEMENT" description="FLEXI_ITEMS_PLACEMENT_DESC" class="btn-group group-fcinfo">
 							<option value="">FLEXI_USE_GLOBAL</option>
 							<option value="0">FLEXI_CLEARED</option>

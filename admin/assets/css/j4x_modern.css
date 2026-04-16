@@ -1203,3 +1203,319 @@ span.input-append > a[id$="_edit"]:hover,
   margin: 0;
   line-height: 1;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   FIX: Required field red colors — แก้ title/select สีแดง
+   Joomla 5/6 + FLEXIcontent legacy CSS ทำให้ required fields แดง
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Override: label required → ไม่ใช้สีแดง ──────────────────────── */
+.com_flexicontent .control-label label.required,
+.com_flexicontent .control-label span.required,
+.com_flexicontent label.required,
+.com_flexicontent .form-label.required,
+#flexicontent label.required,
+#flexicontent .control-label label.required,
+.com_menus label.required,
+.com_menus .control-label label.required {
+  color: var(--fc-text) !important;
+  font-weight: 700 !important;
+}
+
+/* Required star (*) → subtle muted */
+.com_flexicontent label.required::after,
+.com_flexicontent .form-label.required::after,
+#flexicontent label.required::after {
+  content: " *";
+  color: var(--fc-text-muted) !important;
+  font-weight: 400 !important;
+  font-size: .8em !important;
+}
+
+/* ── Override: input.required (not invalid) → no red border ──────── */
+/* Only show red when ACTUALLY invalid (user tried to submit) */
+.com_flexicontent input.required:not(:invalid):not(.fc-validated),
+.com_flexicontent select.required:not(:invalid):not(.fc-validated),
+#flexicontent input.required:not(:invalid),
+#flexicontent select.required:not(:invalid) {
+  border-color: var(--fc-border) !important;
+  color: var(--fc-text) !important;
+  background: var(--fc-bg-card) !important;
+}
+
+/* Title input — always clean style */
+#adminForm input#jform_title,
+#adminForm input[name="jform[title]"],
+.com_flexicontent input[id$="_title"],
+.com_flexicontent input.form-control[required],
+.com_flexicontent select[required] {
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  color: var(--fc-text) !important;
+  background: var(--fc-bg-card) !important;
+  padding: .55rem .875rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  transition: border-color var(--fc-transition), box-shadow var(--fc-transition) !important;
+}
+#adminForm input#jform_title:focus,
+.com_flexicontent input.form-control[required]:focus {
+  border-color: var(--fc-primary) !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
+  outline: none !important;
+}
+
+/* ── DOCUMENT TYPE select — no red border ─────────────────────────── */
+.com_flexicontent select#jform_type_id,
+.com_flexicontent select[name="jform[type_id]"],
+.com_flexicontent select.required,
+#adminForm select.required {
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  color: var(--fc-text) !important;
+  background: var(--fc-bg-card) !important;
+}
+.com_flexicontent select.required:focus,
+#adminForm select.required:focus {
+  border-color: var(--fc-primary) !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
+  outline: none !important;
+}
+
+/* ── TITLE label pill badge — neutral not red ─────────────────────── */
+/* ภาพ 1: "TITLE *" badge สีแดง → เปลี่ยนเป็น neutral */
+.com_flexicontent .control-label .badge,
+.com_flexicontent .control-label .label,
+.com_flexicontent .form-label .badge {
+  background: var(--fc-bg) !important;
+  color: var(--fc-text) !important;
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: 6px !important;
+  font-size: .68rem !important;
+  font-weight: 700 !important;
+  padding: .2rem .55rem !important;
+}
+/* keep required star small */
+.com_flexicontent .control-label .badge.required,
+.com_flexicontent .control-label .label.required {
+  color: var(--fc-text-muted) !important;
+  border-color: var(--fc-border) !important;
+}
+
+/* ── FLEXIcontent legacy: darkred overrides ───────────────────────── */
+#flexicontent dl.tabs dt.open span,
+#flexicontent dl.tabs dt.open h3 a {
+  color: var(--fc-primary) !important;
+}
+.fc-icon-red:before { color: #ef4444 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Frontend Item Edit Form — Modern UI
+   site/views/item/tmpl/ uses admin template
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Frontend edit form wrapper ──────────────────────────────────── */
+body.com_flexicontent #flexicontent.fcitem-form,
+.fcitem-form,
+.site-item-edit {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* ── Save/Cancel toolbar ─────────────────────────────────────────── */
+/* ภาพ 3: Save bar เขียวเข้ม + Cancel แดง — ปรับให้ทันสมัย */
+.fc-toolbar-row,
+.fcitem-form .btn-toolbar,
+#flexicontent .fc-form-toolbar,
+.fc-item-form-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: .5rem !important;
+  padding: .875rem 1.25rem !important;
+  background: var(--fc-bg-card) !important;
+  border: 1px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius) !important;
+  margin-bottom: 1.25rem !important;
+  box-shadow: var(--fc-shadow-sm) !important;
+  flex-wrap: wrap !important;
+}
+
+/* Save button */
+.com_flexicontent .btn.btn-success,
+#flexicontent .btn.btn-success,
+.fcitem-form .btn-success {
+  background: var(--fc-success) !important;
+  border-color: var(--fc-success) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  border-radius: var(--fc-radius-sm) !important;
+  padding: .45rem 1.125rem !important;
+  font-size: .875rem !important;
+  transition: all var(--fc-transition) !important;
+}
+.com_flexicontent .btn.btn-success:hover,
+#flexicontent .btn.btn-success:hover {
+  background: #047857 !important;
+  border-color: #047857 !important;
+  box-shadow: 0 3px 10px rgba(5,150,105,.3) !important;
+}
+
+/* Cancel button */
+.com_flexicontent .btn.btn-danger,
+#flexicontent .btn.btn-danger,
+.fcitem-form .btn-danger {
+  background: #fff !important;
+  border: 1.5px solid #fca5a5 !important;
+  color: var(--fc-danger) !important;
+  font-weight: 600 !important;
+  border-radius: var(--fc-radius-sm) !important;
+  padding: .45rem 1.125rem !important;
+  font-size: .875rem !important;
+  transition: all var(--fc-transition) !important;
+}
+.com_flexicontent .btn.btn-danger:hover,
+#flexicontent .btn.btn-danger:hover {
+  background: var(--fc-danger) !important;
+  border-color: var(--fc-danger) !important;
+  color: #fff !important;
+}
+
+/* ── Frontend form fields ────────────────────────────────────────── */
+.com_flexicontent .control-group,
+#flexicontent .control-group {
+  margin-bottom: 1.125rem !important;
+}
+.com_flexicontent .control-group .control-label,
+#flexicontent .control-group .control-label {
+  font-size: .8rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+  color: var(--fc-text-muted) !important;
+  margin-bottom: .375rem !important;
+}
+.com_flexicontent .control-group .controls input[type="text"],
+.com_flexicontent .control-group .controls input[type="email"],
+.com_flexicontent .control-group .controls textarea,
+.com_flexicontent .control-group .controls select,
+#flexicontent .control-group .controls input[type="text"],
+#flexicontent .control-group .controls select {
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  padding: .5rem .875rem !important;
+  font-size: .9rem !important;
+  color: var(--fc-text) !important;
+  background: var(--fc-bg-card) !important;
+  width: 100% !important;
+  transition: border-color var(--fc-transition), box-shadow var(--fc-transition) !important;
+}
+.com_flexicontent .controls input:focus,
+.com_flexicontent .controls select:focus,
+.com_flexicontent .controls textarea:focus,
+#flexicontent .controls input:focus,
+#flexicontent .controls select:focus {
+  border-color: var(--fc-primary) !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
+  outline: none !important;
+}
+
+/* ── Tabs (fctabber) ─────────────────────────────────────────────── */
+.com_flexicontent .fctabber.tabber,
+#flexicontent .fctabber.tabber,
+.fcitem-form .fctabber {
+  border: 1px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius) !important;
+  overflow: hidden !important;
+}
+.com_flexicontent .fctabber .tabbernav,
+#flexicontent .fctabber .tabbernav {
+  display: flex !important;
+  border-bottom: 2px solid var(--fc-border) !important;
+  background: var(--fc-bg) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+  gap: 0 !important;
+}
+.com_flexicontent .fctabber .tabbernav li,
+#flexicontent .fctabber .tabbernav li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.com_flexicontent .fctabber .tabbernav li a,
+#flexicontent .fctabber .tabbernav li a {
+  display: flex !important;
+  align-items: center !important;
+  gap: .3rem !important;
+  padding: .625rem 1rem !important;
+  font-size: .825rem !important;
+  font-weight: 600 !important;
+  color: var(--fc-text-muted) !important;
+  text-decoration: none !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -2px !important;
+  transition: all var(--fc-transition) !important;
+}
+.com_flexicontent .fctabber .tabbernav li a:hover,
+#flexicontent .fctabber .tabbernav li a:hover {
+  color: var(--fc-primary) !important;
+  background: var(--fc-primary-light) !important;
+}
+.com_flexicontent .fctabber .tabbernav li.tabberactive a,
+#flexicontent .fctabber .tabbernav li.tabberactive a {
+  color: var(--fc-primary) !important;
+  border-bottom-color: var(--fc-primary) !important;
+  background: var(--fc-bg-card) !important;
+}
+.com_flexicontent .tabbertab,
+#flexicontent .tabbertab {
+  padding: 1.25rem !important;
+  background: var(--fc-bg-card) !important;
+}
+
+/* ── Info alert box ──────────────────────────────────────────────── */
+/* ภาพ 3: กล่องแจ้งเตือน version review */
+.com_flexicontent .alert-info,
+#flexicontent .alert-info,
+.site-item-edit .alert-info {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  border-radius: var(--fc-radius-sm) !important;
+  color: #1e40af !important;
+  padding: .875rem 1.125rem !important;
+  font-size: .875rem !important;
+  display: flex !important;
+  gap: .75rem !important;
+  align-items: flex-start !important;
+  margin-bottom: 1.25rem !important;
+}
+.com_flexicontent .alert-info .btn-close,
+#flexicontent .alert-info .btn-close {
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Preview button ──────────────────────────────────────────────── */
+.com_flexicontent .btn-preview,
+#flexicontent .preview-btn,
+.com_flexicontent a[href*="preview"],
+.fc-preview-bar {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .4rem !important;
+  padding: .45rem .875rem !important;
+  font-size: .825rem !important;
+  font-weight: 600 !important;
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  color: var(--fc-text-muted) !important;
+  background: var(--fc-bg-card) !important;
+  text-decoration: none !important;
+  transition: all var(--fc-transition) !important;
+}
+.com_flexicontent a[href*="preview"]:hover {
+  border-color: var(--fc-primary) !important;
+  color: var(--fc-primary) !important;
+}
