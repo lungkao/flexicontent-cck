@@ -1575,6 +1575,10 @@
 		sel      = typeof sel !== 'undefined' && sel ? sel : 'body';
 		var sbox = jQuery(sel);
 
+		// Detect select2 version: v3=$.fn.select2.defaults, v4=$.fn.select2.amd
+		var _s2ver = (jQuery.fn.select2 && jQuery.fn.select2.amd) ? 4 : 3;
+
+
 		s2_elems = s2_elems || sbox.find('select.use_select2_lib');
 
 		if (window.skip_select2_js)
@@ -1598,9 +1602,17 @@
 			var sel_EL = jQuery(this);
 
 			var sel2ops = {
-				minimumResultsForSearch: 10,
-				formatResult: fc_formatSel2Option
+				minimumResultsForSearch: 10
 			};
+			if (_s2ver >= 4) {
+				sel2ops.templateResult = function(item) {
+					if (!item.element) return item.text;
+					var dt = jQuery(item.element).attr('data-title');
+					return dt ? jQuery('<span title="'+dt+'">'+item.text+'</span>') : item.text;
+				};
+			} else {
+				sel2ops.formatResult = fc_formatSel2Option;
+			}
 
 			if ( sel_EL.hasClass('fc_select2_noselect') )
 			{
@@ -1624,7 +1636,14 @@
 			// Set initially selected data (this allows setting order too)
 			if ( sel_EL.get(0).hasAttribute('data-select2-initdata') )
 			{
-				sel_EL.select2('data', sel_EL.data('select2-initdata'));
+				var initData = sel_EL.data('select2-initdata');
+				if (_s2ver >= 4) {
+					// v4: set value directly
+					var ids = Array.isArray(initData) ? initData.map(function(d){ return d.id||d; }) : (initData ? initData.id||initData : null);
+					if (ids) sel_EL.val(ids).trigger('change');
+				} else {
+					sel_EL.select2('data', initData);
+				}
 			}
 
 			// Make sortable if requested
@@ -1687,7 +1706,7 @@
 
 
 		// MULTI-SELECT2:
-		s2_elems.on('select2-open', function()
+		s2_elems.on('select2-open select2:open', function()
 		{
 
 			// Add events to handle focusing the text filter box (hide inner label)
@@ -1710,7 +1729,7 @@
 			}
 
 
-		}).on('select2-close', function(e)
+		}).on('select2-close select2:close', function(e)
 		{
 
 			// Add events to handle bluring the text filter box (show inner label)
@@ -1757,7 +1776,7 @@
 			}
 
 
-		}).on('select2-selecting', function(e)
+		}).on('select2-selecting select2:selecting', function(e)
 		{
 
 			// Handle toggling MULTI-SELECT2 as checkboxes
@@ -1806,7 +1825,11 @@
 				jQuery('#select2-drop').find('.select2-selected').removeClass('select2-selected-visible').removeClass('select2-selected');
 
 				// Specific values were requested to be set, but first clear data value, to prevent loop in the change event
-				sel_EL.data('set_selected_values', null).select2('val', nVals).trigger('change');
+				if (_s2ver >= 4) {
+						sel_EL.data('set_selected_values', null).val(nVals).trigger('change');
+					} else {
+						sel_EL.data('set_selected_values', null).select2('val', nVals).trigger('change');
+					}
 			}
 
 

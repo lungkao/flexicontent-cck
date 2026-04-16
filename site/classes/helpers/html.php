@@ -1641,8 +1641,9 @@ class flexicontent_html
 				$ver = '3.5.4';
 				$framework_path = \Joomla\CMS\Uri\Uri::root().$lib_path.'/select2';
 				$framework_folder = JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'librairies'.DS.'select2';
-				$document->getWebAssetManager()->registerAndUseScript('min', $framework_path.'/select2.min.js', array('version' => $ver));
-				$document->getWebAssetManager()->registerAndUseScript('sortable', $framework_path.(JDEBUG ? '/select2.sortable.js' : '/select2.sortable.min.js'), array('version' => $ver));
+				$document->getWebAssetManager()->registerAndUseScript('fc-select2', $framework_path.'/select2.min.js', array('version' => $ver));
+				$document->getWebAssetManager()->registerAndUseScript('fc-select2-sortable', $framework_path.(JDEBUG ? '/select2.sortable.js' : '/select2.sortable.min.js'), array('version' => $ver));
+						$document->getWebAssetManager()->registerAndUseScript('fc-select2-compat', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/js/'.(JDEBUG ? 'select2-compat.js' : 'select2-compat.min.js'), array('version' => FLEXI_VHASH));
 				$document->getWebAssetManager()->registerAndUseStyle('select2', $framework_path.(JDEBUG ? '/select2.css' : '/select2.min.css'), array('version' => $ver));
 
 				$lang_code = flexicontent_html::getUserCurrentLang();
@@ -1650,21 +1651,21 @@ class flexicontent_html
 				{
 					// Try language shortcode
 					if ( file_exists($framework_folder.DS.'select2_locale_'.$lang_code.'.js') ) {
-						$document->getWebAssetManager()->registerAndUseScript('fc-script', $framework_path.'/select2_locale_'.$lang_code.'.js', array('version' => $ver));
+						$document->getWebAssetManager()->registerAndUseScript('fc-select2-locale', $framework_path.'/select2_locale_'.$lang_code.'.js', array('version' => $ver));
 					}
 					// select2 JS 4.0.0+
 					/*if ( file_exists($framework_folder.DS.'select2'.DS.'i18n'.DS.$lang_code.'.js') ) {
-						$document->getWebAssetManager()->registerAndUseScript('fc-script', $framework_path.'/select2/i18n/'.$lang_code.'.js', array('version' => $ver));
+						$document->getWebAssetManager()->registerAndUseScript('fc-select2-i18n', $framework_path.'/select2/i18n/'.$lang_code.'.js', array('version' => $ver));
 					}*/
 					// Try country language code
 					else {
 						$country_code = flexicontent_html::getUserCurrentLang($short_tag=false);
 						if ( $country_code && file_exists($framework_folder.DS.'select2_locale_'.$country_code.'.js') ) {
-							$document->getWebAssetManager()->registerAndUseScript('fc-script', $framework_path.'/select2_locale_'.$country_code.'.js', array('version' => $ver));
+							$document->getWebAssetManager()->registerAndUseScript('fc-select2-locale', $framework_path.'/select2_locale_'.$country_code.'.js', array('version' => $ver));
 						}
 						// select2 JS 4.0.0+
 						/*if ( $country_code && file_exists($framework_folder.DS.'select2'.DS.'i18n'.DS.$country_code.'.js') ) {
-							$document->getWebAssetManager()->registerAndUseScript('fc-script', $framework_path.'/select2/i18n/'.$country_code.'.js', array('version' => $ver));
+							$document->getWebAssetManager()->registerAndUseScript('fc-select2-i18n', $framework_path.'/select2/i18n/'.$country_code.'.js', array('version' => $ver));
 						}*/
 					}
 				}
