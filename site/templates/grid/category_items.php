@@ -503,7 +503,7 @@ if ($leadnum) :
 			?>
 
 			<!-- BOF item -->	
-			<div class="fc-item-block-featured-wrapper<?php echo $do_hlight_feat; ?> <?php echo ($force_content_height_feat == 1) ? 'd-flex' : '' ;?> <?php echo ($load_masonry_feat == 1) ? 'masonry' : '';?>"
+			<div class="fc-item-block-featured-wrapper<?php echo $do_hlight_feat; ?> <?php echo ($force_content_height_feat == 1) ? 'd-flex' : '' ;?> <?php echo ($load_masonry_feat == 1) ? 'masonry' : '';?>" data-index="<?php echo $i; ?>" data-total="<?php echo $leadnum; ?>"
 				<?php echo $microdata_itemtype_code; ?>
 				id="fc_newslist_item_<?php echo $i; ?>"
 			>
