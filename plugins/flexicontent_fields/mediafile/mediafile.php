@@ -737,7 +737,7 @@ class plgFlexicontent_fieldsMediafile extends FCField
 			\Joomla\CMS\HTML\HTMLHelper::addIncludePath(JPATH_SITE . '/components/com_flexicontent/helpers/html');
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/wavesurfer.min.js');
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/plugin/wavesurfer.cursor.js');
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-form', \Joomla\CMS\Uri\Uri::root() . (JDEBUG ? 'plugins/flexicontent_fields/mediafile/js/form.js' : '/plugins/flexicontent_fields/mediafile/js/form.min.js'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-form', \Joomla\CMS\Uri\Uri::root() . (JDEBUG ? 'plugins/flexicontent_fields/mediafile/js/form.js' : 'plugins/flexicontent_fields/mediafile/js/form.min.js'), array('version' => FLEXI_VHASH));
 
 			$js .= "
 			jQuery(document).ready(function()
@@ -1119,7 +1119,7 @@ class plgFlexicontent_fieldsMediafile extends FCField
 			\Joomla\CMS\HTML\HTMLHelper::addIncludePath(JPATH_SITE . '/components/com_flexicontent/helpers/html');
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/wavesurfer.min.js');
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/plugin/wavesurfer.cursor.js');
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-view', \Joomla\CMS\Uri\Uri::root() . (JDEBUG ? 'plugins/flexicontent_fields/mediafile/js/view.js' : '/plugins/flexicontent_fields/mediafile/js/view.min.js'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-view', \Joomla\CMS\Uri\Uri::root() . (JDEBUG ? 'plugins/flexicontent_fields/mediafile/js/view.js' : 'plugins/flexicontent_fields/mediafile/js/view.min.js'), array('version' => FLEXI_VHASH));
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako.min.js', array('version' => FLEXI_VHASH));
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako_deflate-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako_deflate.min.js', array('version' => FLEXI_VHASH));
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako_inflate-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako_inflate.min.js', array('version' => FLEXI_VHASH));

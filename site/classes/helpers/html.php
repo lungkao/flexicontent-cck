@@ -1942,14 +1942,14 @@ class flexicontent_html
 
 				$framework_path = \Joomla\CMS\Uri\Uri::root().$lib_path.'/plupload';
 				$framework_folder = JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'librairies'.DS.'plupload';
-				$document->getWebAssetManager()->registerAndUseScript('min', $framework_path.'/js/plupload.full.min.js');
+				$document->getWebAssetManager()->registerAndUseScript('fc-plupload-full', $framework_path.'/js/plupload.full.min.js');
 
 				if ($mode=='ui') {
-					$document->getWebAssetManager()->registerAndUseStyle('plupload', $framework_path.(JDEBUG ? '/js/jquery.ui.plupload/css/jquery.ui.plupload.css' : '/js/jquery.ui.plupload/css/jquery.ui.plupload.min.css'));
-					$document->getWebAssetManager()->registerAndUseScript('min', $framework_path.'/js/jquery.ui.plupload/jquery.ui.plupload.min.js');
+					$document->getWebAssetManager()->registerAndUseStyle('fc-plupload-ui-css', $framework_path.(JDEBUG ? '/js/jquery.ui.plupload/css/jquery.ui.plupload.css' : '/js/jquery.ui.plupload/css/jquery.ui.plupload.min.css'));
+					$document->getWebAssetManager()->registerAndUseScript('fc-plupload-ui', $framework_path.'/js/jquery.ui.plupload/jquery.ui.plupload.min.js');
 					//$document->getWebAssetManager()->registerAndUseScript('themeswitcher', $framework_path.'/js/themeswitcher.js');
 				} else {
-					$document->getWebAssetManager()->registerAndUseStyle('queue', $framework_path.(JDEBUG ? '/js/jquery.plupload.queue/css/jquery.plupload.queue.css' : '/js/jquery.plupload.queue/css/jquery.plupload.queue.min.css'));
+					$document->getWebAssetManager()->registerAndUseStyle('fc-plupload-queue-css', $framework_path.(JDEBUG ? '/js/jquery.plupload.queue/css/jquery.plupload.queue.css' : '/js/jquery.plupload.queue/css/jquery.plupload.queue.min.css'));
 					$document->getWebAssetManager()->registerAndUseScript('queue', $framework_path.(JDEBUG ? '/js/jquery.plupload.queue/jquery.plupload.queue.js' : '/js/jquery.plupload.queue/jquery.plupload.queue.min.js'));
 				}
 

@@ -182,12 +182,12 @@ if ($add_ccs && $layout) {
 	else {
 		// Active module layout css (optional)
 		if (file_exists(dirname(__FILE__) . DS . 'tmpl' . DS . $layout . DS . $layout . '.css')) {
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', Uri::base(true) . '/modules/' . $modulename . '/tmpl/' . $layout . '/' . $layout . '.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', Uri::base(true) . 'modules/' . $modulename . '/tmpl/' . $layout . '/' . $layout . '.css', array('version' => FLEXI_VHASH));
 		}
 
 		// Module 's core CSS
 		if (file_exists(dirname(__FILE__) . DS . 'tmpl_common' . DS . 'module.css')) {
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-module', Uri::base(true) . '/modules/' . $modulename . (JDEBUG ? '/tmpl_common/module.css' : '/tmpl_common/module.min.css'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-module', Uri::base(true) . 'modules/' . $modulename . (JDEBUG ? '/tmpl_common/module.css' : '/tmpl_common/module.min.css'), array('version' => FLEXI_VHASH));
 		}
 
 		// Component CSS with optional override
