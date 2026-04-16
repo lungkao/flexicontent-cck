@@ -916,3 +916,290 @@ table.fcmanlist thead th a,
   font-weight: 600;
   white-space: nowrap;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FLEXIcontent Admin — Form Elements & Menu Item UI
+   Covers: input-append (Bootstrap 2→5), fccategory, fcitem, fctag,
+           menu form fields, required badge, select/popup buttons
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Bootstrap 2 .input-append → Bootstrap 5 input-group ──────── */
+/* Joomla 6 dropped Bootstrap 2 — rebuild the layout with flex */
+span.input-append,
+div.input-append,
+.fc-form-field .input-append {
+  display: inline-flex !important;
+  align-items: stretch !important;
+  flex-wrap: nowrap !important;
+  gap: 0 !important;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Readonly text field (selected value display) */
+span.input-append > input[type="text"][readonly],
+span.input-append > input[type="text"].fcselectitem_name,
+.input-append > input[type="text"][readonly="readonly"] {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  height: 38px !important;
+  border: 1.5px solid var(--fc-border) !important;
+  border-right: none !important;
+  border-radius: var(--fc-radius-sm) 0 0 var(--fc-radius-sm) !important;
+  padding: .4rem .875rem !important;
+  font-size: .875rem !important;
+  background: var(--fc-bg) !important;
+  color: var(--fc-text) !important;
+  transition: border-color var(--fc-transition) !important;
+  cursor: default !important;
+}
+
+/* Select / Edit buttons immediately after input */
+span.input-append > a.btn,
+span.input-append > button.btn,
+.input-append > a.btn,
+.input-append > button.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .3rem !important;
+  height: 38px !important;
+  padding: 0 .875rem !important;
+  font-size: .825rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  border: 1.5px solid var(--fc-border) !important;
+  border-left: none !important;
+  border-radius: 0 !important;
+  background: var(--fc-bg-card) !important;
+  color: var(--fc-text) !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: all var(--fc-transition) !important;
+  flex-shrink: 0 !important;
+}
+
+/* Last button gets right radius */
+span.input-append > a.btn:last-child,
+span.input-append > button.btn:last-child,
+.input-append > a.btn:last-child,
+.input-append > button.btn:last-child {
+  border-radius: 0 var(--fc-radius-sm) var(--fc-radius-sm) 0 !important;
+}
+
+/* Hover state for all buttons */
+span.input-append > a.btn:hover,
+span.input-append > button.btn:hover,
+.input-append > a.btn:hover,
+.input-append > button.btn:hover {
+  background: var(--fc-primary-light) !important;
+  border-color: var(--fc-primary) !important;
+  color: var(--fc-primary) !important;
+}
+
+/* ── Select button — primary accent ────────────────────────────── */
+/* First btn after readonly input = Select button */
+span.input-append > input[type="text"][readonly] + a.btn,
+span.input-append > input[type="text"][readonly="readonly"] + a.btn {
+  background: var(--fc-primary) !important;
+  border-color: var(--fc-primary) !important;
+  border-left: none !important;
+  color: #fff !important;
+}
+span.input-append > input[type="text"][readonly] + a.btn:hover,
+span.input-append > input[type="text"][readonly="readonly"] + a.btn:hover {
+  background: var(--fc-primary-dark) !important;
+  border-color: var(--fc-primary-dark) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(37,99,235,.3) !important;
+}
+
+/* ── Clear button — danger outline ──────────────────────────────── */
+span.input-append > button[id$="_clear"],
+span.input-append > button.fcselectitem_clear,
+.input-append > button[id$="_clear"] {
+  border-color: #fca5a5 !important;
+  color: var(--fc-danger) !important;
+  background: #fff5f5 !important;
+}
+span.input-append > button[id$="_clear"]:hover,
+.input-append > button[id$="_clear"]:hover {
+  background: var(--fc-danger) !important;
+  border-color: var(--fc-danger) !important;
+  color: #fff !important;
+}
+
+/* ── Required badge (Joomla renders this as .label-warning) ─────── */
+/* Override the bright red Required badge to pill-outline style */
+.com_flexicontent .control-label .label.required,
+.com_flexicontent .required-star,
+span.required,
+.jform_fccat + .required,
+input.required ~ .label,
+.com_flexicontent [class*="required"],
+.com_menus [class*="required"] {
+  display: inline-flex;
+  align-items: center;
+  font-size: .67rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: .15rem .5rem !important;
+  border-radius: 999px !important;
+  background: #fef2f2 !important;
+  color: var(--fc-danger) !important;
+  border: 1.5px solid #fca5a5 !important;
+  vertical-align: middle;
+  margin-left: .375rem;
+  line-height: 1.4 !important;
+}
+
+/* ── fc_hidden_value — truly hidden ─────────────────────────────── */
+input.fc_hidden_value {
+  display: none !important;
+  position: absolute !important;
+  visibility: hidden !important;
+}
+
+/* ── hasTooltip buttons alignment fix ──────────────────────────── */
+.hasTooltip.btn {
+  vertical-align: middle;
+}
+
+/* ── Joomla menu form — com_menus context ───────────────────────── */
+/* Ensures FLEXIcontent form elements look good inside Joomla menu editor */
+.com_menus .control-group .controls span.input-append,
+.com_menus .control-group .controls div.input-append {
+  display: inline-flex !important;
+  align-items: stretch !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+/* Menu form: readonly input inherits proper width */
+.com_menus span.input-append > input[type="text"][readonly] {
+  min-width: 180px !important;
+  max-width: 320px !important;
+}
+
+/* ── fccategoryelement popup list ───────────────────────────────── */
+/* Popup modal list for category selection */
+.fc_modal_popup_container .adminlist,
+.fc_modal_popup_container table.fcmanlist {
+  width: 100%;
+  border-collapse: collapse;
+}
+.fc_modal_popup_container .adminlist td,
+.fc_modal_popup_container table.fcmanlist td {
+  padding: .5rem .75rem;
+  font-size: .875rem;
+  border-bottom: 1px solid var(--fc-border);
+  vertical-align: middle;
+}
+.fc_modal_popup_container .adminlist tr:hover,
+.fc_modal_popup_container table.fcmanlist tr:hover {
+  background: var(--fc-primary-light);
+  cursor: pointer;
+}
+.fc_modal_popup_container .adminlist a,
+.fc_modal_popup_container table.fcmanlist a {
+  color: var(--fc-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+.fc_modal_popup_container .adminlist a:hover {
+  text-decoration: underline;
+}
+
+/* ── General admin form fields ─────────────────────────────────── */
+/* Consistent styling across all FLEXIcontent admin form inputs */
+.com_flexicontent .control-group input[type="text"]:not([readonly]),
+.com_flexicontent .control-group input[type="number"],
+.com_flexicontent .control-group input[type="email"],
+.com_flexicontent .control-group input[type="url"],
+.com_flexicontent .control-group textarea,
+.com_flexicontent .controls input[type="text"]:not([readonly]) {
+  border: 1.5px solid var(--fc-border);
+  border-radius: var(--fc-radius-sm);
+  padding: .45rem .875rem;
+  font-size: .875rem;
+  color: var(--fc-text);
+  background: var(--fc-bg-card);
+  transition: border-color var(--fc-transition), box-shadow var(--fc-transition);
+  width: 100%;
+}
+.com_flexicontent .control-group input:focus,
+.com_flexicontent .controls input:focus,
+.com_flexicontent .control-group textarea:focus {
+  border-color: var(--fc-primary) !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
+  outline: none !important;
+  background: #fff !important;
+}
+
+/* com_menus context — same field styling */
+.com_menus .control-group input[type="text"],
+.com_menus .controls input[type="text"] {
+  border: 1.5px solid var(--fc-border);
+  border-radius: var(--fc-radius-sm);
+  padding: .45rem .875rem;
+  font-size: .875rem;
+  color: var(--fc-text);
+  background: var(--fc-bg-card);
+  width: 100%;
+  transition: border-color var(--fc-transition);
+}
+.com_menus .control-group input[type="text"]:focus {
+  border-color: var(--fc-primary) !important;
+  outline: none !important;
+}
+
+/* ── Edit (pencil) button ───────────────────────────────────────── */
+span.input-append > a[id$="_edit"],
+.input-append > a[id$="_edit"] {
+  background: #f0fdf4 !important;
+  border-color: #86efac !important;
+  color: #16a34a !important;
+}
+span.input-append > a[id$="_edit"]:hover,
+.input-append > a[id$="_edit"]:hover {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #fff !important;
+}
+
+/* ── Joomla 5/6 form validation badges ──────────────────────────── */
+/* Joomla renders "Required" as .invalid-feedback or input:invalid */
+.com_menus .invalid-feedback,
+.com_flexicontent .invalid-feedback {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: .67rem !important;
+  font-weight: 700 !important;
+  color: var(--fc-danger) !important;
+  background: #fef2f2 !important;
+  border: 1.5px solid #fca5a5 !important;
+  border-radius: 999px !important;
+  padding: .12rem .5rem !important;
+  margin-left: .375rem !important;
+  line-height: 1.5 !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  width: auto !important;
+}
+
+/* Required input border highlight */
+.com_menus input.required:invalid,
+.com_flexicontent input.required:invalid,
+.com_menus span.input-append input[required]:invalid,
+.com_flexicontent span.input-append input[required]:invalid {
+  border-color: #fca5a5 !important;
+}
+
+/* ── Override Joomla 6 Atum/Cassiopeia button defaults ─────────── */
+/* .btn inside FLEXIcontent admin form elements */
+.com_flexicontent .input-append .btn,
+.com_menus .input-append .btn {
+  border-radius: 0;
+  margin: 0;
+  line-height: 1;
+}
