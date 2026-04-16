@@ -38,11 +38,19 @@ namespace FLEXIcontent;
  * The `lessc_formatter` takes a CSS tree, and dumps it to a formatted string,
  * handling things like indentation.
  */
+#[\AllowDynamicProperties]
 class lessc {
 	static public $VERSION = "v0.5.0";
 
 	static public $TRUE = array("keyword", "true");
 	static public $FALSE = array("keyword", "false");
+
+	// PHP 8.2+ dynamic property declarations
+	public $formatterName = null;
+	public $parser = null;
+	public $env = null;
+	public $scope = null;
+	public $formatter = null;
 
 	protected $libFunctions = array();
 	protected $registeredVars = array();
@@ -1301,7 +1309,7 @@ class lessc {
 					$name = $name . ": ";
 				}
 
-				$this->throwError("${name}expecting $expectedArgs arguments, got $numValues");
+				$this->throwError("{$name}expecting $expectedArgs arguments, got $numValues");
 			}
 
 			return $values;
@@ -1647,7 +1655,7 @@ class lessc {
 		}
 
 		// type based operators
-		$fname = "op_${ltype}_${rtype}";
+		$fname = "op_{$ltype}_{$rtype}";
 		if (is_callable(array($this, $fname))) {
 			$out = $this->$fname($op, $left, $right);
 			if (!is_null($out)) return $out;
@@ -2047,7 +2055,9 @@ class lessc {
 		if (!empty($this->formatterName)) {
 			if (!is_string($this->formatterName))
 				return $this->formatterName;
-			$className = "lessc_formatter_$this->formatterName";
+			$className = __NAMESPACE__ . "\\lessc_formatter_$this->formatterName";
+		} else {
+			$className = __NAMESPACE__ . "\\lessc_formatter_classic";
 		}
 
 		return new $className;
@@ -2270,7 +2280,20 @@ class lessc {
 
 // responsible for taking a string of LESS code and converting it into a
 // syntax tree
+#[\AllowDynamicProperties]
 class lessc_parser {
+	// PHP 8.2+ property declarations (were dynamic)
+	public $eatWhiteDefault = true;
+	public $lessc = null;
+	public $sourceName = null;
+	public $writeComments = false;
+	public $count = 0;
+	public $line = 1;
+	public $env = null;
+	public $buffer = '';
+	public $seenComments = false;
+	public $inExp = false;
+
 	static protected $nextBlockId = 0; // used to uniquely identify blocks
 
 	static protected $precedence = array(
@@ -3652,6 +3675,7 @@ class lessc_parser {
 }
 
 class lessc_formatter_classic {
+	public int $indentLevel = 0;
 	public $indentChar = "  ";
 
 	public $break = "\n";
@@ -3669,7 +3693,7 @@ class lessc_formatter_classic {
 	public $compressColors = false;
 
 	public function __construct() {
-		$this->indentLevel = 0;
+		// indentLevel declared as class property above
 	}
 
 	public function indentStr($n = 0) {
