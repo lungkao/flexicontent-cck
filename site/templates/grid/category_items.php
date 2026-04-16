@@ -522,7 +522,7 @@ if ($leadnum) :
 				?>
 
 				<?php if ( $header_shown ) : ?>
-				<header class=" tool">
+				<header class="tool fc-edit-toolbar">
 				<?php endif; ?>
 
 				<?php if ($this->params->get('show_editbutton', 1)) : ?>
@@ -1063,7 +1063,7 @@ if ($count > $leadnum) :
 				?>
 
 				<?php if ( $header_shown ) : ?>
-				<header class="tool">
+				<header class="tool fc-edit-toolbar">
 				<?php endif; ?>
 
 				<?php if ($this->params->get('show_editbutton', 1)) : ?>
