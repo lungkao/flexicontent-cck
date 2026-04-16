@@ -95,7 +95,7 @@ abstract class JHtmlFcuploader
 		$initialized[$up_tag_id] = true;
 
 		$defaults = array(
-			'action' => \Joomla\CMS\Uri\Uri::base(true) . '/index.php?option=com_flexicontent&task=filemanager.uploads'
+			'action' => \Joomla\CMS\Uri\Uri::root() . 'administrator/index.php?option=com_flexicontent&task=filemanager.uploads'
 				. '&view='.($field ? 'fileselement' : 'filemanager')
 				. '&fieldid='.($field ? $field->id : ''). '&u_item_id='.$u_item_id
 				. '&'.\Joomla\CMS\Session\Session::getFormToken().'=1',

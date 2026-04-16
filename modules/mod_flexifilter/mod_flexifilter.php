@@ -422,24 +422,24 @@ if ($add_ccs && $layout)
 		// Active module layout css (optional)
 		if (file_exists(dirname(__FILE__).DS.'tmpl'.DS.$layout.DS.$layout.'.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::base(true).'/modules/'.$modulename.'/tmpl/'.$layout.'/'.$layout.'.css', array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'modules/'.$modulename.'/tmpl/'.$layout.'/'.$layout.'.css', array('version' => FLEXI_VHASH));
 		}
 
 		// Module 's core CSS
 		if (file_exists(dirname(__FILE__).DS.'tmpl_common'.DS.'module.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-module', \Joomla\CMS\Uri\Uri::base(true).'/modules/'.$modulename.(JDEBUG ? '/tmpl_common/module.css' : '/tmpl_common/module.min.css'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-module', \Joomla\CMS\Uri\Uri::root().'modules/'.$modulename.(JDEBUG ? '/tmpl_common/module.css' : '/tmpl_common/module.min.css'), array('version' => FLEXI_VHASH));
 		}
 
 		// Component CSS with optional override
 		/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent.css' : 'components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 		if (FLEXI_J40GE && file_exists(JPATH_SITE.DS.'media/templates/site'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::base(true).'/media/templates/site/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().'media/templates/site/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 		}
 		elseif (file_exists(JPATH_SITE.DS.'templates'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
 		{
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::base(true).'/templates/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-flexicontent', \Joomla\CMS\Uri\Uri::root().'templates/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'));
 		}
 	}
 }
