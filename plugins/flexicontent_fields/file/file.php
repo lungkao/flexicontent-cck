@@ -1054,7 +1054,7 @@ class plgFlexicontent_fieldsFile extends FCField
 		$docspath  = static::$cparams->get('file_path', 'components/com_flexicontent/uploads');
 
 		$target_dir = $field->parameters->get('target_dir', 0);
-		$base_url   = \Joomla\CMS\Uri\Uri::root(true) . '/' . (!$target_dir ? $mediapath : $docspath);
+		$base_url   = \Joomla\CMS\Uri\Uri::root() . '' . (!$target_dir ? $mediapath : $docspath);
 		$base_url   = str_replace(DS, '/', $base_url);
 
 		// JS safe Field name

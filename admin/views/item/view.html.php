@@ -2389,7 +2389,7 @@ var $proxy_option = null;
 			{
 				foreach ($themes->items->{$ilayout}->js as $js)
 				{
-					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-script', $this->baseurl.'/'.$js);
+					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-tpl-'.preg_replace('/[^a-z0-9]/i','-',basename($js,'.js')), $this->baseurl.'/'.$js);
 				}
 			}
 

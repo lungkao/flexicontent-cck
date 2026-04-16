@@ -22,6 +22,7 @@ require_once('traitlegacylist.php');
  * FLEXIcontent Component BASE (list) Model
  *
  */
+#[AllowDynamicProperties]
 abstract class FCModelAdminList extends \Joomla\CMS\MVC\Model\ListModel
 {
 	/** @var mixed $scope_title */

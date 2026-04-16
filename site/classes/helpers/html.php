@@ -338,9 +338,9 @@ class flexicontent_html
 		static $initialized;
 		if ($initialized===null)
 		{
-			jimport('joomla.filesystem.path' );
-			jimport('joomla.filesystem.folder');
-			jimport('joomla.filesystem.file');
+			// use Joomla\Filesystem\Path; // PSR-4 autoloaded
+			// use Joomla\Filesystem\Folder; // PSR-4 autoloaded
+			// use Joomla\Filesystem\File; // PSR-4 autoloaded
 			$initialized = 1;
 		}
 
@@ -2307,7 +2307,7 @@ class flexicontent_html
 
 			case 'EMAIL':
 				// Use the Joomla mail helper to validate emails
-				jimport('joomla.mail.helper');
+				// jimport replaced — Joomla\CMS\Mail\MailHelper autoloaded
 				if ( !\Joomla\CMS\Mail\MailHelper::isEmailAddress($v) ) $v = '';
 				break;
 
@@ -2452,7 +2452,7 @@ class flexicontent_html
 	 */
 	static function extractimagesrc( $row )
 	{
-		jimport('joomla.filesystem.file');
+		// use Joomla\Filesystem\File; // PSR-4 autoloaded
 
 		$regex = '#<\s*img [^\>]*src\s*=\s*(["\'])(.*?)\1#im';
 
@@ -6439,9 +6439,9 @@ class flexicontent_html
 	// Check and if needed install Joomla template overrides into current Joomla template
 	public static function install_template_overrides($display_mssg = false)
 	{
-		jimport('joomla.filesystem.path' );
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
+		// use Joomla\Filesystem\Path; // PSR-4 autoloaded
+		// use Joomla\Filesystem\Folder; // PSR-4 autoloaded
+		// use Joomla\Filesystem\File; // PSR-4 autoloaded
 		$app =Factory::getApplication();
 
 		$pathDestFolder_arr = array(

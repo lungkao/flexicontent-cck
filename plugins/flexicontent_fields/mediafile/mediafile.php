@@ -157,7 +157,7 @@ class plgFlexicontent_fieldsMediafile extends FCField
 		$imagesExt   = array('jpg', 'png', 'gif', 'xcf', 'odg', 'wbmp', 'bmp', 'ico', 'jpeg', 'webp');
 
 		$target_dir = $field->parameters->get('target_dir', 0);
-		$base_url   = \Joomla\CMS\Uri\Uri::root(true) . '/' . (!$target_dir ? $mediapath : $docspath);
+		$base_url   = \Joomla\CMS\Uri\Uri::root() . '' . (!$target_dir ? $mediapath : $docspath);
 		$base_url   = str_replace(DS, '/', $base_url);
 
 		$thumb_size_resizer = (int) $field->parameters->get('thumb_size_resizer', 0);
@@ -1089,7 +1089,7 @@ class plgFlexicontent_fieldsMediafile extends FCField
 		$docspath  = static::$cparams->get('file_path', 'components/com_flexicontent/uploads');
 
 		$target_dir = $field->parameters->get('target_dir', 0);
-		$base_url   = \Joomla\CMS\Uri\Uri::root(true) . '/' . (!$target_dir ? $mediapath : $docspath);
+		$base_url   = \Joomla\CMS\Uri\Uri::root() . '' . (!$target_dir ? $mediapath : $docspath);
 		$base_url   = str_replace(DS, '/', $base_url);
 
 		// JS safe Field name
@@ -1120,9 +1120,9 @@ class plgFlexicontent_fieldsMediafile extends FCField
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/wavesurfer.min.js');
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/plugin/wavesurfer.cursor.js');
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-view', \Joomla\CMS\Uri\Uri::root(true) . (JDEBUG ? '/plugins/flexicontent_fields/mediafile/js/view.js' : '/plugins/flexicontent_fields/mediafile/js/view.min.js'), array('version' => FLEXI_VHASH));
-			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako-min', \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/assets/js/pako.min.js', array('version' => FLEXI_VHASH));
-			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako_deflate-min', \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/assets/js/pako_deflate.min.js', array('version' => FLEXI_VHASH));
-			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako_inflate-min', \Joomla\CMS\Uri\Uri::root(true) . '/components/com_flexicontent/assets/js/pako_inflate.min.js', array('version' => FLEXI_VHASH));
+			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako.min.js', array('version' => FLEXI_VHASH));
+			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako_deflate-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako_deflate.min.js', array('version' => FLEXI_VHASH));
+			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako_inflate-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako_inflate.min.js', array('version' => FLEXI_VHASH));
 
 			$document->addScriptDeclaration("
 			jQuery(document).ready(function()

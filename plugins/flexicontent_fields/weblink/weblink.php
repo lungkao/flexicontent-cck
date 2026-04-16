@@ -1142,7 +1142,7 @@ class plgFlexicontent_fieldsWeblink extends FCField
 				: $link;
 
 			// Absolute path without protocol, port, domain (subfolder only) and with them
-			$Abs_Path = \Joomla\CMS\Uri\Uri::root(true) . '/';
+			$Abs_Path = \Joomla\CMS\Uri\Uri::root() . '';
 			$Abs_Path_Full = \Joomla\CMS\Uri\Uri::root();
 
 			// Remove joomla uri root to make it relative if relative allowed but an absolute URL was given
