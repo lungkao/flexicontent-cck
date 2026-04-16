@@ -109,6 +109,7 @@ class FLEXIcontentViewSearch extends \Joomla\CMS\MVC\View\HtmlView
 		// Add css files to the document <head> section (also load CSS joomla template override)
 		if (!$params->get('disablecss', ''))
 		{
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-frontend-modern', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/'.(JDEBUG ? 'flexi_frontend_modern.css' : 'flexi_frontend_modern.min.css'), array('version' => FLEXI_VHASH));
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexicontent', $this->baseurl.(JDEBUG ? '/components/com_flexicontent/assets/css/flexicontent.css' : '/components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('flexi_filters', $this->baseurl.(JDEBUG ? '/components/com_flexicontent/assets/css/flexi_filters.css' : '/components/com_flexicontent/assets/css/flexi_filters.min.css'), array('version' => FLEXI_VHASH));
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
