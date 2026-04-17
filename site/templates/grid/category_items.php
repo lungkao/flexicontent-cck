@@ -197,6 +197,9 @@ $feat_content_valign = $this->params->get('feat_content_valign', 'top');
 $feat_card_minheight = (int)$this->params->get('feat_card_minheight', 280);
 $feat_animation      = $this->params->get('feat_animation', 'fade-up');
 $std_animation       = $this->params->get('std_animation', 'fade-up');
+$std_card_style      = $this->params->get('std_card_style', 'classic');
+$std_img_width       = (int)$this->params->get('std_img_width', 33);
+$std_card_minheight  = (int)$this->params->get('std_card_minheight', 200);
 
 if ($lead_link_to_popup || $intro_link_to_popup) {
 	flexicontent_html::loadFramework('flexi-lib');
@@ -880,7 +883,10 @@ if ($count > $leadnum) :
 	$_ibox_min_std = $this->params->get('ibox_minsize_std', '260px');
 	$_grid_style_std = 'style="--fc-col-min:' . htmlspecialchars($_ibox_min_std) . ';"';
 	?>
-	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?>" <?php echo $_grid_style_std; ?> data-std-anim="<?php echo htmlspecialchars($std_animation); ?>">
+	<?php
+	$_std_css_vars = '--fc-std-img-w:'.intval($std_img_width).'%;--fc-std-minheight:'.intval($std_card_minheight).'px;';
+	?>
+	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?> fc-std-style-<?php echo $std_card_style; ?>" style="<?php echo $_std_css_vars; ?>" data-std-anim="<?php echo htmlspecialchars($std_animation); ?>">
 
 		<?php
 		if ($intro_use_image && $this->params->get('intro_image'))

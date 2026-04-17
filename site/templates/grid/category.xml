@@ -317,7 +317,34 @@
 
 					<field name="items_tab_standard_placement" type="separator" default="FLEXI_PLACEMENT" icon_class="icon-grid" level="tab_open" box_type="1" />
 		
-						<field name="items_standard_basic" type="separator" default="FLEXI_BASIC" icon_class="icon-cog" level="level2" />
+						<field name="items_standard_basic" type="separator" default="Standard Card Design" icon_class="icon-grid" level="level2" />
+
+						<!-- === STANDARD CARD STYLE === -->
+						<field name="std_card_style" type="list" default="classic" label="Card style" description="Visual style for standard cards">
+							<option value="classic">Classic (image top, content below)</option>
+							<option value="horizontal">Horizontal list (image left 80px)</option>
+							<option value="overlay">Overlay (text over image)</option>
+							<option value="minimal">Minimal (no image, accent border)</option>
+							<option value="magazine">Magazine row (image left 33%)</option>
+						</field>
+
+						<!-- === IMAGE WIDTH for horizontal/magazine === -->
+						<field name="std_img_width" type="list" default="33" label="Image width %" description="For Horizontal and Magazine styles only" class="">
+							<option value="20">20% (compact)</option>
+							<option value="25">25%</option>
+							<option value="33">33% (default)</option>
+							<option value="40">40%</option>
+							<option value="50">50%</option>
+						</field>
+
+						<!-- === MIN HEIGHT for overlay === -->
+						<field name="std_card_minheight" type="list" default="200" label="Card min height" description="For Overlay style only" class="">
+							<option value="160">160px (compact)</option>
+							<option value="200">200px (default)</option>
+							<option value="240">240px (medium)</option>
+							<option value="280">280px (tall)</option>
+						</field>
+
 						<field name="std_animation" type="list" default="fade-up" label="Scroll animation" description="Animation when standard cards enter viewport" class="">
 							<option value="">None</option>
 							<option value="fade-up">Fade up</option>

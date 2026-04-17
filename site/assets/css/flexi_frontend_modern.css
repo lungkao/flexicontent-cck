@@ -1472,6 +1472,246 @@ header.fc-edit-toolbar {
   border-top:1px solid var(--b,#e2e8f0); padding-top:.5rem; margin-top:.25rem !important;
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   STANDARD CARD STYLES — 5 variants
+   DOM: .wrapper > .innerbox > article.fc-item-standard
+          ├─ header.tool (absolute)
+          ├─ figure.image_standard
+          └─ div.content_standard
+               ├─ span.fcitem_title_box
+               ├─ div.fc_block.fcitem_text
+               └─ footer.fc_block
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Base resets (apply to ALL styles) ─────────────────────────── */
+.standard-block.fc-items-block header.tool.fc-edit-toolbar {
+  position:absolute !important; top:0 !important; left:0 !important;
+  right:0 !important; z-index:10 !important;
+}
+.standard-block.fc-items-block article.fc-item-standard {
+  display:flex !important; flex-direction:column !important;
+  height:100% !important; float:none !important; position:relative !important;
+}
+.standard-block.fc-items-block article.fc-item-standard.fc_float_left,
+.standard-block.fc-items-block article.fc-item-standard.fc_float_right,
+.standard-block.fc-items-block article.fc-item-standard.fc_stretch {
+  float:none !important; clear:none !important; width:100% !important;
+}
+.standard-block.fc-items-block figure.image_standard a {
+  display:block !important; height:100% !important;
+}
+.standard-block.fc-items-block figure.image_standard img,
+.standard-block.fc-items-block .image_standard img {
+  display:block !important; width:100% !important; height:100% !important;
+  object-fit:cover !important; object-position:center !important;
+  transition:transform .5s ease !important;
+}
+.standard-block.fc-items-block .fc-item-block-standard-wrapper:hover figure img {
+  transform:scale(1.06) !important;
+}
+.standard-block.fc-items-block .content_standard {
+  display:flex !important; flex-direction:column !important;
+  flex:1 1 auto !important; min-width:0 !important;
+  float:none !important; width:auto !important; clear:none !important;
+}
+.standard-block.fc-items-block .content_standard.fc_floated {
+  float:none !important; width:auto !important;
+}
+.standard-block.fc-items-block .fcitem_title_box { padding:.875rem 1rem .375rem !important; flex:none !important; }
+.standard-block.fc-items-block .fcitem_title a {
+  font-size:.95rem !important; font-weight:700 !important; line-height:1.35 !important;
+  color:var(--t,#0f172a) !important; text-decoration:none !important;
+  word-break:break-word !important;
+  display:-webkit-box !important; -webkit-line-clamp:2 !important;
+  -webkit-box-orient:vertical !important; overflow:hidden !important;
+  transition:color .2s !important;
+}
+.standard-block.fc-items-block .fcitem_title a:hover { color:var(--p,#2563eb) !important; }
+.standard-block.fc-items-block .fc_block.fcitem_text {
+  padding:0 1rem .625rem !important; font-size:.845rem !important;
+  flex:1 1 auto !important; color:var(--tm,#475569) !important;
+  word-break:break-word !important;
+}
+.standard-block.fc-items-block footer.fc_block {
+  padding:.625rem 1rem !important; flex:none !important; margin-top:auto !important;
+  border-top:1px solid var(--b,#e2e8f0) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STYLE 1: CLASSIC — image top 4:3, content below (DEFAULT)
+   ══════════════════════════════════════════════════════════════ */
+.standard-block.fc-std-style-classic figure.image_standard {
+  aspect-ratio:4/3 !important; overflow:hidden !important;
+  flex:none !important; width:100% !important; margin:0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STYLE 2: HORIZONTAL — small image left, content right
+   image width: --fc-std-img-w (default 33%)
+   ══════════════════════════════════════════════════════════════ */
+.standard-block.fc-std-style-horizontal {
+  grid-template-columns:1fr !important; /* always 1 col */
+}
+.standard-block.fc-std-style-horizontal .fc-item-block-standard-wrapper-innerbox {
+  border-radius:10px !important;
+}
+.standard-block.fc-std-style-horizontal article.fc-item-standard {
+  flex-direction:row !important; align-items:stretch !important;
+  min-height:88px !important;
+}
+.standard-block.fc-std-style-horizontal figure.image_standard {
+  flex:0 0 var(--fc-std-img-w,33%) !important;
+  width:var(--fc-std-img-w,33%) !important;
+  min-width:var(--fc-std-img-w,33%) !important;
+  aspect-ratio:unset !important; align-self:stretch !important;
+  overflow:hidden !important; margin:0 !important;
+}
+.standard-block.fc-std-style-horizontal .content_standard {
+  flex:1 1 0% !important; min-width:0 !important; overflow:hidden !important;
+}
+.standard-block.fc-std-style-horizontal .fcitem_title_box {
+  padding:.625rem .875rem .25rem !important;
+}
+.standard-block.fc-std-style-horizontal .fcitem_title a {
+  font-size:.875rem !important; -webkit-line-clamp:2 !important;
+}
+.standard-block.fc-std-style-horizontal .fc_block.fcitem_text {
+  padding:0 .875rem .5rem !important; font-size:.8rem !important;
+  -webkit-line-clamp:2 !important;
+}
+.standard-block.fc-std-style-horizontal footer.fc_block {
+  padding:.5rem .875rem !important; font-size:.8rem !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STYLE 3: OVERLAY — text layered over image
+   min-height: --fc-std-minheight (default 200px)
+   ══════════════════════════════════════════════════════════════ */
+.standard-block.fc-std-style-overlay .fc-item-block-standard-wrapper-innerbox {
+  min-height:var(--fc-std-minheight,200px) !important;
+  border-radius:12px !important;
+}
+.standard-block.fc-std-style-overlay article.fc-item-standard {
+  position:relative !important; flex-direction:column !important;
+  min-height:var(--fc-std-minheight,200px) !important;
+}
+.standard-block.fc-std-style-overlay figure.image_standard {
+  position:absolute !important; inset:0 !important; z-index:0 !important;
+  width:100% !important; height:100% !important;
+  flex:none !important; margin:0 !important; aspect-ratio:unset !important;
+}
+.standard-block.fc-std-style-overlay .content_standard {
+  position:relative !important; z-index:2 !important;
+  margin-top:auto !important; flex:none !important; width:100% !important;
+  background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.25) 55%,transparent 100%) !important;
+  padding-top:3rem !important;
+}
+.standard-block.fc-std-style-overlay .content_standard.fc_floated { position:relative !important; }
+.standard-block.fc-std-style-overlay .fcitem_title_box { padding:.75rem 1rem .375rem !important; }
+.standard-block.fc-std-style-overlay .fcitem_title a {
+  color:#fff !important; text-shadow:0 1px 3px rgba(0,0,0,.4) !important;
+  -webkit-line-clamp:2 !important;
+}
+.standard-block.fc-std-style-overlay .fc_block.fcitem_text { color:rgba(255,255,255,.85) !important; }
+.standard-block.fc-std-style-overlay footer.fc_block {
+  border-top-color:rgba(255,255,255,.15) !important;
+}
+.standard-block.fc-std-style-overlay .fcitem_readon a {
+  color:#fff !important; border-color:rgba(255,255,255,.4) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STYLE 4: MINIMAL — no image, accent border left
+   ══════════════════════════════════════════════════════════════ */
+.standard-block.fc-std-style-minimal figure.image_standard { display:none !important; }
+.standard-block.fc-std-style-minimal .fc-item-block-standard-wrapper-innerbox {
+  border-left:3px solid var(--p,#2563eb) !important;
+  border-radius:0 10px 10px 0 !important;
+  background:var(--pl,#eff6ff) !important;
+  box-shadow:none !important;
+}
+.standard-block.fc-std-style-minimal .fc-item-block-standard-wrapper:hover
+  .fc-item-block-standard-wrapper-innerbox {
+  border-color:var(--pd,#1d4ed8) !important;
+  background:#e0effe !important;
+}
+.standard-block.fc-std-style-minimal .content_standard { padding-top:3rem !important; }
+.standard-block.fc-std-style-minimal .fcitem_title_box { padding:.875rem 1rem .375rem !important; }
+.standard-block.fc-std-style-minimal .fcitem_title a {
+  color:var(--p,#2563eb) !important; font-size:.95rem !important;
+}
+.standard-block.fc-std-style-minimal footer.fc_block {
+  border-top-color:rgba(37,99,235,.15) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STYLE 5: MAGAZINE — full-width row, image left 33%, content right
+   Overrides grid to 1 column (each item = full row)
+   ══════════════════════════════════════════════════════════════ */
+.standard-block.fc-std-style-magazine {
+  grid-template-columns:1fr !important;
+  gap:1rem !important;
+}
+.standard-block.fc-std-style-magazine .fc-item-block-standard-wrapper-innerbox {
+  border-radius:12px !important;
+}
+.standard-block.fc-std-style-magazine article.fc-item-standard {
+  flex-direction:row !important; align-items:stretch !important;
+  min-height:130px !important;
+}
+.standard-block.fc-std-style-magazine figure.image_standard {
+  flex:0 0 var(--fc-std-img-w,33%) !important;
+  width:var(--fc-std-img-w,33%) !important;
+  min-width:var(--fc-std-img-w,33%) !important;
+  align-self:stretch !important; overflow:hidden !important;
+  margin:0 !important; aspect-ratio:unset !important;
+}
+.standard-block.fc-std-style-magazine figure.image_standard img { height:100% !important; }
+.standard-block.fc-std-style-magazine .content_standard {
+  flex:1 1 0% !important; min-width:0 !important; overflow:hidden !important;
+}
+.standard-block.fc-std-style-magazine .fcitem_title_box { padding:1rem 1.25rem .5rem !important; }
+.standard-block.fc-std-style-magazine .fcitem_title a {
+  font-size:1rem !important; font-weight:700 !important;
+  -webkit-line-clamp:3 !important;
+}
+.standard-block.fc-std-style-magazine .fc_block.fcitem_text {
+  padding:0 1.25rem .75rem !important; font-size:.875rem !important;
+  -webkit-line-clamp:3 !important;
+}
+.standard-block.fc-std-style-magazine footer.fc_block { padding:.75rem 1.25rem !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — all styles
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:640px){
+  /* Horizontal: image shrinks */
+  .standard-block.fc-std-style-horizontal figure.image_standard {
+    flex:0 0 72px !important; width:72px !important; min-width:72px !important;
+  }
+  /* Magazine: stack vertical */
+  .standard-block.fc-std-style-magazine article.fc-item-standard {
+    flex-direction:column !important;
+  }
+  .standard-block.fc-std-style-magazine figure.image_standard {
+    width:100% !important; flex:none !important;
+    aspect-ratio:16/9 !important; height:auto !important; align-self:auto !important;
+  }
+  /* Overlay: keep full cover */
+  .standard-block.fc-std-style-overlay article.fc-item-standard {
+    min-height:180px !important;
+  }
+  /* Minimal: full width */
+  .standard-block.fc-std-style-minimal { grid-template-columns:1fr !important; }
+}
+@media(max-width:768px){
+  .standard-block.fc-std-style-horizontal { grid-template-columns:1fr !important; }
+  .standard-block.fc-std-style-overlay {
+    grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr)) !important;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════════
    SCROLL ANIMATIONS
    ══════════════════════════════════════════════════════════════ */
