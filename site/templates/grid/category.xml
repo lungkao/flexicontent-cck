@@ -353,14 +353,6 @@
 							<option value="slide-left">Slide from left</option>
 						</field>
 
-						<field name="std_animation" type="list" default="fade-up" label="Scroll animation" description="Animation when standard cards enter viewport" class="">
-							<option value="">None</option>
-							<option value="fade-up">Fade up</option>
-							<option value="fade-in">Fade in</option>
-							<option value="zoom-in">Zoom in</option>
-							<option value="slide-left">Slide from left</option>
-						</field>
-
 						<field name="ibox_minsize_std" type="list" cssprep="less" default="260px" label="Columns layout" description="Select number of columns — auto adjusts to screen width" class="">
 							<option value="100%">1 column (full width)</option>
 							<option value="480px">2 columns (large)</option>
