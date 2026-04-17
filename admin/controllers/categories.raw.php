@@ -30,8 +30,7 @@ require_once JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_flexicontent' .
 #[AllowDynamicProperties]
 class FlexicontentControllerCategories extends FlexicontentControllerBaseAdmin
 {
-		/** @var mixed $text_prefix */
-	public mixed $text_prefix = null;
+	public $text_prefix = null;
 
 var $records_dbtbl = 'categories';
 	var $records_jtable = 'flexicontent_categories';

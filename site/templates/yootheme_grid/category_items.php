@@ -115,7 +115,7 @@ $std_uk_cls  = trim($std_uk_card_style  . ($std_uk_card_hover  ? ' uk-card-hover
 	<?php for ($i = 0; $i < $leadnum; $i++) : ?>
 	<?php
 		$item = $this->items[$i];
-		$link_url = \Joomla\CMS\Router\Route::_(flexicontent_html::getItemRoute($item->slug ?? '', $item->categoryslug ?? '', 0, $item));
+		$link_url = \Joomla\CMS\Router\Route::_(FlexicontentHelperRoute::getItemRoute($item->slug ?? '', $item->categoryslug ?? '', 0, $item));
 
 		// Edit/State buttons
 		$editbutton  = $show_editbtn ? flexicontent_html::editbutton($item, $this->params)  : '';
@@ -218,20 +218,12 @@ $std_uk_cls  = trim($std_uk_card_style  . ($std_uk_card_hover  ? ' uk-card-hover
             --fc-std-minheight:<?php echo $std_card_minheight; ?>px;"
      data-std-anim="<?php echo htmlspecialchars($std_animation); ?>">
 
-	<?php
-	// UIkit needs uk-grid on a ul, children are li
-	// For overlay/horizontal/magazine we use a different wrapper
-	$use_uk_list = in_array($std_card_style, ['classic', 'overlay', 'minimal']);
-	if ($use_uk_list) : ?>
 	<div class="<?php echo $uk_grid_class; ?>" uk-grid>
-	<?php else : ?>
-	<div class="fc-std-list">
-	<?php endif; ?>
 
 	<?php for ($i = $leadnum; $i < count($this->items); $i++) : ?>
 	<?php
 		$item = $this->items[$i];
-		$link_url = \Joomla\CMS\Router\Route::_(flexicontent_html::getItemRoute($item->slug ?? '', $item->categoryslug ?? '', 0, $item));
+		$link_url = \Joomla\CMS\Router\Route::_(FlexicontentHelperRoute::getItemRoute($item->slug ?? '', $item->categoryslug ?? '', 0, $item));
 
 		$editbutton  = $show_editbtn ? flexicontent_html::editbutton($item, $this->params)  : '';
 		$statebutton = $show_editbtn ? flexicontent_html::statebutton($item, $this->params) : '';
@@ -262,7 +254,7 @@ $std_uk_cls  = trim($std_uk_card_style  . ($std_uk_card_hover  ? ' uk-card-hover
 			: Text::sprintf('FLEXI_READ_MORE', $item->title ?? '');
 	?>
 
-	<div class="fc-std-item <?php echo ($use_uk_list ? '' : 'uk-margin-bottom'); ?>">
+	<div class="fc-std-item">
 		<div class="fc-std-innerbox uk-card <?php echo $std_uk_cls; ?> uk-position-relative">
 
 			<!-- Edit toolbar -->
@@ -320,7 +312,7 @@ $std_uk_cls  = trim($std_uk_card_style  . ($std_uk_card_hover  ? ' uk-card-hover
 
 	<?php endfor; ?>
 
-	</div><!-- /uk-grid or fc-std-list -->
+	</div><!-- /uk-grid -->
 </div><!-- /standard-section -->
 <?php endif; ?>
 
