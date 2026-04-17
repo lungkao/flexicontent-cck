@@ -96,6 +96,8 @@ class FlexicontentViewTemplate extends \Joomla\CMS\MVC\View\HtmlView
 		$attribs = ' class="use_select2_lib" onchange="filterFieldList(\'%s\', \'%s\', \'%s\');"';
 		$field_type_select = flexicontent_html::buildfieldtypeslist($fftypes, $fieldname, '', ($_grouped ? 1 : 0), $attribs, $elementid);
 
+		$jssort    = '';
+		$positions = '';
 		if (isset($layout->positions)) {
 			$sort = array();
 			$jssort = array();
