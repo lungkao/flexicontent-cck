@@ -23,7 +23,7 @@
   margin:1.75rem 0 !important;width:100%;clear:both
 }
 .standard-block.fc-items-block{grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--fc-col-min,280px)),1fr))}
-.featured-block.fc-items-block{grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--fc-col-min,260px)),1fr))}
+.featured-block.fc-items-block{grid-template-columns:1fr}
 
 /* ── Wrapper ─────────────────────────────────────────────── */
 .news.fc-items-block .fc-item-block-standard-wrapper,
@@ -695,11 +695,10 @@ header.fc-edit-toolbar {
 
 /* ── FEATURED container ──────────────────────────────────────── */
 .featured-block.fc-items-block {
-  display:flex !important;
-  flex-direction:column !important;
+  display:grid !important;
+  grid-template-columns:1fr !important;
   gap:1.5rem !important;
   margin-bottom:3rem !important;
-  grid-template-columns:unset !important;
 }
 
 /* ── FEATURED: hero card base ────────────────────────────────── */
@@ -1094,22 +1093,16 @@ header.fc-edit-toolbar {
   .featured-block.fc-items-block header.tool.fc-edit-toolbar { grid-column:auto !important; }
 }
 
-
-
-
 /* ═══════════════════════════════════════════════════════════════
-   FEATURED CARD SYSTEM v5
-   DOM per item:
-     .wrapper > .innerbox > article.fc-item-featured
-       ├─ header.tool          (edit bar — must be position:absolute)
-       ├─ figure.image_featured
-       └─ div.content_featured
-            ├─ span.fcitem_title_box
-            ├─ div.fc_block.fcitem_text
-            └─ footer.fc_block
+   FEATURED CARD SYSTEM v6 — final fix
+   Root causes fixed:
+   1. Old CSS had auto-fill grid on featured → 260px wide, not full width
+   2. v5 used display:flex on block → grid-template-columns ignored
+   3. header.tool in article flex flow → breaks hero side-by-side
+   DOM: .wrapper > .innerbox > article > [header*abs] + figure + .content_featured
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Block: 1-col grid by default ─────────────────────────────── */
+/* ── Block: display:grid, 1 col default ───────────────────────── */
 .featured-block.fc-items-block {
   display:grid !important;
   grid-template-columns:1fr !important;
@@ -1128,7 +1121,10 @@ header.fc-edit-toolbar {
   background:var(--card,#fff) !important;
   border:1px solid var(--b,#e2e8f0) !important;
   box-shadow:0 2px 8px rgba(0,0,0,.06),0 6px 24px rgba(0,0,0,.05) !important;
-  height:100% !important; position:relative !important;
+  min-height:var(--fc-feat-minheight,280px) !important;
+  height:100% !important; width:100% !important;
+  display:flex !important; flex-direction:column !important;
+  position:relative !important;
   transition:box-shadow .3s,transform .3s !important;
 }
 .featured-block.fc-items-block .fc-item-block-featured-wrapper:hover
@@ -1137,23 +1133,18 @@ header.fc-edit-toolbar {
   transform:translateY(-4px) !important;
 }
 
-/* ── CRITICAL: header.tool = position:absolute ─────────────────── */
-/* header is flex item 1 in article — must be removed from flow */
+/* ── header.tool: position:absolute — keep out of article flex ── */
 .featured-block.fc-items-block header.tool.fc-edit-toolbar {
-  position:absolute !important;
-  top:0 !important; left:0 !important; right:0 !important;
-  z-index:10 !important; width:auto !important;
-  /* rest handled by existing .header.tool CSS */
+  position:absolute !important; top:0 !important; left:0 !important;
+  right:0 !important; z-index:10 !important;
 }
 
-/* ── Article: base ─────────────────────────────────────────────── */
+/* ── Article: flex-col base, relative for header ──────────────── */
 .featured-block.fc-items-block article.fc-item-featured {
   display:flex !important; flex-direction:column !important;
-  width:100% !important; height:100% !important;
-  min-height:var(--fc-feat-minheight,280px) !important;
+  width:100% !important; height:100% !important; flex:1 !important;
   float:none !important; clear:none !important; position:relative !important;
 }
-/* Reset any float/clear from content_layout_feat switch */
 .featured-block.fc-items-block article.fc-item-featured.fc_float_left,
 .featured-block.fc-items-block article.fc-item-featured.fc_float_right,
 .featured-block.fc-items-block article.fc-item-featured.fc_stretch,
@@ -1161,13 +1152,13 @@ header.fc-edit-toolbar {
   float:none !important; clear:none !important; width:100% !important;
 }
 
-/* ── Figure: base ──────────────────────────────────────────────── */
+/* ── Figure base ───────────────────────────────────────────────── */
 .featured-block.fc-items-block figure.image_featured {
   margin:0 !important; padding:0 !important; overflow:hidden !important;
   flex:none !important; display:block !important;
 }
 .featured-block.fc-items-block figure.image_featured a {
-  display:block !important; width:100% !important; height:100% !important;
+  display:block !important; height:100% !important;
 }
 .featured-block.fc-items-block figure.image_featured img,
 .featured-block.fc-items-block .image_featured img {
@@ -1179,10 +1170,10 @@ header.fc-edit-toolbar {
   transform:scale(1.06) !important;
 }
 
-/* ── content_featured: base ────────────────────────────────────── */
+/* ── content_featured base ─────────────────────────────────────── */
 .featured-block.fc-items-block .content_featured {
   display:flex !important; flex-direction:column !important;
-  flex:1 1 auto !important; min-width:0 !important; min-height:0 !important;
+  flex:1 1 auto !important; min-width:0 !important;
   float:none !important; width:auto !important; clear:none !important;
 }
 .featured-block.fc-items-block .content_featured.fc_floated,
@@ -1197,7 +1188,7 @@ header.fc-edit-toolbar {
 .featured-block.fc-items-block .fcitem_title a {
   font-size:1.05rem !important; font-weight:800 !important; line-height:1.3 !important;
   color:var(--t,#0f172a) !important; text-decoration:none !important;
-  word-break:break-word !important; overflow-wrap:anywhere !important;
+  word-break:break-word !important;
   display:-webkit-box !important; -webkit-line-clamp:3 !important;
   -webkit-box-orient:vertical !important; overflow:hidden !important;
   transition:color .2s !important;
@@ -1206,7 +1197,7 @@ header.fc-edit-toolbar {
 .featured-block.fc-items-block .fc_block.fcitem_text {
   padding:0 1.25rem .875rem !important; font-size:.875rem !important;
   flex:1 1 auto !important; color:var(--tm,#475569) !important;
-  word-break:break-word !important; overflow-wrap:anywhere !important;
+  word-break:break-word !important;
 }
 .featured-block.fc-items-block footer.fc_block {
   padding:.75rem 1.25rem !important; flex:none !important; margin-top:auto !important;
@@ -1221,44 +1212,31 @@ header.fc-edit-toolbar {
   padding:.2rem .6rem; border-radius:999px; pointer-events:none;
 }
 
-/* ══════════════════════════════════════════════════════
-   GRID LAYOUT by data-total
-   (default: 1fr = 1 col = full width for all styles)
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   GRID LAYOUT by data-total (applies to ALL styles)
+   1 item  = 1fr  (default, full width)
+   2 items = 2 cols
+   3 items = 2 cols (hero: magazine; others: 3 equal)
+   4 items = 3 cols (hero: hero+grid; others: 4 equal)
+   ══════════════════════════════════════════════════════════════ */
 .featured-block.fc-items-block:has(.fc-item-block-featured-wrapper[data-total="2"]) {
   grid-template-columns:1fr 1fr !important;
 }
 .featured-block.fc-items-block:has(.fc-item-block-featured-wrapper[data-total="3"]) {
-  grid-template-columns:1fr 1fr !important; grid-template-rows:auto auto !important;
+  grid-template-columns:1fr 1fr !important;
 }
 .featured-block.fc-items-block:has(.fc-item-block-featured-wrapper[data-total="4"]) {
   grid-template-columns:repeat(3,1fr) !important;
 }
-
-/* 3 items: first spans 2 rows (hero only) */
-.featured-block.fc-feat-style-hero
-  .fc-item-block-featured-wrapper[data-index="0"][data-total="3"] {
-  grid-row:1/3 !important; grid-column:1 !important;
-}
-.featured-block.fc-feat-style-hero
-  .fc-item-block-featured-wrapper[data-index="1"][data-total="3"],
-.featured-block.fc-feat-style-hero
-  .fc-item-block-featured-wrapper[data-index="2"][data-total="3"] {
-  grid-column:2 !important;
-}
-/* 4 items: first spans all cols */
+/* 4 items: first wrapper spans all cols */
 .featured-block.fc-items-block
   .fc-item-block-featured-wrapper[data-index="0"][data-total="4"] {
   grid-column:1/-1 !important;
 }
 
-/* ══════════════════════════════════════════════════════
-   STYLE: HERO — figure LEFT/RIGHT of content_featured
-   article = flex-row
-   header = absolute (already set above)
-   figure = fixed width column
-   content_featured = flex:1
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   STYLE: HERO — figure + content side by side (flex-row on article)
+   ══════════════════════════════════════════════════════════════ */
 .featured-block.fc-feat-style-hero article.fc-item-featured {
   flex-direction:row !important; align-items:stretch !important;
 }
@@ -1266,37 +1244,38 @@ header.fc-edit-toolbar {
   flex:0 0 var(--fc-feat-img-w,50%) !important;
   width:var(--fc-feat-img-w,50%) !important;
   min-width:var(--fc-feat-img-w,50%) !important;
-  height:auto !important; aspect-ratio:unset !important;
-  align-self:stretch !important;
+  align-self:stretch !important; aspect-ratio:unset !important;
 }
-.featured-block.fc-feat-style-hero figure.image_featured img {
-  height:100% !important;
-}
+.featured-block.fc-feat-style-hero figure.image_featured img { height:100% !important; }
 .featured-block.fc-feat-style-hero .content_featured {
   flex:1 1 0% !important; min-width:0 !important; overflow:hidden !important;
 }
-/* LEFT */
+/* Image LEFT */
 .featured-block.fc-feat-style-hero.fc-feat-img-left figure.image_featured { order:-1 !important; }
 .featured-block.fc-feat-style-hero.fc-feat-img-left .content_featured  { order:1 !important; }
-/* RIGHT */
+/* Image RIGHT */
 .featured-block.fc-feat-style-hero.fc-feat-img-right figure.image_featured { order:1 !important; }
 .featured-block.fc-feat-style-hero.fc-feat-img-right .content_featured  { order:-1 !important; }
-/* TOP */
-.featured-block.fc-feat-style-hero.fc-feat-img-top article.fc-item-featured {
-  flex-direction:column !important;
-}
+/* Image TOP */
+.featured-block.fc-feat-style-hero.fc-feat-img-top article.fc-item-featured { flex-direction:column !important; }
 .featured-block.fc-feat-style-hero.fc-feat-img-top figure.image_featured {
   width:100% !important; flex:none !important; aspect-ratio:16/9 !important; align-self:auto !important;
 }
-/* BOTTOM */
-.featured-block.fc-feat-style-hero.fc-feat-img-bottom article.fc-item-featured {
-  flex-direction:column-reverse !important;
-}
+/* Image BOTTOM */
+.featured-block.fc-feat-style-hero.fc-feat-img-bottom article.fc-item-featured { flex-direction:column-reverse !important; }
 .featured-block.fc-feat-style-hero.fc-feat-img-bottom figure.image_featured {
   width:100% !important; flex:none !important; aspect-ratio:16/9 !important; align-self:auto !important;
 }
+/* Valign */
+.featured-block.fc-feat-valign-center .content_featured { justify-content:center !important; }
+.featured-block.fc-feat-valign-bottom .content_featured { justify-content:flex-end !important; }
+.featured-block.fc-feat-valign-between .fcitem_title_box { flex:1 !important; }
 
-/* Hero 3-item: first item portrait (column layout) */
+/* Hero 3-items: first = portrait, others = col 2 */
+.featured-block.fc-feat-style-hero
+  .fc-item-block-featured-wrapper[data-index="0"][data-total="3"] {
+  grid-row:1/3 !important; grid-column:1 !important;
+}
 .featured-block.fc-feat-style-hero
   .fc-item-block-featured-wrapper[data-index="0"][data-total="3"]
   article.fc-item-featured { flex-direction:column !important; }
@@ -1309,8 +1288,12 @@ header.fc-edit-toolbar {
 .featured-block.fc-feat-style-hero
   .fc-item-block-featured-wrapper[data-index="0"][data-total="3"]
   .content_featured { flex:none !important; }
+.featured-block.fc-feat-style-hero
+  .fc-item-block-featured-wrapper[data-index="1"][data-total="3"],
+.featured-block.fc-feat-style-hero
+  .fc-item-block-featured-wrapper[data-index="2"][data-total="3"] { grid-column:2 !important; }
 
-/* Hero 4-item: first = hero-row, rest = card-col */
+/* Hero 4-items: first = full-width hero-row, rest = card-col */
 .featured-block.fc-feat-style-hero
   .fc-item-block-featured-wrapper[data-index="0"][data-total="4"]
   article.fc-item-featured { flex-direction:row !important; }
@@ -1318,7 +1301,7 @@ header.fc-edit-toolbar {
   .fc-item-block-featured-wrapper[data-index="0"][data-total="4"]
   figure.image_featured {
   flex:0 0 55% !important; width:55% !important; min-width:55% !important;
-  height:auto !important; align-self:stretch !important; aspect-ratio:unset !important;
+  align-self:stretch !important; aspect-ratio:unset !important;
 }
 .featured-block.fc-feat-style-hero
   .fc-item-block-featured-wrapper:not([data-index="0"])[data-total="4"]
@@ -1329,21 +1312,14 @@ header.fc-edit-toolbar {
   width:100% !important; flex:none !important; aspect-ratio:16/9 !important; align-self:auto !important;
 }
 
-/* Valign */
-.featured-block.fc-feat-valign-center .content_featured { justify-content:center !important; }
-.featured-block.fc-feat-valign-bottom .content_featured { justify-content:flex-end !important; }
-.featured-block.fc-feat-valign-between .fcitem_title_box { flex:1 !important; }
-.featured-block.fc-feat-valign-between footer.fc_block { margin-top:0 !important; }
-
-/* ══════════════════════════════════════════════════════
-   STYLE: CARD — image top (column, 16/9 image)
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   STYLE: CARD — image top 16/9, equal grid for 3-4 items
+   ══════════════════════════════════════════════════════════════ */
 .featured-block.fc-feat-style-card figure.image_featured {
   width:100% !important; aspect-ratio:16/9 !important; flex:none !important;
 }
-/* card 3-4 items: equal cols (not magazine) */
 .featured-block.fc-feat-style-card:has(.fc-item-block-featured-wrapper[data-total="3"]) {
-  grid-template-columns:repeat(3,1fr) !important; grid-template-rows:unset !important;
+  grid-template-columns:repeat(3,1fr) !important;
 }
 .featured-block.fc-feat-style-card:has(.fc-item-block-featured-wrapper[data-total="4"]) {
   grid-template-columns:repeat(4,1fr) !important;
@@ -1355,24 +1331,20 @@ header.fc-edit-toolbar {
   grid-column:unset !important; grid-row:unset !important;
 }
 
-/* ══════════════════════════════════════════════════════
-   STYLE: OVERLAY — content over image
-   figure:absolute full coverage, content:z-index:2 bottom
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   STYLE: OVERLAY — content layered over image
+   ══════════════════════════════════════════════════════════════ */
+.featured-block.fc-feat-style-overlay .fc-item-block-featured-wrapper-innerbox {
+  min-height:var(--fc-feat-minheight,320px) !important;
+}
 .featured-block.fc-feat-style-overlay article.fc-item-featured {
-  flex-direction:column !important;
-  position:relative !important;
-  /* needs explicit height for absolute figure */
-  height:var(--fc-feat-minheight,320px) !important;
+  position:relative !important; flex-direction:column !important;
   min-height:var(--fc-feat-minheight,320px) !important;
 }
 .featured-block.fc-feat-style-overlay figure.image_featured {
   position:absolute !important; inset:0 !important; z-index:0 !important;
   width:100% !important; height:100% !important;
   flex:none !important; aspect-ratio:unset !important;
-}
-.featured-block.fc-feat-style-overlay figure.image_featured img {
-  width:100% !important; height:100% !important;
 }
 .featured-block.fc-feat-style-overlay .content_featured {
   position:relative !important; z-index:2 !important;
@@ -1382,18 +1354,14 @@ header.fc-edit-toolbar {
 }
 .featured-block.fc-feat-style-overlay .fcitem_title a {
   color:#fff !important; text-shadow:0 1px 4px rgba(0,0,0,.5) !important;
-  -webkit-line-clamp:3 !important;
 }
 .featured-block.fc-feat-style-overlay .fc_block.fcitem_text { color:rgba(255,255,255,.87) !important; }
-.featured-block.fc-feat-style-overlay footer.fc_block {
-  border-top-color:rgba(255,255,255,.15) !important;
-}
+.featured-block.fc-feat-style-overlay footer.fc_block { border-top-color:rgba(255,255,255,.15) !important; }
 .featured-block.fc-feat-style-overlay .fc-item-block-featured-wrapper-innerbox::before {
   background:rgba(255,255,255,.18) !important; backdrop-filter:blur(4px) !important;
 }
-/* overlay equal cols for 3-4 items */
 .featured-block.fc-feat-style-overlay:has(.fc-item-block-featured-wrapper[data-total="3"]) {
-  grid-template-columns:repeat(3,1fr) !important; grid-template-rows:unset !important;
+  grid-template-columns:repeat(3,1fr) !important;
 }
 .featured-block.fc-feat-style-overlay:has(.fc-item-block-featured-wrapper[data-total="4"]) {
   grid-template-columns:repeat(4,1fr) !important;
@@ -1405,9 +1373,9 @@ header.fc-edit-toolbar {
   grid-column:unset !important; grid-row:unset !important;
 }
 
-/* ══════════════════════════════════════════════════════
-   STYLE: MINIMAL
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   STYLE: MINIMAL — no image, accent card
+   ══════════════════════════════════════════════════════════════ */
 .featured-block.fc-feat-style-minimal figure.image_featured { display:none !important; }
 .featured-block.fc-feat-style-minimal .fc-item-block-featured-wrapper-innerbox {
   border-left:4px solid var(--p,#2563eb) !important;
@@ -1417,6 +1385,10 @@ header.fc-edit-toolbar {
 .featured-block.fc-feat-style-minimal .fc-item-block-featured-wrapper-innerbox::before {
   display:none !important;
 }
+/* pad content below the absolute header */
+.featured-block.fc-feat-style-minimal .content_featured {
+  padding-top:3.5rem !important;
+}
 .featured-block.fc-feat-style-minimal .fcitem_title a {
   font-size:1.2rem !important; color:var(--p,#2563eb) !important;
 }
@@ -1424,21 +1396,15 @@ header.fc-edit-toolbar {
   grid-template-columns:1fr 1fr !important;
 }
 .featured-block.fc-feat-style-minimal:has(.fc-item-block-featured-wrapper[data-total="3"]) {
-  grid-template-columns:repeat(3,1fr) !important; grid-template-rows:unset !important;
+  grid-template-columns:repeat(3,1fr) !important;
 }
 .featured-block.fc-feat-style-minimal:has(.fc-item-block-featured-wrapper[data-total="4"]) {
   grid-template-columns:repeat(4,1fr) !important;
 }
-.featured-block.fc-feat-style-minimal
-  .fc-item-block-featured-wrapper[data-index="0"][data-total="3"],
-.featured-block.fc-feat-style-minimal
-  .fc-item-block-featured-wrapper[data-index="0"][data-total="4"] {
-  grid-column:unset !important; grid-row:unset !important;
-}
 
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════
    STANDARD — compact grid
-   ══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════ */
 .standard-block.fc-items-block { gap:1.25rem !important; }
 .standard-block.fc-items-block .fc-item-block-standard-wrapper-innerbox {
   border-radius:12px !important;
@@ -1448,8 +1414,7 @@ header.fc-edit-toolbar {
   transition:box-shadow .3s,transform .3s,border-color .2s !important;
 }
 .standard-block.fc-items-block article.fc-item-standard {
-  display:flex !important; flex-direction:column !important;
-  height:100% !important; float:none !important;
+  display:flex !important; flex-direction:column !important; height:100% !important; float:none !important;
 }
 .standard-block.fc-items-block .content_standard {
   display:flex !important; flex-direction:column !important;
@@ -1465,35 +1430,26 @@ header.fc-edit-toolbar {
 }
 .standard-block.fc-items-block figure.image_standard img,
 .standard-block.fc-items-block .image_standard img {
-  width:100% !important; height:100% !important; object-fit:cover !important;
-  transition:transform .5s !important;
+  width:100% !important; height:100% !important; object-fit:cover !important; transition:transform .5s !important;
 }
-.standard-block.fc-items-block .fc-item-block-standard-wrapper:hover figure img {
-  transform:scale(1.06) !important;
-}
+.standard-block.fc-items-block .fc-item-block-standard-wrapper:hover figure img { transform:scale(1.06) !important; }
 .standard-block.fc-items-block .fcitem_title_box { padding:.875rem 1rem .375rem !important; }
 .standard-block.fc-items-block .fcitem_title a {
   font-size:.95rem !important; font-weight:700 !important;
   display:-webkit-box !important; -webkit-line-clamp:2 !important;
   -webkit-box-orient:vertical !important; overflow:hidden !important;
 }
-.standard-block.fc-items-block .fc_block.fcitem_text {
-  padding:0 1rem .625rem !important; font-size:.845rem !important; flex:1 !important;
-}
-.standard-block.fc-items-block footer.fc_block {
-  padding:.625rem 1rem !important; margin-top:auto !important;
-  border-top:1px solid var(--b,#e2e8f0) !important;
-}
+.standard-block.fc-items-block .fc_block.fcitem_text { padding:0 1rem .625rem !important; font-size:.845rem !important; flex:1 !important; }
+.standard-block.fc-items-block footer.fc_block { padding:.625rem 1rem !important; margin-top:auto !important; border-top:1px solid var(--b,#e2e8f0) !important; }
 
-/* ── Separator ─────────────────────────────────────────────────── */
+/* ── Section separator ─────────────────────────────────────────── */
 .featured-block.fc-items-block + .standard-block.fc-items-block {
-  border-top:1px solid var(--b,#e2e8f0);
-  padding-top:.5rem; margin-top:.25rem !important;
+  border-top:1px solid var(--b,#e2e8f0); padding-top:.5rem; margin-top:.25rem !important;
 }
 
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════
    SCROLL ANIMATIONS
-   ══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════ */
 .fc-anim-ready { transition:opacity .55s ease,transform .55s ease !important; }
 .fc-anim-ready.fc-anim-fade-up    { opacity:0 !important; transform:translateY(36px) !important; }
 .fc-anim-ready.fc-anim-fade-in    { opacity:0 !important; }
@@ -1504,25 +1460,16 @@ header.fc-edit-toolbar {
 
 /* ── Mobile ─────────────────────────────────────────────────────── */
 @media(max-width:640px){
-  .featured-block.fc-items-block,
-  .featured-block.fc-feat-style-card:has(.fc-item-block-featured-wrapper[data-total]),
-  .featured-block.fc-feat-style-overlay:has(.fc-item-block-featured-wrapper[data-total]),
-  .featured-block.fc-feat-style-minimal:has(.fc-item-block-featured-wrapper[data-total]) {
-    grid-template-columns:1fr !important;
-  }
-  .featured-block.fc-items-block .fc-item-block-featured-wrapper {
-    grid-column:1 !important; grid-row:auto !important;
-  }
-  .featured-block.fc-feat-style-hero article.fc-item-featured {
-    flex-direction:column !important;
-  }
+  .featured-block.fc-items-block { grid-template-columns:1fr !important; }
+  .featured-block.fc-items-block .fc-item-block-featured-wrapper { grid-column:1 !important; grid-row:auto !important; }
+  .featured-block.fc-feat-style-hero article.fc-item-featured { flex-direction:column !important; }
   .featured-block.fc-feat-style-hero figure.image_featured {
-    width:100% !important; flex:none !important; aspect-ratio:16/9 !important;
-    height:auto !important; align-self:auto !important;
+    width:100% !important; flex:none !important; aspect-ratio:16/9 !important; align-self:auto !important;
   }
 }
 @media(max-width:768px){
-  .featured-block.fc-feat-style-hero:has(.fc-item-block-featured-wrapper[data-total="3"]) {
+  .featured-block.fc-items-block:has(.fc-item-block-featured-wrapper[data-total="3"]),
+  .featured-block.fc-items-block:has(.fc-item-block-featured-wrapper[data-total="4"]) {
     grid-template-columns:1fr 1fr !important;
   }
   .featured-block.fc-feat-style-hero
@@ -1536,8 +1483,10 @@ header.fc-edit-toolbar {
     .fc-item-block-featured-wrapper[data-index="0"][data-total="3"]
     figure.image_featured {
     flex:0 0 50% !important; width:50% !important; min-width:50% !important;
-    height:auto !important; align-self:stretch !important; aspect-ratio:unset !important;
+    align-self:stretch !important; aspect-ratio:unset !important;
   }
+  .featured-block.fc-items-block:has(.fc-item-block-featured-wrapper[data-total="4"])
+    .fc-item-block-featured-wrapper[data-index="0"] { grid-column:1/-1 !important; }
 }
 @media(prefers-reduced-motion:reduce){
   .fc-anim-ready { transition:none !important; }
