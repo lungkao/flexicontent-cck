@@ -57,10 +57,8 @@ $uk_cols_t = (int)$this->params->get('uk_grid_cols_tablet', 2);
 $uk_cols_m = (int)$this->params->get('uk_grid_cols_mobile', 1);
 $uk_gap    = $this->params->get('uk_grid_gap', '');
 
-// Build UIkit child-width classes
+// Build UIkit child-width classes (mobile=no breakpoint, tablet=@s >=640, desktop=@m >=960)
 $uk_child = 'uk-child-width-1-' . $uk_cols_m;
-if ($uk_cols_t > 1) $uk_child .= '@s';
-// tablet = @s (>=640), desktop = @m (>=960)
 if ($uk_cols_t != $uk_cols_m) $uk_child .= ' uk-child-width-1-' . $uk_cols_t . '@s';
 if ($uk_cols_d != $uk_cols_t) $uk_child .= ' uk-child-width-1-' . $uk_cols_d . '@m';
 $uk_grid_class = trim('uk-grid ' . $uk_gap . ' ' . $uk_child);
