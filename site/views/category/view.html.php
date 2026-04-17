@@ -177,6 +177,10 @@ class FlexicontentViewCategory extends \Joomla\CMS\MVC\View\HtmlView
 		if (!$params->get('disablecss', ''))
 		{
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-frontend-modern', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/'.(JDEBUG ? 'flexi_frontend_modern.css' : 'flexi_frontend_modern.min.css'), array('version' => FLEXI_VHASH));
+			/* YOOtheme Grid template CSS */
+			if ($this->tmpl === 'yootheme_grid') {
+				/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-yootheme-grid', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/templates/yootheme_grid/css/category.css', array('version' => FLEXI_VHASH));
+			}
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-card-anim', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/js/'.(JDEBUG ? 'fc-card-anim.js' : 'fc-card-anim.min.js'), array('version' => FLEXI_VHASH));
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-main-css', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent.css' : 'components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
 			!\Joomla\CMS\Factory::getLanguage()->isRtl()
