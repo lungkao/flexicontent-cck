@@ -1266,6 +1266,50 @@ header.fc-edit-toolbar {
 .featured-block.fc-feat-style-hero.fc-feat-img-bottom figure.image_featured {
   width:100% !important; flex:none !important; aspect-ratio:16/9 !important; align-self:auto !important;
 }
+/* ══════════════════════════════════════════════════════════════
+   HERO: image position = between
+   Layout: title → image → excerpt (flex-col, image in middle)
+   ══════════════════════════════════════════════════════════════ */
+
+/* BETWEEN: use grid on article */
+.featured-block.fc-feat-style-hero.fc-feat-img-between article.fc-item-featured {
+  display:grid !important;
+  grid-template-rows:auto auto 1fr auto !important;
+  grid-template-columns:1fr !important;
+  flex-direction:unset !important;
+}
+.featured-block.fc-feat-style-hero.fc-feat-img-between header.tool.fc-edit-toolbar {
+  grid-row:1 !important; grid-column:1 !important;
+}
+.featured-block.fc-feat-style-hero.fc-feat-img-between figure.image_featured {
+  grid-row:2 !important; grid-column:1 !important;
+  width:100% !important; aspect-ratio:16/9 !important;
+  order:unset !important; flex:unset !important; align-self:auto !important;
+}
+.featured-block.fc-feat-style-hero.fc-feat-img-between .content_featured {
+  display:contents !important;  /* unwrap — children become grid items */
+  flex:unset !important;
+}
+.featured-block.fc-feat-style-hero.fc-feat-img-between .fcitem_title_box {
+  grid-row:1 !important; grid-column:1 !important;
+  padding-top:3.5rem !important; /* clear the absolute header */
+  order:unset !important;
+}
+.featured-block.fc-feat-style-hero.fc-feat-img-between .fc_block.fcitem_text {
+  grid-row:3 !important; grid-column:1 !important;
+  order:unset !important;
+}
+.featured-block.fc-feat-style-hero.fc-feat-img-between footer.fc_block {
+  grid-row:4 !important; grid-column:1 !important;
+  order:unset !important;
+}
+/* other positioned elements inside content_featured */
+.featured-block.fc-feat-style-hero.fc-feat-img-between .lineinfo,
+.featured-block.fc-feat-style-hero.fc-feat-img-between .fc_afterDisplayTitle {
+  display:none !important; /* hide extra positions for clean between layout */
+}
+
+
 /* Valign */
 .featured-block.fc-feat-valign-center .content_featured { justify-content:center !important; }
 .featured-block.fc-feat-valign-bottom .content_featured { justify-content:flex-end !important; }
@@ -1310,25 +1354,6 @@ header.fc-edit-toolbar {
   .fc-item-block-featured-wrapper:not([data-index="0"])[data-total="4"]
   figure.image_featured {
   width:100% !important; flex:none !important; aspect-ratio:16/9 !important; align-self:auto !important;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   STYLE: CARD — image top 16/9, equal grid for 3-4 items
-   ══════════════════════════════════════════════════════════════ */
-.featured-block.fc-feat-style-card figure.image_featured {
-  width:100% !important; aspect-ratio:16/9 !important; flex:none !important;
-}
-.featured-block.fc-feat-style-card:has(.fc-item-block-featured-wrapper[data-total="3"]) {
-  grid-template-columns:repeat(3,1fr) !important;
-}
-.featured-block.fc-feat-style-card:has(.fc-item-block-featured-wrapper[data-total="4"]) {
-  grid-template-columns:repeat(4,1fr) !important;
-}
-.featured-block.fc-feat-style-card
-  .fc-item-block-featured-wrapper[data-index="0"][data-total="3"],
-.featured-block.fc-feat-style-card
-  .fc-item-block-featured-wrapper[data-index="0"][data-total="4"] {
-  grid-column:unset !important; grid-row:unset !important;
 }
 
 /* ══════════════════════════════════════════════════════════════

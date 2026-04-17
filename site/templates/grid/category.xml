@@ -95,15 +95,15 @@
 						<field name="feat_card_style" type="list" default="hero" label="Card style" description="Visual style for featured cards">
 							<option value="hero">Hero (image + content side by side)</option>
 							<option value="overlay">Overlay (text over image)</option>
-							<option value="card">Card (image top, content below)</option>
 							<option value="minimal">Minimal (no image, text only)</option>
 						</field>
 
 						<!-- === IMAGE POSITION (for hero style) === -->
-						<field name="feat_img_position" type="radio" default="left" label="Image position" description="Where image sits relative to content (Hero style only)" class="btn-group">
+						<field name="feat_img_position" type="radio" default="left" label="Image position" description="Left/Right: image beside content. Top/Bottom: image above or below. Between: image sits between title and excerpt." class="btn-group">
 							<option value="left">Left</option>
 							<option value="right">Right</option>
 							<option value="top">Top</option>
+							<option value="between">Between (title ↑ image ↑ excerpt)</option>
 							<option value="bottom">Bottom</option>
 						</field>
 
