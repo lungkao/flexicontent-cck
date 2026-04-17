@@ -1429,7 +1429,32 @@ header.fc-edit-toolbar {
 
 /* ══════════════════════════════════════════════════════════════
    STANDARD — compact grid
+   Auto-fill mode (default): uses --fc-col-min (from ibox_minsize_std param)
+   Fixed-cols mode (.fc-std-fixed-cols): uses --fc-cols-d/t/m (per-breakpoint params)
    ══════════════════════════════════════════════════════════════ */
+
+/* Auto-fill fallback — active when std_cols_desktop=0 */
+.standard-block.fc-items-block:not(.fc-std-fixed-cols) {
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,minmax(var(--fc-col-min,260px),1fr)) !important;
+}
+
+/* Fixed per-breakpoint columns — active when std_cols_desktop>0 */
+.standard-block.fc-items-block.fc-std-fixed-cols {
+  display:grid !important;
+  grid-template-columns:repeat(var(--fc-cols-m,1),1fr) !important;
+}
+@media(min-width:640px){
+  .standard-block.fc-items-block.fc-std-fixed-cols {
+    grid-template-columns:repeat(var(--fc-cols-t,2),1fr) !important;
+  }
+}
+@media(min-width:960px){
+  .standard-block.fc-items-block.fc-std-fixed-cols {
+    grid-template-columns:repeat(var(--fc-cols-d,3),1fr) !important;
+  }
+}
+
 .standard-block.fc-items-block { gap:1.25rem !important; }
 .standard-block.fc-items-block .fc-item-block-standard-wrapper-innerbox {
   border-radius:12px !important;
@@ -1758,4 +1783,91 @@ header.fc-edit-toolbar {
   .fc-anim-ready.fc-anim-fade-up,.fc-anim-ready.fc-anim-fade-in,
   .fc-anim-ready.fc-anim-zoom-in,.fc-anim-ready.fc-anim-slide-left,
   .fc-anim-ready.fc-anim-slide-right { opacity:1 !important; transform:none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK MODE — prefers-color-scheme: dark
+   Overrides CSS custom properties defined in :root token block.
+   Hardcoded colour references are replaced via var() throughout;
+   these token overrides propagate automatically.
+   ══════════════════════════════════════════════════════════════ */
+@media(prefers-color-scheme:dark){
+  #flexicontent,.flexicontent{
+    /* Typography */
+    --t:#e2e8f0;          /* was #0f172a */
+    --tm:#94a3b8;         /* was #475569 */
+    --tl:#64748b;         /* was #94a3b8 */
+
+    /* Brand / accent */
+    --p:#60a5fa;          /* was #2563eb — brighter on dark bg */
+    --pd:#3b82f6;         /* was #1d4ed8 */
+    --pl:#1e3a5f;         /* was #eff6ff — dark accent tint */
+
+    /* Borders */
+    --b:#334155;          /* was #e2e8f0 */
+    --bf:#1d4ed8;         /* was #93c5fd */
+
+    /* Surfaces */
+    --bg:#0f172a;         /* was #f8fafc — dark page bg */
+    --card:#1e293b;       /* was #fff — card bg */
+
+    /* Shadows — lighter alpha on dark bg */
+    --sh:0 1px 3px rgba(0,0,0,.3),0 4px 20px rgba(0,0,0,.25);
+    --shh:0 12px 40px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.2);
+  }
+
+  /* Cards: ensure background picks up --card var */
+  #flexicontent .fc-item-block-featured-wrapper-innerbox,
+  #flexicontent .fc-item-block-standard-wrapper-innerbox,
+  .flexicontent .fc-item-block-featured-wrapper-innerbox,
+  .flexicontent .fc-item-block-standard-wrapper-innerbox {
+    background:var(--card,#1e293b) !important;
+    border-color:var(--b,#334155) !important;
+  }
+
+  /* Featured hero/overlay dark gradient overlay */
+  #flexicontent .featured-block.fc-feat-style-hero .fc-item-block-featured-wrapper-innerbox::before,
+  .flexicontent .featured-block.fc-feat-style-hero .fc-item-block-featured-wrapper-innerbox::before {
+    background:linear-gradient(to right,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 100%) !important;
+  }
+  #flexicontent .featured-block.fc-feat-style-overlay .fc-item-block-featured-wrapper-innerbox::before,
+  .flexicontent .featured-block.fc-feat-style-overlay .fc-item-block-featured-wrapper-innerbox::before {
+    background:rgba(0,0,0,.55) !important;
+  }
+
+  /* Text colours in cards */
+  #flexicontent .fcitem_title a,
+  .flexicontent .fcitem_title a { color:var(--t,#e2e8f0) !important; }
+  #flexicontent .fc_block.fcitem_text,
+  .flexicontent .fc_block.fcitem_text { color:var(--tm,#94a3b8) !important; }
+  #flexicontent footer.fc_block,
+  .flexicontent footer.fc_block {
+    border-top-color:var(--b,#334155) !important;
+    color:var(--tl,#64748b) !important;
+  }
+
+  /* Minimal style accent — dark mode uses lighter accent */
+  #flexicontent .featured-block.fc-feat-style-minimal .fc-item-block-featured-wrapper-innerbox,
+  .flexicontent .featured-block.fc-feat-style-minimal .fc-item-block-featured-wrapper-innerbox {
+    border-left-color:var(--p,#60a5fa) !important;
+    background:var(--pl,#1e3a5f) !important;
+  }
+  #flexicontent .featured-block.fc-feat-style-minimal .fcitem_title a,
+  .flexicontent .featured-block.fc-feat-style-minimal .fcitem_title a {
+    color:var(--p,#60a5fa) !important;
+  }
+
+  /* Standard card hover border */
+  #flexicontent .standard-block.fc-items-block .fc-item-block-standard-wrapper:hover
+    .fc-item-block-standard-wrapper-innerbox,
+  .flexicontent .standard-block.fc-items-block .fc-item-block-standard-wrapper:hover
+    .fc-item-block-standard-wrapper-innerbox {
+    border-color:var(--p,#60a5fa) !important;
+  }
+
+  /* Section separator */
+  #flexicontent .featured-block.fc-items-block + .standard-block.fc-items-block,
+  .flexicontent .featured-block.fc-items-block + .standard-block.fc-items-block {
+    border-top-color:var(--b,#334155) !important;
+  }
 }

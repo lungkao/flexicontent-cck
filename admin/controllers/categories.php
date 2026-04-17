@@ -32,8 +32,7 @@ class FlexicontentControllerCategories extends FlexicontentControllerBaseAdmin
 {
 		/** @var mixed $msg_records_deleted */
 	public mixed $msg_records_deleted = null;
-	/** @var mixed $text_prefix */
-	public mixed $text_prefix = null;
+	public $text_prefix = null;
 
 var $records_dbtbl = 'categories';
 	var $records_jtable = 'flexicontent_categories';

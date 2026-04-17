@@ -643,7 +643,7 @@ if ($leadnum) :
 
 					<?php endif; ?>
 
-				<?php $captured_image = ob_get_clean(); $hasImage = (boolean) trim($captured_image); ?>
+				<?php $captured_image = ob_get_clean(); $hasImage = (bool) trim($captured_image); ?>
 				<!-- EOF item's image -->
 
 				<?php echo $content_layout_feat!=2 ? $captured_image : '';?>
@@ -880,13 +880,21 @@ if ($count > $leadnum) :
 	<!-- BOF DIV standard-block (standard items) -->
 
 	<?php
-	$_ibox_min_std = $this->params->get('ibox_minsize_std', '260px');
-	$_grid_style_std = 'style="--fc-col-min:' . htmlspecialchars($_ibox_min_std) . ';"';
-	?>
-	<?php
+	$_ibox_min_std    = $this->params->get('ibox_minsize_std', '260px');
+	$_std_cols_d      = (int)$this->params->get('std_cols_desktop', 3);
+	$_std_cols_t      = (int)$this->params->get('std_cols_tablet',  2);
+	$_std_cols_m      = (int)$this->params->get('std_cols_mobile',  1);
+
+	/* When per-breakpoint cols are set (non-zero desktop), use them via CSS vars.
+	   Otherwise fall back to auto-fill with --fc-col-min. */
 	$_std_css_vars = '--fc-std-img-w:'.intval($std_img_width).'%;--fc-std-minheight:'.intval($std_card_minheight).'px;';
+	if ($_std_cols_d > 0) {
+		$_std_css_vars .= '--fc-cols-d:'.intval($_std_cols_d).';--fc-cols-t:'.intval($_std_cols_t).';--fc-cols-m:'.intval($_std_cols_m).';';
+	} else {
+		$_std_css_vars .= '--fc-col-min:'.htmlspecialchars($_ibox_min_std).';';
+	}
 	?>
-	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?> fc-std-style-<?php echo $std_card_style; ?>" style="<?php echo $_std_css_vars; ?>" data-std-anim="<?php echo htmlspecialchars($std_animation); ?>">
+	<div class="standard-block news fc-items-block <?php echo $classnum; ?> <?php echo ' '.$oe_class . ($cols_class_std ? ' '.$cols_class_std : ''); ?> fc-std-style-<?php echo $std_card_style; ?><?php echo ($_std_cols_d > 0 ? ' fc-std-fixed-cols' : ''); ?>" style="<?php echo $_std_css_vars; ?>" data-std-anim="<?php echo htmlspecialchars($std_animation); ?>">
 
 		<?php
 		if ($intro_use_image && $this->params->get('intro_image'))
@@ -1191,7 +1199,7 @@ if ($count > $leadnum) :
 
 					<?php endif; ?>
 
-				<?php $captured_image = ob_get_clean(); $hasImage = (boolean) trim($captured_image); ?>
+				<?php $captured_image = ob_get_clean(); $hasImage = (bool) trim($captured_image); ?>
 				<!-- EOF item's image -->
 
 				<?php echo $content_layout!=2 ? $captured_image : '';?>

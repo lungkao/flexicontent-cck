@@ -353,13 +353,42 @@
 							<option value="slide-left">Slide from left</option>
 						</field>
 
-						<field name="ibox_minsize_std" type="list" cssprep="less" default="260px" label="Columns layout" description="Select number of columns — auto adjusts to screen width" class="">
+						<field name="std_animation" type="list" default="fade-up" label="Scroll animation" description="Animation when standard cards enter viewport" class="">
+							<option value="">None</option>
+							<option value="fade-up">Fade up</option>
+							<option value="fade-in">Fade in</option>
+							<option value="zoom-in">Zoom in</option>
+							<option value="slide-left">Slide from left</option>
+						</field>
+
+						<field name="ibox_minsize_std" type="list" cssprep="less" default="260px" label="Columns layout (auto)" description="CSS auto-fill fallback — ignored when per-breakpoint columns below are set" class="">
 							<option value="100%">1 column (full width)</option>
 							<option value="480px">2 columns (large)</option>
 							<option value="300px">2–3 columns (medium)</option>
 							<option value="220px">3–4 columns (standard)</option>
 							<option value="160px">4–5 columns (small cards)</option>
 							<option value="120px">5–6 columns (mini grid)</option>
+						</field>
+
+						<!-- === PER-BREAKPOINT COLUMN CONTROL (overrides auto-fill above) === -->
+						<field name="std_cols_desktop" type="list" default="3" label="Columns — Desktop (≥960px)" description="Fixed column count on desktop. Set to 0 to use auto-fill above." class="">
+							<option value="0">Auto (use CSS auto-fill)</option>
+							<option value="1">1 column</option>
+							<option value="2">2 columns</option>
+							<option value="3">3 columns (default)</option>
+							<option value="4">4 columns</option>
+							<option value="5">5 columns</option>
+							<option value="6">6 columns</option>
+						</field>
+						<field name="std_cols_tablet" type="list" default="2" label="Columns — Tablet (640–959px)" description="Fixed column count on tablet." class="">
+							<option value="1">1 column</option>
+							<option value="2">2 columns (default)</option>
+							<option value="3">3 columns</option>
+							<option value="4">4 columns</option>
+						</field>
+						<field name="std_cols_mobile" type="list" default="1" label="Columns — Mobile (&lt;640px)" description="Fixed column count on mobile." class="">
+							<option value="1">1 column (default)</option>
+							<option value="2">2 columns</option>
 						</field>
 						<field name="item_placement" type="radio" default="" hint="1" label="FLEXI_ITEMS_PLACEMENT" description="FLEXI_ITEMS_PLACEMENT_DESC" class="btn-group group-fcinfo">
 							<option value="">FLEXI_USE_GLOBAL</option>
