@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<name>Form layout -- List</name>
+	<author>ggppdk</author>
+	<creationDate>January 2022</creationDate>
+	<copyright>Copyright (C) 2022 ggppdk</copyright>
+	<license>GNU/GPL v2</license>
+	<authorEmail>flexicontentck@gmail.com</authorEmail>
+	<authorUrl>www.flexicontent.org</authorUrl>
+	<version>1.0</version>
+	<description>Default (Vertical placement)</description>
+	
+	<fields name="attribs">
+		
+		<fieldset name="layout" addfieldpath="/administrator/components/com_flexicontent/elements">
+
+			<field name="" type="separator" default="FLEXI_FIELD_ABOUT_SELECTED_LAYOUT_WITH_NO_PARAMS" description="" level="level3" class="alert alert-info" />
+
+		</fieldset>
+
+	</fields>
+	
+</form>

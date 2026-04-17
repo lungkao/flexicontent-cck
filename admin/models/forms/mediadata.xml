@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset name="basic" addfieldpath="/administrator/components/com_flexicontent/elements" icon_class="icon-info-circle">
+		<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL" description="JGLOBAL_FIELD_ID_DESC" class="readonly" readonly="true" labelclass="fc-prop-lbl" />
+		<field name="file_id" type="hidden" filter="integer" cols="30" rows="5" default="" label="File" description="Associated file record" class="" labelclass="fc-prop-lbl" />
+		<field name="state" type="list" class="use_select2_lib" default="1" label="FLEXI_REVIEW_STATE" description="FLEXI_REVIEW_STATE_DESC" labelclass="fc-prop-lbl">
+			<option value="1">JENABLED</option>
+			<option value="0">JDISABLED</option>
+			<option value="-2">JTRASHED</option>
+		</field>
+
+		<field name="media_type" type="fcradio" default="1" label="Media Type" description="Audio or Video" class="btn-group group-fcinfo" labelclass="fc-prop-lbl">
+			<option value="0">Audio</option>
+			<option value="1">Video</option>
+		</field>
+
+		<field name="media_format" type="fcradio" default="1" label="Format" description="e.g wav, mp3" class="btn-group group-fcinfo" labelclass="fc-prop-lbl">
+			<option value="wav">Audio/Wav</option>
+			<option value="mp3">Audio/Mp3</option>
+			<option value="aiff">Audio/Aiff</option>
+			<option value="video">Video/*</option>
+		</field>
+
+		<field name="codec_type" type="text" default="" class="readonly" readonly="true" label="codec Type" description="codec Type" labelclass="fc-prop-lbl" />
+		<field name="codec_name" type="text" default="" class="readonly" readonly="true" label="codec Name" description="codec Name" labelclass="fc-prop-lbl" />
+		<field name="codec_long_name" type="text" default="" class="readonly" readonly="true" label="codec Long Name" description="codec Long Name" labelclass="fc-prop-lbl" />
+
+		<field name="resolution" type="list" default="" label="Resolution" description="Video resolution" labelclass="fc-prop-lbl">
+			<option value="">NA</option>
+			<option value="720p">1280x720</option>
+			<option value="1080p">1920x1080</option>
+			<option value="2K (2048x1080)">2048x1080</option>
+			<option value="1440p">2560x1440</option>
+			<option value="4K (2160p)">3840x2160</option>
+			<option value="8K (4320p)">7680x4320</option>
+		</field>
+		<field name="fps" type="number" default="" label="FPS" description="Frames per second" labelclass="fc-prop-lbl" />
+
+		<field name="bit_rate" type="int" default="0" label="Bit Rate (bits per second)" description="In Kilobits per second" labelclass="fc-prop-lbl" />
+		<!--
+			<option value="64">64</option>
+			<option value="96">96</option>
+			<option value="128">128</option>
+			<option value="160">160</option>
+			<option value="192">192</option>
+			<option value="320">320</option>
+			<option value="394">394</option>
+			<option value="512">512</option>
+		</field-->
+		<field name="bits_per_sample" type="int" default="0" label="Bit Depth" description="Number of bits per sample" labelclass="fc-prop-lbl" />
+		<!--
+			<option value="16">16</option>
+			<option value="24">24</option>
+			<option value="32">32</option>
+		</field-->
+		<field name="sample_rate" type="int" default="0" label="Sample rate (Hz)" description="In Hz" labelclass="fc-prop-lbl" />
+		<!--
+			<option value="22050">22050</option>
+			<option value="44100">44100</option>
+		</field-->
+		<field name="duration" type="int" default="0" label="Duration (s)" description="In second" labelclass="fc-prop-lbl" />
+
+		<field name="channels" type="int" default="1" label="# Channels" description="Number of channels" labelclass="fc-prop-lbl" />
+		<field name="channel_layout" type="text" default="" label="Channel Layout" description="Stereo, Mono, ..." labelclass="fc-prop-lbl" />
+		<!--
+			<option value="stereo">Stereo</option>
+			<option value="mono">Mono</option>
+		</field-->
+	</fieldset>
+
+</form>

@@ -1,0 +1,13 @@
+{
+    "name": "flexicontent/tests",
+    "description": "FLEXIcontent Plus — PHPUnit test suite",
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload-dev": {
+        "classmap": ["../site/helpers/"]
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

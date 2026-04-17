@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="1.6" group="flexicontent_fields" method="upgrade">
+	<name>FLEXIcontent - Toolbar (social share/other tools)</name>
+	<author>Emmanuel Danan, George Papadakis</author>
+	<creationDate>March 2011</creationDate>
+	<copyright>Copyright (C) 2009-2012 Emmanuel Danan</copyright>
+	<license>GNU/GPL v2</license>
+	<authorEmail>emmanuel@vistamedia.fr</authorEmail>
+	<authorUrl>www.vistamedia.fr</authorUrl>
+	<version>1.2</version>
+	<documentation url="http://www.flexicontent.org/documentation/faq.html" title="FLEXI_ABOUT" modal="1" icon="info" />
+	<description>Toolbar Field for FLEXIcontent</description>
+
+	<files>
+		<filename plugin="toolbar">toolbar.php</filename>
+		<filename>index.html</filename>
+		<folder>toolbar</folder>
+		<folder>tmpl</folder>
+	</files>
+
+	<config>
+	<fields name="attribs">
+
+		<!--fieldset name="standard" hidden="true">
+		</fieldset-->
+
+		<fieldset name="group-toolbar-viewing" hidden="true" icon_class="icon-screen" label="FLEXI_FIELD_VIEWING" addfieldpath="/administrator/components/com_flexicontent/elements">
+
+			<field name="" type="separator" default="FLEXI_FIELD_VIEWING" level="tabset_start" box_type="1" />
+			<field name="" type="separator" default="FLEXI_BASIC" icon_class="icon-vcard" level="tab_open" box_type="1" />
+
+			<field name="frontend_hidden" type="hidden" default="1" />
+			<field name="backend_hidden" type="hidden" default="1" />
+
+			<field name="" type="separator" default="FLEXI_DISPLAY" level="level2" />
+			<field name="show_in_clients" type="fccheckbox" default=""
+				checkoptions="FLEXI_DESKTOP,FLEXI_TABLET,FLEXI_MOBILE" checkvals="desktop,tablet,mobile" defaultvals="desktop,tablet,mobile"
+				label="FLEXI_FIELD_SHOW_IN_CLIENTS" description="FLEXI_FIELD_SHOW_IN_CLIENTS_DESC" />
+			<field name="show_in_views" type="fccheckbox" default=""
+				checkoptions="FLEXI_ITEM,FLEXI_ITEM_LISTS,FLEXI_MODULE,FLEXI_BACKEND" checkvals="item,category,module,backend" defaultvals="item,category,module,backend"
+				label="FLEXI_FIELD_SHOW_IN_VIEWS" description="FLEXI_FIELD_SHOW_IN_VIEWS_DESC" />
+
+			<field name="" type="separator" default="FLEXI_FIELD_LABEL_AND_ACCESS" level="level2" />
+			<field name="display_label" type="radio" default="1" label="FLEXI_FIELD_DISPLAY_LABEL" description="FLEXI_FIELD_DISPLAY_LABEL_DESC" class="btn-group btn-group-yesno">
+				<option value="0">FLEXI_NO</option>
+				<option value="1">FLEXI_YES</option>
+			</field>
+			<field name="show_acc_msg" type="multilist" subtype="radio" toggle_related="1" default="0" label="FLEXI_FIELD_SHOW_NOACCESS" description="FLEXI_FIELD_SHOW_NOACCESS_DESC" class="btn-group group-fcmethod fcnoyes">
+				<option value="0" show_list="" hide_list="field-acc-msg">FLEXI_NO</option>
+				<option value="1" show_list="field-acc-msg" hide_list="">FLEXI_YES</option>
+			</field>
+			<field name="no_acc_msg" type="text" default="" label="FLEXI_FIELD_NOACCESS_MSG" description="FLEXI_FIELD_NOACCESS_MSG_DESC" depend_class="field-acc-msg"/>
+
+			
+
+			<field name="" type="separator" default="FLEXI_LAYOUT" icon_class="icon-file-2" level="tab_open" box_type="1" />
+						<field name="viewlayout" type="fclayout" default="default" label="FLEXI_FIELD_SELECT_VIEW_LAYOUT" description="FLEXI_FIELD_SELECT_VIEW_LAYOUT_DESC"
+				directory="/plugins/flexicontent_fields/toolbar/tmpl"
+				ext_name="toolbar"
+				hide_default="1" hide_none="1"
+				stripext="1" stripprefix="value_" filter="^value_.*\.php$" trim_displayname=""
+				tmpl_container="tabset_attrs_0_nav_3" params_source="file" custom_layouts_label="Custom layouts" layout_label="FLEXI_LAYOUT" icon_class="icon-screen"
+			/>
+
+			<field name="" type="separator" default="FLEXI_FIELD_VALUE_LIST" description="" icon_class="icon-stack" level="level3" box_type="1" />
+            <field name="opentag" type="text" default="" filter="raw" label="FLEXI_FIELD_OPENING_TEXT" description="FLEXI_FIELD_OPENING_TEXT_DESC" />
+			<field name="closetag" type="text" default="" filter="raw" label="FLEXI_FIELD_CLOSING_TEXT" description="FLEXI_FIELD_CLOSING_TEXT_DESC" />
+
+			<field name="" type="separator" default="FLEXI_PARAMETERS" icon_class="icon-screen" level="tab_open" box_type="1" />
+
+
+
+			<field name="" type="separator" default="FLEXI_FIELD_VIEWING" level="tabset_close" box_type="1" />
+
+		
+		</fieldset>
+		<fieldset name="group-toolbar-social" hidden="true" icon_class="icon-users" label="FLEXI_SOCIAL" addfieldpath="/administrator/components/com_flexicontent/elements">
+
+			<field name="" type="separator" default="FLEXI_SOCIAL_SUPPORT" description="FLEXI_SOCIAL_SUPPORT_IMG_DESC" level="level1" />
+
+			<field name="" type="separator" default="FLEXI_TEXT" description="" level="level2" />
+
+			<field name="add_og_site_name" type="radio" default="0" label="FLEXI_FIELD_TOOLBAR_SITENAME" description="FLEXI_FIELD_TOOLBAR_SITENAME_DESC" class="btn-group btn-group-yesno">
+				<option value="0">FLEXI_NO</option>
+				<option value="1">FLEXI_FIELD_TOOLBAR_REAL_SITENAME</option>
+				<!--option value="2">Custom Field</option-->
+			</field>
+			<!--field name="og_site_name_fieldid" type="text" default="" label="Custom field id" description="NOTE: usually, this should be a text field" /-->
+
+			<field name="add_og_title" type="radio" default="0" label="FLEXI_TITLE" description="FLEXI_TOOLBAR_ADD_TITLE_DESC" class="btn-group btn-group-yesno">
+				<option value="0">FLEXI_NO</option>
+				<option value="1">FLEXI_TOOLBAR_ITEM_TITLE</option>
+				<!--option value="2">Custom Field</option-->
+			</field>
+			<!--field name="og_title_fieldid" type="text" default="" label="Custom field id" description="NOTE: usually, this should be a text field" /-->
+			<!--field name="og_title_maxlen" type="text" default="100" label="Max length" description="Max length of the text" /-->
+
+			<field name="add_og_descr" type="radio" default="0" label="FLEXI_TOOLBAR_DESCRIPTION" description="FLEXI_TOOLBAR_DESCRIPTION_DESC" class="btn-group btn-group-yesno">
+				<option value="0">FLEXI_NO</option>
+				<option value="1">FLEXI_TOOLBAR_ITEM_DESCRIPTION</option>
+				<!--option value="2">Custom Field</option-->
+			</field>
+			<!--field name="og_descr_fieldid" type="text" default="" label="Custom field id" description="NOTE: usually, this should be a text or textarea field" /-->
+			<!--field name="og_descr_maxlen" type="text" default="300" label="Max length" description="Max length of the text" /-->
+
+			<field name="add_og_type" type="radio" default="article" label="FLEXI_TOOLBAR_CONTENT_TYPE" description="FLEXI_TOOLBAR_CONTENT_TYPE_DESC" class="btn-group btn-group-yesno">
+				<option value="0">FLEXI_NO</option>
+				<option value="article">FLEXI_TOOLBAR_CONTENT_TYPE_ARTICLE</option>
+				<option value="website">FLEXI_TOOLBAR_CONTENT_TYPE_SITE</option>
+				<!--option value="1">Item's type name</option-->
+				<!--option value="2">Custom text Field</option-->
+			</field>
+			<!--field name="og_type_fieldid" type="text" default="" label="Custom field id" description="NOTE: usually, this should be a text field" /-->
+
+			<field name="" type="separator" default="FLEXI_IMAGE" description="" level="level2" />
+
+			<field name="add_og_image" type="multilist" subtype="radio" default="0" label="FLEXI_ADD" toggle_related="1" description="FLEXI_TOOLBAR_CONTENT_IMAGE_DESC" class="btn-group btn-group-yesno">
+				<option value="0" show_list="" hide_list="hiddefield-mode4">FLEXI_NO</option>
+				<option value="1" show_list="hiddefield-mode4" hide_list="">FLEXI_YES</option>
+			</field>
+
+			<field name="og_image_field" type="fcimage" default="" label="FLEXI_TOOLBAR_CONTENT_IMAGE_SOURCE" depend_class="hiddefield-mode4" description="FLEXI_TOOLBAR_CONTENT_IMAGE_SOURCE_DESC" />
+			<field name="og_image_fallback" type="list" default="" label="FLEXI_FIELD_TOOLBAR_FALLBACK_IMG" depend_class="hiddefield-mode4" description="FLEXI_FIELD_TOOLBAR_FALLBACK_IMG_DESC" >
+				<option value="0">FLEXI_FIELD_TOOLBAR_NO_FALLBACK</option>
+				<option value="1">FLEXI_FIELD_TOOLBAR_USE_INTROTEXT_FALLBACK</option>
+				<option value="2">FLEXI_FIELD_TOOLBAR_USE_INTROTEXT_FALLBACK_IGNORE_DEFAULTIMG</option>
+			</field>
+			<field name="og_image_thumbsize" type="radio" default="medium" label="FLEXI_TOOLBAR_CONTENT_IMAGE_THUMB" depend_class="hiddefield-mode4" description="FLEXI_TOOLBAR_CONTENT_IMAGE_THUMB_DESC" class="btn-group btn-group-yesno">
+				<option value="small">FLEXI_FIELD_TOOLBAR_SMALL_THUMB</option>
+				<option value="medium">FLEXI_FIELD_TOOLBAR_MEDIUM_THUMB</option>
+				<option value="large">FLEXI_FIELD_TOOLBAR_LARGE_THUMB</option>
+			</field>
+
+			<!--field name="spacer_size" type="text" default="21" size="4" label="FLEXI_FIELD_TOOLBAR_SPACER" description="FLEXI_FIELD_TOOLBAR_SPACER_DESC" />
+			<field name="module_position" type="text" default="" size="20" label="Position du module" description="Position du module pour le cache avancé (expérimental)" />
+			<field name="required" type="radio" default="0" label="Required" description="Required">
+				<option value="0">FLEXI_NO</option>
+				<option value="1">FLEXI_YES</option>
+			</field-->
+
+		</fieldset>
+
+	</fields>
+	</config>
+
+	<languages>
+		<language tag="en-GB">en-GB.plg_flexicontent_fields_toolbar.ini</language>
+	</languages>
+
+</extension>

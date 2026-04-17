@@ -1,0 +1,525 @@
+/* FLEXIcontent article toolbar default CSS */
+
+
+/* Global colors setting */
+.flexitoolbar,
+.flexitoolbar a,
+.flexitoolbar a:link,
+.flexitoolbar a:visited,
+.flexitoolbar a:hover {
+	color: #777;
+}
+
+.flexitoolbar {
+	/*background-color: #ffffff; background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6));
+	background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#ffffff, endColorstr=#e6e6e6);
+	border-bottom: 1px solid #bbb;
+	border-top: 1px solid #bbb;
+	display: block;
+	background: url(bg.png) 0 0 repeat-x;
+	padding: 0 5px;
+	margin: 8px 0;
+	width: 100%;
+	box-sizing: border-box;*/
+}
+
+.flexi-legend, .flexi-legend a {
+	font-size: 12px;
+	text-decoration: none;
+	outline: none;
+}
+
+.toolbar-element {
+	float: left;
+	line-height: 40px;
+	height: 40px;
+}
+
+.toolbar-spacer {
+	/*background: url(spacer.png) 50% 50% no-repeat;*/
+	display: inline-block;
+	float: left;
+	font-size: 16px;
+	line-height: 40px;
+	height: 40px;
+}
+.toolbar-spacer::after {
+	border-left: 1px solid lightgray;
+	bottom: 0;
+	content: "";
+	left: 50%;
+	position: relative;
+	top: 0;
+	z-index: 1;
+}
+
+/* Comments */
+.comments-bubble {
+	display: block;
+	height: 40px;
+	width: 27px;
+	background: url(bubble.png) 0 12px no-repeat;
+	float: left;
+	text-align: center;
+	color: #fff;
+	font-size: 11px;
+	font-weight: bold;
+}
+.comments-legend {
+	padding-left: 8px;
+}
+
+/* Email */
+.flexi-email {
+	background: url(email.png) 0 12px no-repeat;
+	padding-left: 26px;
+}
+
+/* Print */
+.flexi-print a {
+	/*background: url(print.png) 0 12px no-repeat;
+	padding-left: 26px;*/
+	text-decoration: none;
+}
+
+/* Voice */
+.flexi-voice {
+	background: url(sound.png) 0 12px no-repeat;
+	padding-left: 26px;
+}
+
+/* PDF */
+.flexi-pdf {
+	background: url(pdf.png) 0 12px no-repeat;
+	padding-left: 26px;
+}
+
+/* Text resizer */
+.flexi-resizer a {
+
+}
+.flexi-resizer span {
+	padding-left: 8px;
+}
+.flexi-resizer .sublegend {
+	width: 16px;
+	outline: none;
+	float: left;
+	margin-left: 2px;
+	display: block;
+	height: inherit;
+	text-indent: -10000px;
+}
+
+.flexi-resizer a.increase {
+	/*background: transparent url(resizer_buttons.png) right 50% no-repeat;*/
+}
+.flexi-resizer a.decrease {
+/*	background: transparent url(resizer_buttons.png) left 50% no-repeat;*/
+}
+
+
+/* Social sharing */
+
+/* Outer container of addthis elements */
+.flexi-socials {
+	padding: 0;
+	box-sizing: border-box;
+	float: left;
+	overflow: visible;
+}
+.flexi-socials.fc_size_32 {
+	margin-bottom: -5px;
+}
+
+.flexi-socials.fc-outside {
+	clear: both;
+	box-sizing: border-box;
+	display:block;
+	float:left;
+	margin-left:0;
+	margin-right:0;
+	padding-left:0;
+	padding-right:0;
+}
+
+
+/* Resize FB Like */
+.flexi-socials .addthis_toolbox .addthis_button_facebook_like {
+	display: inline-block;
+	box-sizing: border-box;
+	padding: 0 4px 0 0px;
+}
+.flexi-socials .addthis_toolbox.addthis_default_style  .addthis_button_facebook_like.fc_resize {
+	transform-origin: top left;  -ms-transform-origin: top left;  -webkit-transform-origin: top left;  -moz-transform-origin: top left;  -webkit-transform-origin: top left;
+}
+.flexi-socials .addthis_toolbox.addthis_floating_style .addthis_button_facebook_like.fc_resize {
+	transform-origin: top center;  -ms-transform-origin: top center;  -webkit-transform-origin: top center;  -moz-transform-origin: top center;  -webkit-transform-origin: top center;
+	padding-left: 4px;
+}
+.flexi-socials .addthis_toolbox.addthis_default_style.addthis_16x16_style  .addthis_button_facebook_like.fc_resize {
+	transform: scale(0.9);  -ms-transform: scale(0.9);  -webkit-transform: scale(0.9);  -o-transform: scale(0.9);  -moz-transform: scale(0.9);
+	margin: 0 0 14px 0;
+}
+/*.flexi-socials .addthis_toolbox.addthis_floating_style.addthis_16x16_style .addthis_button_facebook_like.fc_resize {
+	transform: scale(0.9);  -ms-transform: scale(0.9);  -webkit-transform: scale(0.9);  -o-transform: scale(0.9);  -moz-transform: scale(0.9);
+	margin: 0 0px 14px 0;
+}*/
+.flexi-socials .addthis_toolbox.addthis_default_style.addthis_32x32_style  .addthis_button_facebook_like.fc_resize {
+	transform: scale(1.6);  -ms-transform: scale(1.6);  -webkit-transform: scale(1.6);  -o-transform: scale(1.6);  -moz-transform: scale(1.6);
+	margin: 0 0 14px 0;
+}
+/*.flexi-socials .addthis_toolbox.addthis_floating_style.addthis_32x32_style .addthis_button_facebook_like.fc_resize {
+	transform: scale(1.3);  -ms-transform: scale(1.3);  -webkit-transform: scale(1.3);  -o-transform: scale(1.3);  -moz-transform: scale(1.3);
+	margin: 0 0px 14px 0;
+}*/
+
+
+/* Some alignment / placement */
+.flexi-socials:not(.fccleared) .addthis_default_style.addthis_16x16_style {
+	margin: 10px 0 3px;
+}
+.flexi-socials:not(.fccleared) .addthis_default_style.addthis_20x20_style {
+	margin: 10px 0 1px;
+}
+.flexi-socials:not(.fccleared) .addthis_default_style.addthis_32x32_style {
+	margin: 3px 0;
+}
+.flexi-socials .addthis_toolbox .at_PinItButton {
+	display:inline-block;
+}
+
+
+/* Fixed Position of floating buttons */
+.flexi-socials .addthis_toolbox.addthis_floating_style {
+	left:0px;
+	top:100px;
+	background:rgba(255,255,255, 0.6);
+}
+.flexi-socials .addthis_toolbox.addthis_floating_style .addthis_internal_container > a {
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+.flexi-socials .addthis_toolbox.addthis_floating_style,
+.flexi-socials .addthis_toolbox.addthis_floating_style .addthis_internal_container {
+	width: unset;
+	max-width: unset;
+}
+.flexi-socials .addthis_toolbox.addthis_floating_style .fc_addthis_btn_cnt {
+	width:100%;
+	box-sizing: border-box;
+}
+
+
+/* addThis Compact button with counter */
+.flexi-socials .addthis_toolbox .addthis_button_compact {
+	float: none;
+}
+.flexi-socials .addthis_toolbox .fc_addthis_btn_cnt > a {
+	float: none;
+	display: inline-block;
+	margin: 0;
+}
+.flexi-socials .addthis_toolbox.addthis_default_style.addthis_16x16_style .fc_addthis_btn_cnt > a {
+	margin: 2px 0;
+}
+
+/** share button css **/
+.resp-sharing-button__link,
+.resp-sharing-button__icon {
+  display: inline-block
+}
+
+.resp-sharing-button__link {
+  text-decoration: none;
+  color: #fff;
+  margin: 0.5em
+}
+
+.resp-sharing-button {
+  border-radius: 5px;
+  transition: 25ms ease-out;
+  padding: 0.5em 0.75em;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif
+}
+
+.resp-sharing-button__icon svg {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.4em;
+  vertical-align: top
+}
+
+.resp-sharing-button--small svg {
+  margin: 0;
+  vertical-align: middle
+}
+
+/* Non solid icons get a stroke */
+.resp-sharing-button__icon {
+  stroke: #fff;
+  fill: none
+}
+
+/* Solid icons get a fill */
+.resp-sharing-button__icon--solid,
+.resp-sharing-button__icon--solidcircle {
+  fill: #fff;
+  stroke: none
+}
+
+.resp-sharing-button--twitter {
+  background-color: #55acee
+}
+
+.resp-sharing-button--twitter:hover {
+  background-color: #2795e9
+}
+
+.resp-sharing-button--pinterest {
+  background-color: #bd081c
+}
+
+.resp-sharing-button--pinterest:hover {
+  background-color: #8c0615
+}
+
+.resp-sharing-button--facebook {
+  background-color: #3b5998
+}
+
+.resp-sharing-button--facebook:hover {
+  background-color: #2d4373
+}
+
+.resp-sharing-button--tumblr {
+  background-color: #35465C
+}
+
+.resp-sharing-button--tumblr:hover {
+  background-color: #222d3c
+}
+
+.resp-sharing-button--reddit {
+  background-color: #5f99cf
+}
+
+.resp-sharing-button--reddit:hover {
+  background-color: #3a80c1
+}
+
+.resp-sharing-button--google {
+  background-color: #dd4b39
+}
+
+.resp-sharing-button--google:hover {
+  background-color: #c23321
+}
+
+.resp-sharing-button--linkedin {
+  background-color: #0077b5
+}
+
+.resp-sharing-button--linkedin:hover {
+  background-color: #046293
+}
+
+.resp-sharing-button--email {
+  background-color: #777
+}
+
+.resp-sharing-button--email:hover {
+  background-color: #5e5e5e
+}
+
+.resp-sharing-button--xing {
+  background-color: #1a7576
+}
+
+.resp-sharing-button--xing:hover {
+  background-color: #114c4c
+}
+
+.resp-sharing-button--whatsapp {
+  background-color: #25D366
+}
+
+.resp-sharing-button--whatsapp:hover {
+  background-color: #1da851
+}
+
+.resp-sharing-button--hackernews {
+background-color: #FF6600
+}
+.resp-sharing-button--hackernews:hover, .resp-sharing-button--hackernews:focus {   background-color: #FB6200 }
+
+.resp-sharing-button--vk {
+  background-color: #507299
+}
+
+.resp-sharing-button--vk:hover {
+  background-color: #43648c
+}
+
+.resp-sharing-button--facebook {
+  background-color: #3b5998;
+  border-color: #3b5998;
+}
+
+.resp-sharing-button--facebook:hover,
+.resp-sharing-button--facebook:active {
+  background-color: #2d4373;
+  border-color: #2d4373;
+}
+
+.resp-sharing-button--twitter {
+  background-color: #55acee;
+  border-color: #55acee;
+}
+
+.resp-sharing-button--twitter:hover,
+.resp-sharing-button--twitter:active {
+  background-color: #2795e9;
+  border-color: #2795e9;
+}
+
+.resp-sharing-button--tumblr {
+  background-color: #35465C;
+  border-color: #35465C;
+}
+
+.resp-sharing-button--tumblr:hover,
+.resp-sharing-button--tumblr:active {
+  background-color: #222d3c;
+  border-color: #222d3c;
+}
+
+.resp-sharing-button--email {
+  background-color: #777777;
+  border-color: #777777;
+}
+
+.resp-sharing-button--email:hover,
+.resp-sharing-button--email:active {
+  background-color: #5e5e5e;
+  border-color: #5e5e5e;
+}
+
+.resp-sharing-button--pinterest {
+  background-color: #bd081c;
+  border-color: #bd081c;
+}
+
+.resp-sharing-button--pinterest:hover,
+.resp-sharing-button--pinterest:active {
+  background-color: #8c0615;
+  border-color: #8c0615;
+}
+
+.resp-sharing-button--linkedin {
+  background-color: #0077b5;
+  border-color: #0077b5;
+}
+
+.resp-sharing-button--linkedin:hover,
+.resp-sharing-button--linkedin:active {
+  background-color: #046293;
+  border-color: #046293;
+}
+
+.resp-sharing-button--reddit {
+  background-color: #5f99cf;
+  border-color: #5f99cf;
+}
+
+.resp-sharing-button--reddit:hover,
+.resp-sharing-button--reddit:active {
+  background-color: #3a80c1;
+  border-color: #3a80c1;
+}
+
+.resp-sharing-button--xing {
+  background-color: #1a7576;
+  border-color: #1a7576;
+}
+
+.resp-sharing-button--xing:hover
+.resp-sharing-button--xing:active {
+  background-color: #114C4C;
+  border-color: #114C4C;
+}
+
+.resp-sharing-button--whatsapp {
+  background-color: #25D366;
+  border-color: #25D366;
+}
+
+.resp-sharing-button--whatsapp:hover,
+.resp-sharing-button--whatsapp:active {
+  background-color: #1DA851;
+  border-color: #1DA851;
+}
+
+.resp-sharing-button--hackernews {
+  background-color: #FF6600;
+  border-color: #FF6600;
+}
+
+.resp-sharing-button--hackernews:hover
+.resp-sharing-button--hackernews:active {
+  background-color: #FB6200;
+  border-color: #FB6200;
+}
+
+.resp-sharing-button--vk {
+  background-color: #507299;
+  border-color: #507299;
+}
+
+.resp-sharing-button--vk:hover
+.resp-sharing-button--vk:active {
+  background-color: #43648c;
+  border-color: #43648c;
+}
+
+.resp-sharing-button--telegram {
+  background-color: #54A9EB;
+}
+
+.resp-sharing-button--telegram:hover {
+  background-color: #4B97D1;}
+
+.dropdown.flexi-share-dropdown {
+    display: inline-block;
+    padding-left: 10px;
+}
+.flexi-share-dropdown li{
+  display: block;
+}
+.flexi-share-dropdown .dropdown-menu{
+  min-width: 58px;
+    max-width: 58px;
+}
+.flexitoolbar.toolbarfixed {
+    position: fixed;
+    top: 39%;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    background: #e3e3e3;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+    max-width: 76px;
+    z-index: 1000;
+	align-items: center;
+}
+.toolbarfixed .toolbar-spacer {
+    display: none;
+}
+.toolbarfixed .flexi-legend a, .toolbarfixed span.flexi-legend {
+    font-size: 0 !important;
+}

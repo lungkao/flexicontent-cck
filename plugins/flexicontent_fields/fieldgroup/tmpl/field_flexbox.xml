@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<name>Form layout -- Flexbox</name>
+	<author>ggppdk</author>
+	<creationDate>January 2022</creationDate>
+	<copyright>Copyright (C) 2022 ggppdk</copyright>
+	<license>GNU/GPL v2</license>
+	<authorEmail>flexicontentck@gmail.com</authorEmail>
+	<authorUrl>www.flexicontent.org</authorUrl>
+	<version>1.0</version>
+	<description>Flexbox (Horizontal placement with auto-wrap)</description>
+	
+	<fields name="attribs">
+		
+		<fieldset name="layout" addfieldpath="/administrator/components/com_flexicontent/elements">
+
+			<field name="use_flex_grow" type="radio" default="1" label="Auto grow cells" description="Whether to auto grow cells to all available row width (shared propertionally to the cells in current row)" class="btn-group btn-group-yesno">
+				<option value="0">FLEXI_NO</option>
+				<option value="1">FLEXI_YES</option>
+			</field>
+
+		</fieldset>
+
+	</fields>
+	
+</form>

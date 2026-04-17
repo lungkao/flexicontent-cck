@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(node -e \"const fs=require\\('fs'\\);const s=fs.readFileSync\\('site/assets/js/fc-card-anim.min.js','utf8'\\);console.log\\(s.substring\\(0,200\\)\\)\")",
+      "Bash(composer --version)",
+      "Bash(composer install *)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml --display-deprecations)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml -v)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml --log-events-verbose-text /dev/stderr)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml --display-deprecations --display-warnings)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml --no-output)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml --testdox)",
+      "Bash(vendor/bin/phpunit --configuration phpunit.xml --log-junit /tmp/fc_junit.xml)",
+      "Read(//tmp/**)",
+      "Bash(npm install *)",
+      "Bash(npx jest *)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git add *)"
+    ]
+  }
+}

@@ -1,0 +1,1133 @@
+<?php
+/**
+ * @version 1.5 stable $Id: view.html.php 1959 2014-09-18 00:15:15Z ggppdk $
+ * @package Joomla
+ * @subpackage FLEXIcontent
+ * @copyright (C) 2009 Emmanuel Danan - www.vistamedia.fr
+ * @license GNU/GPL v2
+ *
+ * FLEXIcontent is a derivative work of the excellent QuickFAQ component
+ * @copyright (C) 2008 Christoph Lukes
+ * see www.schlu.net for more information
+ *
+ * FLEXIcontent is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+// no direct access
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
+use Joomla\Filesystem\File;
+use Joomla\CMS\Language\Text;
+use Joomla\String\StringHelper;
+use Joomla\CMS\Component\ComponentHelper;
+
+/**
+ * HTML View class for the Category View
+ *
+ * @package Joomla
+ * @subpackage FLEXIcontent
+ * @since 1.0
+ */
+class FlexicontentViewCategory extends \Joomla\CMS\MVC\View\HtmlView
+{
+	/**
+	 * Creates the page's display
+	 *
+	 * @since 1.0
+	 */
+	function display( $tpl = null )
+	{
+		// Get Non-routing Categories, and Category Tree
+		global $globalnoroute, $globalcats;
+		if (!is_array($globalnoroute)) $globalnoroute = array();
+
+		//initialize variables
+		$dispatcher = JEventDispatcher::getInstance();
+		$app      = \Joomla\CMS\Factory::getApplication();
+		$jinput   = \Joomla\CMS\Factory::getApplication()->input;
+		$session  = \Joomla\CMS\Factory::getSession();
+
+		$option   = $jinput->get('option', '', 'cmd');
+		$format   = $jinput->get('format', 'html', 'cmd');
+		$print    = $jinput->get('print', '', 'cmd');
+
+		$document = \Joomla\CMS\Factory::getDocument();
+
+		// Check for Joomla issue with system plugins creating \Joomla\CMS\Document\Document in early events forcing it to be wrong type, when format as url suffix is enabled
+		if ($format && $document->getType() != strtolower($format))
+		{
+			echo '<div class="alert">WARNING: &nbsp; Document format should be: <b>'.$format.'</b> but current document is: <b>'. $document->getType().'</b> <br/>Some system plugin may have forced current document type</div>';
+		}
+
+		$menus    = $app->getMenu();
+		$menu     = $menus->getActive();
+		$uri      = \Joomla\CMS\Uri\Uri::getInstance();
+		$user     = \Joomla\CMS\Factory::getUser();
+		$aid      = \Joomla\CMS\Access\Access::getAuthorisedViewLevels($user->id);
+
+		// Get view's Model
+		$model  = $this->getModel();
+
+		// Allow clayout from HTTP request, this will be checked during loading category parameters
+		$model->setCatLayout('__request__');
+		// Indicate to model to merge menu parameters if menu matches
+		$model->mergeMenuParams = true;
+
+		// Get the category, loading category data and doing parameters merging
+		$category = $model->getCategory();
+
+		// Get Tag data if current layout is 'tags'
+		$tag = $model->getTag();
+
+		/**
+		 * Get category parameters as VIEW's parameters
+		 * Category parameters are merged parameters in order: layout(template-manager)/component/ancestors-cats/category/author/menu
+		 */
+
+		// View's parameters (OVERRIDE)
+		$params = $category->parameters;
+
+		// View's metadata parameters (clone category meta parameters)
+		$meta_params = $category->metadata ? clone($category->metadata) : null;
+
+		// Category's meta description and keywords
+		$metadesc = $category->id && $category->metadesc
+			? $category->metadesc
+			: '';
+		$metakey = $category->id && $category->metakey
+			? $category->metakey
+			: '';
+
+		/**
+		 * Override with tag's metadata and prepend with tag's metadesc, metakey
+		 * Also use tag title of Joomla tag (it may have been translated via falang)
+		 */
+		if ($tag && $tag->jtag)
+		{
+			$meta_params_tags = $tag->jtag->metadata;
+
+			// Override category's metadata with tag's metadata
+			$meta_params
+				? $meta_params->merge($tag->jtag->metadata)
+				: $meta_params = $tag->jtag->metadata;
+
+			// Prepend tag metadata to view's meta description and keywords
+			$metadesc = $tag->jtag->metadesc . ($metadesc ? "\n" . $metadesc : '');
+			$metakey = $tag->jtag->metakey . ($metakey ? "\n" . $metakey : '');
+
+			// Use Joomla tag as it may have been translated
+			$tag->name = $tag->jtag->title !== $tag->name ? $tag->jtag->title : $tag->name;
+		}
+
+		// ***
+		// *** Get data from the model
+		// ***
+
+		$categories = $this->get('Childs'); // this will also count sub-category items is if  'show_itemcount'  is enabled
+		$peercats   = $this->get('Peers');  // this will also count sub-category items is if  'show_subcatcount_peercat'  is enabled
+		$items   = $this->get('Data');
+		$total   = $this->get('Total');
+		$filters = !$print ? $this->get('Filters') : array();
+		$comments= !$print && $params->get('show_comments_count', 0)  ?  $this->get('CommentsInfo')  :  null;
+		$alpha   = !$print && $params->get('show_alpha', 1)  ?  $this->get('Alphaindex')  :  array();  // This is somewhat expensive so calculate it only if required
+
+		// Request variables, WARNING, must be loaded after retrieving items, because limitstart may have been modified
+		$limitstart = $jinput->get('limitstart', 0, 'int');
+
+		// ***
+		// *** CATEGORY LAYOUT handling
+		// ***
+
+		// Get category 's layout as this may have been altered by model's decideLayout()
+		$clayout = $params->get('clayout');
+
+		// Get cached template data, re-parsing XML/LESS files, also loading any template language files of a specific template
+		$themes = flexicontent_tmpl::getTemplates(  array($clayout) );
+
+		/**
+		 * Get URL variables
+		 */
+
+		// Return slug for authorid, tagid variables
+		$layout_vars = flexicontent_html::getCatViewLayoutVars($model, $use_slug = true);
+
+		$layout   = $layout_vars['layout'];
+		$authorid = $layout_vars['authorid'];  // SLUG
+		$tagid    = $layout_vars['tagid'];     // SLUG
+		$cids = $layout_vars['cids'];
+		$cid  = $layout_vars['cid'];   // SLUG
+
+		$authordescr_item = false;
+		if ((int) $authorid && $params->get('authordescr_itemid') && $format != 'feed')
+		{
+			$authordescr_itemid = $params->get('authordescr_itemid');
+		}
+
+		// ***
+		// *** Load needed JS libs & CSS styles
+		// ***
+
+		flexicontent_html::loadFramework('jQuery');
+		flexicontent_html::loadFramework('flexi_tmpl_common');
+
+		// Add css files to the document <head> section (also load CSS joomla template override)
+		if (!$params->get('disablecss', ''))
+		{
+			if (strpos((string)$clayout, 'yootheme_grid') === false) {
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-frontend-modern', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/'.(JDEBUG ? 'flexi_frontend_modern.css' : 'flexi_frontend_modern.min.css'), array('version' => FLEXI_VHASH));
+			}
+			/* YOOtheme Grid template CSS */
+			if (strpos((string)$clayout, 'yootheme_grid') !== false) {
+				/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-yootheme-grid', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/templates/yootheme_grid/css/category.css', array('version' => FLEXI_VHASH));
+			}
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-card-anim', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/js/'.(JDEBUG ? 'fc-card-anim.js' : 'fc-card-anim.min.js'), array('version' => FLEXI_VHASH));
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-main-css', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/flexicontent.css' : 'components/com_flexicontent/assets/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
+			!\Joomla\CMS\Factory::getLanguage()->isRtl()
+				? /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x.css' : (JDEBUG ? 'j3x.css' : 'j3x.min.css')), array('version' => FLEXI_VHASH))
+				: /* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', \Joomla\CMS\Uri\Uri::root().'components/com_flexicontent/assets/css/' . (FLEXI_J40GE ? 'j4x_rtl.css' : (JDEBUG ? 'j3x_rtl.css' : 'j3x_rtl.min.css')), array('version' => FLEXI_VHASH));
+		}
+
+		if (FLEXI_J40GE && file_exists(JPATH_SITE.DS.'media/templates/site'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
+		{
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-tpl-override-css', \Joomla\CMS\Uri\Uri::root().'media/templates/site/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
+		}
+		elseif (file_exists(JPATH_SITE.DS.'templates'.DS.$app->getTemplate().DS.'css'.DS.'flexicontent.css'))
+		{
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-tpl-override-css', \Joomla\CMS\Uri\Uri::root().'templates/'.$app->getTemplate().(JDEBUG ? '/css/flexicontent.css' : '/css/flexicontent.min.css'), array('version' => FLEXI_VHASH));
+		}
+
+		// ********************************************************************************************
+		// Create pathway, if automatic pathways is enabled, then path will be cleared before populated
+		// ********************************************************************************************
+
+		// Get category titles needed by pathway, this will allow Falang to translate them
+		$catshelper = new flexicontent_cats($category->id);
+		$parents    = $catshelper->getParentlist($all_cols=false);
+		$rootcat = (int) $params->get('rootcat');
+		if ($rootcat) $root_parents = $globalcats[$rootcat]->ancestorsarray;
+
+		// Get current pathway
+		$pathway = $app->getPathWay();
+
+		// Clear pathway, if automatic pathways are enabled
+		if ( $params->get('automatic_pathways', 0) )
+		{
+			$pathway_arr = $pathway->getPathway();
+			$pathway->setPathway( array() );
+			$item_depth = 0;  // menu item depth is now irrelevant ???, ignore it
+		}
+		else
+		{
+			$item_depth = $params->get('item_depth', 0);
+		}
+
+		// Respect menu item depth, defined in menu item
+		$p = $item_depth;
+		while ( $p < count($parents) )
+		{
+			// Do not add the directory root category or its parents (this when coming from a directory view)
+			if ( !empty($root_parents) && in_array($parents[$p]->id, $root_parents) )  { $p++; continue; }
+
+			// Do not add to pathway unroutable categories
+			if ( in_array($parents[$p]->id, $globalnoroute) )  { $p++; continue; }
+
+			// Add current parent category
+			$pathway->addItem(Text::_($parents[$p]->title), \Joomla\CMS\Router\Route::_(FlexicontentHelperRoute::getCategoryRoute($parents[$p]->slug)) );
+			$p++;
+		}
+		//echo "<pre>"; print_r($pathway); echo "</pre>";
+
+		// *******************************************************************************************************************
+		// Bind Fields to items and RENDER their display HTML, but check for document type, due to Joomla issue with system
+		// plugins creating \Joomla\CMS\Document\Document in early events forcing it to be wrong type, when format as url suffix is enabled
+		// *******************************************************************************************************************
+
+		foreach($items as $item)
+		{
+			$item->force_full = (int) $params->get('force_full', 0);
+		}
+
+		if ($format != 'feed')
+		{
+			$items 	= FlexicontentFields::getFields($items, 'category', $params, $aid);
+		}
+
+		// ************************************************************************
+		// Calculate CSS classes needed to add special styling markups to the items
+		// ************************************************************************
+
+		flexicontent_html::calculateItemMarkups($items, $params);
+
+		// **********************************************************
+		// Calculate a (browser window) page title and a page heading
+		// **********************************************************
+
+		// Verify menu item points to correct view, and any others (significant) URL variables must match or be empty
+		$menu_matches = $model->menuMatches($menu);
+
+		/**
+		 * For "Authored" and "Tagged" items view do not use Menu item headings,
+		 * if not a author id or tag id do not match the menu item !
+		 */
+		$menu_is_specific = $menu_matches && (
+				($layout !== 'author' && $layout !== 'tags') ||
+				($layout === 'author' && $authorid == @$menu->query['authorid']) ||
+				($layout === 'tags' && $tagid == @$menu->query['tagid'])
+			);
+
+		// MENU ITEM matched, use its page heading (but use menu title if the former is not set)
+		if ( $menu_is_specific )
+		{
+			$default_heading = $menu->title;
+
+			// Cross set (show_) page_heading / page_title for compatibility of J2.5+ with J1.5 template (and for J1.5 with J2.5 template)
+			$params->def('page_heading', $params->get('page_title',   $default_heading));
+			$params->def('page_title',   $params->get('page_heading', $default_heading));
+			$params->def('show_page_heading', $params->get('show_page_title',   0));
+			$params->def('show_page_title',   $params->get('show_page_heading', 0));
+		}
+
+		// MENU ITEM did not match, clear page title (=browser window title) and page heading so that they are calculated below
+		else
+		{
+			// Calculate default page heading (=called page title in J1.5), which in turn will be document title below !! ...
+			switch($layout)
+			{
+				case ''        :  $default_heading = $category->title;  break;
+				case 'myitems' :  $default_heading =Text::_('FLEXI_MY_CONTENT');  break;
+				case 'author'  :  $default_heading =Text::sprintf('FLEXI_ITEMS_OF_USER', \Joomla\CMS\Factory::getUser((int) $authorid)->get('name'));  break;
+				case 'tags'    :  $default_heading =Text::_('FLEXI_TAG') .': '. $tag->name;  break;
+				case 'favs'    :  $default_heading =Text::_('FLEXI_MY_FAVOURITES');  break;
+				default        :  $default_heading =Text::_('FLEXI_CONTENT_IN_CATEGORY');
+			}
+
+			// Category-based view that is limited to a specific category
+			if ($layout && $category->id)
+			{
+				$default_heading .= ', '.Text::_('FLEXI_IN_CATEGORY').': '.$category->title;
+			}
+
+			// Decide to show page heading (=J1.5 page title) only if a custom layout is used (=not a single category layout)
+			$show_default_heading = $layout ? 1 : 0;
+
+			// Set both (show_) page_heading / page_title for compatibility of J2.5+ with J1.5 template (and for J1.5 with J2.5 template)
+			$params->set('page_title',   $default_heading);
+			$params->set('page_heading', $default_heading);
+			$params->set('show_page_heading', $show_default_heading);
+			$params->set('show_page_title',   $show_default_heading);
+		}
+
+		// Prevent showing the page heading if (a) IT IS same as category title and (b) category title is already configured to be shown
+		if ( $params->get('show_cat_title', 1) )
+		{
+			if ($params->get('page_heading') == $category->title) $params->set('show_page_heading', 0);
+			if ($params->get('page_title')   == $category->title) $params->set('show_page_title',   0);
+		}
+
+		switch($layout)
+		{
+			case ''        : break;
+			case 'myitems' : break;
+			case 'author'  : break;
+			case 'tags'    :
+				$pathway->addItem(Text::_('FLEXI_TAG') . ' : ' . $this->escape($tag->name), '' );
+				break;
+			case 'favs'    :
+				$pathway->addItem(Text::_('FLEXI_MY_FAVOURITES'), '' );
+				break;
+			default        : ;
+		}
+
+		/**
+		 * Render a basic display for filter value data
+		 */
+		FlexicontentFields::getBasicFilterData($category, $filters);
+
+		/**
+		 * Create the document title, by from page title and other data
+		 */
+		if (file_exists(JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'templates'.DS.$clayout.DS.'seo'.DS.'category'.DS.'layouts'.DS.'title.php'))
+		{
+			include(JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'templates'.DS.$clayout.DS.'seo'.DS.'category'.DS.'layouts'.DS.'title.php');
+		}
+		else
+		{
+			include(JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'tmpl_common'.DS.'seo'.DS.'category'.DS.'layouts'.DS.'title.php');
+		}
+
+		/**
+		 * Set document's META tags
+		 */
+		if (file_exists(JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'templates'.DS.$clayout.DS.'seo'.DS.'category'.DS.'layouts'.DS.'meta.php'))
+		{
+			include(JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'templates'.DS.$clayout.DS.'seo'.DS.'category'.DS.'layouts'.DS.'meta.php');
+		}
+		else
+		{
+			include(JPATH_SITE.DS.'components'.DS.'com_flexicontent'.DS.'tmpl_common'.DS.'seo'.DS.'category'.DS.'layouts'.DS.'meta.php');
+		}
+
+		/**
+		 * Create category link, but also consider current 'layout', and use the
+		 * layout specific variables so that filtering form will work properly
+		 */
+
+		$non_sef_link = null;
+		$category_link = flexicontent_html::createCatLink($category->slug, $non_sef_link, $model);
+
+		// ***
+		// *** Add canonical link (if needed and different than current URL), also preventing Joomla default (SEF plugin)
+		// ***
+
+		$add_canonical = (int) $params->get('add_canonical', 0);
+		if ($add_canonical)
+		{
+			$max_filt_in_canonical = (int) $params->get('max_filt_in_canonical', 1);
+			$max_filt_to_index = (int) $params->get('max_filt_to_index', 4);
+
+			// Create desired REL canonical URL
+			$start = $jinput->get('start', '', 'int');
+
+			$filters_count = 0;
+			$canonical_filters = '';
+
+			foreach($jinput->get->get->getArray() as $i => $v)
+			{
+				if (substr($i, 0, 6) !== "filter")
+				{
+					continue;
+				}
+
+				if (is_array($v))
+				{
+					foreach($v as $ii => &$vv)
+					{
+						if (is_array($vv))
+						{
+							foreach($vv as $iii => &$vvv)
+							{
+								$canonical_filters .= '&' . $i . '[' . $ii . '][' . $iii . ']=' . $vvv;
+							}
+						}
+						else
+						{
+							$canonical_filters .= '&' . $i . '[' . $ii . ']=' . $vv;
+						}
+					}
+				}
+				else
+				{
+					$canonical_filters .= '&' . $i . '=' . $v;
+				}
+
+				$filters_count++;
+			}
+
+			// Check if max number of filters limit for search-engine indexing has been reached
+			if ($filters_count > $max_filt_in_canonical)
+			{
+				$document->setMetadata('robots', 'noindex, follow');
+			}
+
+			// After filtering form submit may have different display
+			$listall = $jinput->get('listall', null, 'INT');
+			$canonical_filters .= !empty($listall) ? '&listall=1' : '';
+
+			// Add word-combination variable (submit only if not having the default value)
+			$word_combination = $jinput->get('p', null, 'CMD');
+			$canonical_filters .= !empty($word_combination) ? '&p=' . $word_combination : '';
+
+			$ucanonical = \Joomla\CMS\Router\Route::_(
+				FlexicontentHelperRoute::getCategoryRoute($category->slug, 0, $layout_vars)
+				. $canonical_filters . ($start ? "&start=".$start : '')
+			);
+
+			flexicontent_html::setRelCanonical($ucanonical);
+		}
+
+		// ***
+		// *** Add feed link
+		// ***
+
+		if ($params->get('show_feed_link', 1) == 1)
+		{
+			$link	= $non_sef_link . '&format=feed';
+			$attribs = array('type' => 'application/rss+xml', 'title' => 'RSS 2.0');
+			$document->addHeadLink(\Joomla\CMS\Router\Route::_($link.'&type=rss'), 'alternate', 'rel', $attribs);
+			$attribs = array('type' => 'application/atom+xml', 'title' => 'Atom 1.0');
+			$document->addHeadLink(\Joomla\CMS\Router\Route::_($link.'&type=atom'), 'alternate', 'rel', $attribs);
+		}
+
+		// ***
+		// *** Author "profile" item
+		// ***
+
+		$authordescr_item_html = false;
+		if ($authordescr_item)
+		{
+			$flexi_html_helper = new flexicontent_html();
+			$authordescr_item_html = $flexi_html_helper->renderItem($authordescr_itemid);
+		}
+		//echo $authordescr_item_html; exit();
+
+		// ***
+		// *** Load template css/js and set template data variable
+		// ***
+
+		if ($clayout)
+		{
+			// Add the templates css files if availables
+			if (isset($themes->category->{$clayout}->css)) {
+				foreach ($themes->category->{$clayout}->css as $css) {
+					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-tpl-css-'.preg_replace('/[^a-z0-9]/i','-',basename($css,'.css')), \Joomla\CMS\Uri\Uri::root().$css);
+				}
+			}
+			// Add the templates js files if availables
+			if (isset($themes->category->{$clayout}->js)) {
+				foreach ($themes->category->{$clayout}->js as $js) {
+					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-tpl-js-'.preg_replace('/[^a-z0-9]/i','-',basename($js,'.js')), \Joomla\CMS\Uri\Uri::root().$js);
+				}
+			}
+			// Set the template var
+			$tmpl = $themes->category->{$clayout}->tmplvar;
+		}
+		else
+		{
+			$tmpl = '.category.grid';
+		}
+
+		// @TODO (possible improvement) trigger the plugin selectively, and delete the plugins tags if not active
+		if ($category->id && $params->get('trigger_onprepare_content_cat')) // just check if the parameter is active
+		{
+			\Joomla\CMS\Plugin\PluginHelper::importPlugin('content');
+
+			// Allow to trigger content plugins on category description
+			$category->text = $category->description;
+
+			$_id = $jinput->get('id');
+			$jinput->set('id', $category->id);   // compatibility for plugin that will try to use this variable
+
+			$results = FLEXI_J40GE
+				? $app->triggerEvent('onContentPrepare', array ('com_content.category', &$category, &$params, 0))
+				: $dispatcher->trigger('onContentPrepare', array ('com_content.category', &$category, &$params, 0));
+
+			$jinput->set('layout', $layout);  // Restore LAYOUT variable should some plugin have modified it
+			$jinput->set('id', $_id);   // Restore previous value of this variable
+
+			$category->description 	= $category->text;
+		}
+
+		// Maybe here not to import all plugins but just those for description field or add a parameter for this
+		// Anyway these events are usually not very time consuming as is the the event onPrepareContent(J1.5)/onContentPrepare(J1.6+)
+		\Joomla\CMS\Plugin\PluginHelper::importPlugin('content');
+
+		$noroute_cats = array_flip($globalnoroute);
+
+		$type_attribs = flexicontent_db::getTypeAttribs($force=true, $typeid=0);
+		$type_params = array();
+		foreach ($items as $item)
+		{
+			$item->event 	= new stdClass();
+
+			if ( !isset($type_params[$item->type_id]) )
+			{
+				$type_params[$item->type_id] = new \Joomla\Registry\Registry($type_attribs[$item->type_id]);
+			}
+			$item->params = clone($type_params[$item->type_id]);
+			$item->params->merge( new \Joomla\Registry\Registry($item->attribs) );
+
+			// We must check if the current category is in the categories of the item ..
+			$item_in_category=false;
+			if ($item->catid == $category->id)
+			{
+				$item_in_category=true;
+			}
+			else
+			{
+				foreach ($item->cats as $cat)
+				{
+					if ($cat->id == $category->id)
+					{
+						$item_in_category = true;
+						break;
+					}
+				}
+			}
+
+			// ADVANCED CATEGORY ROUTING (=set the most appropriate category for the item ...)
+			// CHOOSE APPROPRIATE category-slug FOR THE ITEM !!! ( )
+
+			// 1. CATEGORY SLUG: CURRENT category
+			// -- Current category IS a category of the item and ALSO routing (creating links) to this category is allowed
+			if ( $item_in_category && !isset($noroute_cats[$category->id]) )
+			{
+				$item->categoryslug = $category->slug;
+			}
+
+			// 2. CATEGORY SLUG: ITEM's MAIN category   (already SET, ... no assignment needed)
+			// -- Since we cannot use current category (above), we will use item's MAIN category
+			// -- ALSO routing (creating links) to this category is allowed
+			elseif ( !isset($noroute_cats[$item->catid]) )
+			{
+			}
+
+			// 3. CATEGORY SLUG: ANY ITEM's category
+			// -- We will use the first for which routing (creating links) to the category is allowed
+			else
+			{
+				$allcats = array();
+				foreach ($item->cats as $cat)
+				{
+					if ( !isset($noroute_cats[$cat->id]) )
+					{
+						$item->categoryslug = $globalcats[$cat->id]->slug;
+						break;
+					}
+				}
+			}
+
+			// Just put item's text (description field) inside property 'text' in case the events modify the given text,
+			$item->text = isset($item->fields['text']->display) ? $item->fields['text']->display : '';
+
+			// Do some compatibility steps, Set option to 'com_content' (view is already called 'category')
+			// but set a flag 'isflexicontent' to indicate triggering from inside FLEXIcontent ... code
+			$jinput->set('option', 'com_content');
+			$jinput->set('isflexicontent', 'yes');
+
+			// These events return text that could be displayed at appropriate positions by our templates
+			$item->event = new stdClass();
+
+			$results = FLEXI_J40GE
+				? $app->triggerEvent('onContentAfterTitle', array('com_content.category', &$item, &$params, 0))
+				: $dispatcher->trigger('onContentAfterTitle', array('com_content.category', &$item, &$params, 0));
+			$item->event->afterDisplayTitle = trim(implode("\n", $results));
+
+			$results = FLEXI_J40GE
+				? $app->triggerEvent('onContentBeforeDisplay', array('com_content.category', &$item, &$params, 0))
+				: $dispatcher->trigger('onContentBeforeDisplay', array('com_content.category', &$item, &$params, 0));
+			$item->event->beforeDisplayContent = trim(implode("\n", $results));
+
+			$results = FLEXI_J40GE
+				? $app->triggerEvent('onContentAfterDisplay', array('com_content.category', &$item, &$params, 0))
+				: $dispatcher->trigger('onContentAfterDisplay', array('com_content.category', &$item, &$params, 0));
+			$item->event->afterDisplayContent = trim(implode("\n", $results));
+
+			// Set the option back to 'com_flexicontent'
+			$jinput->set('option', 'com_flexicontent');
+
+			// Put text back into the description field, THESE events SHOULD NOT modify the item text, but some plugins may do it anyway... , so we assign text back for compatibility
+			$item->fields['text']->display = & $item->text;
+
+		}
+
+		// ***
+		// *** Remove unroutable categories from sub/peer categories
+		// ***
+
+		// sub-cats
+		$_categories = array();
+		foreach ($categories as $i => $cat)
+		{
+			if (in_array($cat->id, $globalnoroute)) continue;
+			$_categories[] = $categories[$i];
+		}
+		$categories = $_categories;
+
+		// peer-cats
+		$_categories = array();
+		foreach ($peercats as $i => $cat)
+		{
+			if (in_array($cat->id, $globalnoroute)) continue;
+			$_categories[] = $peercats[$i];
+		}
+		$peercats = $_categories;
+
+		// ***
+		// *** Get some variables needed for images
+		// ***
+
+		$joomla_image_path = FLEXI_J40GE
+			?	ComponentHelper::getParams('com_media')->get('image_path', 'images')
+			: $app->getCfg('image_path', '');
+		$joomla_image_path = $joomla_image_path ? $joomla_image_path.DS : '';
+		$joomla_image_url  = '';//$joomla_image_url  ? $joomla_image_url.'/' : ''; // NEED REVIEW
+		$phpThumbURL = $this->baseurl.'/components/com_flexicontent/librairies/phpthumb/phpThumb.php?src=';
+
+		// ***
+		// *** CATEGORY IMAGE
+		// ***
+
+		// category image params
+		$show_cat_image = $params->get('show_description_image', 0);  // we use different name for variable
+		$cat_image_source = $params->get('cat_image_source', 2); // 0: extract, 1: use param, 2: use both
+		$cat_link_image = $params->get('cat_link_image', 1);
+		$cat_image_method = $params->get('cat_image_method', 1);
+		$cat_image_width = $params->get('cat_image_width', 80);
+		$cat_image_height = $params->get('cat_image_height', 80);
+		$cat_default_image = $params->get('cat_default_image', '');
+
+		if ($show_cat_image)
+		{
+			$h		= '&amp;h=' . $cat_image_height;
+			$w		= '&amp;w=' . $cat_image_width;
+			$aoe	= '&amp;aoe=1';
+			$q		= '&amp;q=95';
+			$ar 	= '&amp;ar=x';
+			$zc		= $cat_image_method ? '&amp;zc=' . $cat_image_method : '';
+		}
+
+		if ($cat_default_image)
+		{
+			$src = $this->baseurl ."/". $joomla_image_url . $cat_default_image;
+
+			$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+			$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+			$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+			$default_image = $phpThumbURL.$src.$conf;
+			$default_image = '<img class="fccat_image" src="'.$default_image.'" alt="%s" title="%s"/>';
+		}
+		else
+		{
+			$default_image = '';
+		}
+
+		// Create category image/description/etc data
+		$cat = $category;
+		$image = '';
+
+		if ($cat)
+		{
+			if ($cat->id && $show_cat_image)
+			{
+				$cat->introtext = & $cat->description;
+				$cat->fulltext = "";
+
+				$_parts             = explode('#', $params->get('image') ?? '');
+				$cat->image         = $_parts[0];
+				$cat->image_abspath = JPATH_SITE .DS . $cat->image;
+
+				if ( $cat_image_source && $cat->image && file_exists($cat->image_abspath) )
+				{
+					$src = $this->baseurl ."/". $joomla_image_url . $cat->image;
+
+					$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+					$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+					$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+					$image = $phpThumbURL.$src.$conf;
+				}
+
+				elseif ( $cat_image_source !=1 && $src = flexicontent_html::extractimagesrc($cat) )
+				{
+					$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+					$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+					$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+					$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  $this->baseurl.'/' : '';
+					$src = $base_url.$src;
+
+					$image = $phpThumbURL.$src.$conf;
+				}
+
+				$cat->image_src = @$src;  // Also add image category URL for developers
+
+				if ($image)
+				{
+					$image = '<img class="fccat_image" src="'.$image.'" alt="'.$this->escape($cat->title).'" title="'.$this->escape($cat->title).'"/>';
+				}
+				elseif ($default_image)
+				{
+					$image = sprintf($default_image, $cat->title, $cat->title);
+				}
+
+				if ($cat_link_image && $image)
+				{
+					$image = '<a href="'.\Joomla\CMS\Router\Route::_( FlexicontentHelperRoute::getCategoryRoute($cat->slug) ).'">'.$image.'</a>';
+				}
+			}
+			$cat->image = $image;
+		}
+
+		// ***
+		// *** SUBCATEGORIES (some templates)
+		// ***
+
+		// sub-category image params
+		$show_cat_image = $params->get('show_description_image_subcat', 1);  // we use different name for variable
+		$cat_image_source = $params->get('subcat_image_source', 2); // 0: extract, 1: use param, 2: use both
+		$cat_link_image = $params->get('subcat_link_image', 1);
+		$cat_image_method = $params->get('subcat_image_method', 1);
+		$cat_image_width = $params->get('subcat_image_width', 24);
+		$cat_image_height = $params->get('subcat_image_height', 24);
+		$cat_default_image = $params->get('subcat_default_image', '');
+
+		if ($show_cat_image)
+		{
+			$h		= '&amp;h=' . $cat_image_height;
+			$w		= '&amp;w=' . $cat_image_width;
+			$aoe	= '&amp;aoe=1';
+			$q		= '&amp;q=95';
+			$ar 	= '&amp;ar=x';
+			$zc		= $cat_image_method ? '&amp;zc=' . $cat_image_method : '';
+		}
+
+		if ($cat_default_image)
+		{
+			$src = $this->baseurl ."/". $joomla_image_url . $cat_default_image;
+
+			$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+			$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+			$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+			$default_image = $phpThumbURL.$src.$conf;
+			$default_image = '<img class="fccat_image" src="'.$default_image.'" alt="%s" title="%s"/>';
+		}
+		else
+		{
+			$default_image = '';
+		}
+
+		// Create sub-category image/description/etc data
+		foreach ($categories as $cat)
+		{
+			$image = '';
+			if ($show_cat_image)
+			{
+				if (!is_object($cat->params))
+				{
+					$cat->params = new \Joomla\Registry\Registry($cat->params);
+				}
+
+				$cat->introtext = & $cat->description;
+				$cat->fulltext = "";
+
+				$_parts             = explode('#', $cat->params->get('image') ?? '');
+				$cat->image         = $_parts[0];
+				$cat->image_abspath = JPATH_SITE .DS . $cat->image;
+
+				if ( $cat_image_source && $cat->image && file_exists($cat->image_abspath) )
+				{
+					$src = $this->baseurl ."/". $joomla_image_url . $cat->image;
+
+					$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+					$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+					$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+					$image = $phpThumbURL.$src.$conf;
+				}
+
+				elseif ( $cat_image_source!=1 && $src = flexicontent_html::extractimagesrc($cat) )
+				{
+					$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+					$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+					$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+					$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  $this->baseurl.'/' : '';
+					$src = $base_url.$src;
+
+					$image = $phpThumbURL.$src.$conf;
+				}
+
+				$cat->image_src = @$src;  // Also add image category URL for developers
+
+				if ($image)
+				{
+					$image = '<img class="fccat_image" src="'.$image.'" alt="'.$this->escape($cat->title).'" title="'.$this->escape($cat->title).'"/>';
+				}
+				elseif ($default_image)
+				{
+					$image = sprintf($default_image, $cat->title, $cat->title);
+				}
+
+				if ($cat_link_image && $image)
+				{
+					$image = '<a href="'.\Joomla\CMS\Router\Route::_( FlexicontentHelperRoute::getCategoryRoute($cat->slug) ).'">'.$image.'</a>';
+				}
+			}
+			$cat->image = $image;
+		}
+
+		// ***
+		// *** PEERCATEGORIES (some templates)
+		// ***
+
+		// peer-category image params
+		$show_cat_image = $params->get('show_description_image_peercat', 1);  // we use different name for variable
+		$cat_image_source = $params->get('peercat_image_source', 2); // 0: extract, 1: use param, 2: use both
+		$cat_link_image = $params->get('peercat_link_image', 1);
+		$cat_image_method = $params->get('peercat_image_method', 1);
+		$cat_image_width = $params->get('peercat_image_width', 24);
+		$cat_image_height = $params->get('peercat_image_height', 24);
+		$cat_default_image = $params->get('peercat_default_image', '');
+
+		if ($show_cat_image)
+		{
+			$h		= '&amp;h=' . $cat_image_height;
+			$w		= '&amp;w=' . $cat_image_width;
+			$aoe	= '&amp;aoe=1';
+			$q		= '&amp;q=95';
+			$ar 	= '&amp;ar=x';
+			$zc		= $cat_image_method ? '&amp;zc=' . $cat_image_method : '';
+		}
+
+		if ($cat_default_image)
+		{
+			$src = $this->baseurl ."/". $joomla_image_url . $cat_default_image;
+
+			$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+			$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+			$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+			$default_image = $phpThumbURL.$src.$conf;
+			$default_image = '<img class="fccat_image"  src="'.$default_image.'" alt="%s" title="%s"/>';
+		}
+		else
+		{
+			$default_image = '';
+		}
+
+		// Create peer-category image/description/etc data
+		foreach ($peercats as $cat)
+		{
+			$image = '';
+			if ($show_cat_image)
+			{
+				if (!is_object($cat->params))
+				{
+					$cat->params = new \Joomla\Registry\Registry($cat->params);
+				}
+
+				$cat->introtext = & $cat->description;
+				$cat->fulltext = "";
+
+				$_parts             = explode('#', $cat->params->get('image') ?? '');
+				$cat->image         = $_parts[0];
+				$cat->image_abspath = JPATH_SITE .DS . $cat->image;
+
+				if ( $cat_image_source && $cat->image && file($cat->image_abspath) )
+				{
+					$src = $this->baseurl ."/". $joomla_image_url . $cat->image;
+
+					$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+					$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+					$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+					$image = $phpThumbURL.$src.$conf;
+				}
+
+				elseif ( $cat_image_source!=1 && $src = flexicontent_html::extractimagesrc($cat) )
+				{
+					$ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+					$f = in_array( $ext, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'wbmp', 'bmp', 'ico') ) ? '&amp;f='.$ext : '';
+					$conf	= $w . $h . $aoe . $q . $ar . $zc . $f;
+
+					$base_url = (!preg_match("#^http|^https|^ftp|^/#i", $src)) ?  $this->baseurl.'/' : '';
+					$src = $base_url.$src;
+
+					$image = $phpThumbURL.$src.$conf;
+				}
+
+				$cat->image_src = @$src;  // Also add image category URL for developers
+
+				if ($image)
+				{
+					$image = '<img class="fccat_image" src="'.$image.'" alt="'.$this->escape($cat->title).'" title="'.$this->escape($cat->title).'"/>';
+				}
+				elseif ($default_image)
+				{
+					$image = sprintf($default_image, $cat->title, $cat->title);
+				}
+
+				if ($cat_link_image && $image)
+				{
+					$image = '<a href="'.\Joomla\CMS\Router\Route::_( FlexicontentHelperRoute::getCategoryRoute($cat->slug) ).'">'.$image.'</a>';
+				}
+			}
+
+			$cat->image = $image;
+		}
+
+		// remove previous alpha index filter
+		//$uri->delVar('letter');
+
+		// remove filter variables (includes search box and sort order)
+		preg_match_all('/filter[^=]*/', $uri->toString(), $matches);
+		foreach($matches[0] as $match)
+		{
+			//$uri->delVar($match);
+		}
+
+		// Build Lists
+		$lists = array();
+
+		//ordering
+		$lists['filter_order']     = $jinput->get('filter_order', 'i.title', 'cmd');
+		$lists['filter_order_Dir'] = $jinput->get('filter_order_Dir', 'ASC', 'cmd');
+		$lists['filter']           = $jinput->get('filter', '', 'string');
+
+		// Add html to filter objects
+		$form_name = 'adminForm';
+		if ($filters)
+		{
+			FlexicontentFields::renderFilters( $params, $filters, $form_name );
+		}
+
+		// Log the word the searched word
+		if (trim($lists['filter']))
+		{
+			$model->logSearch($lists['filter']);
+		}
+
+		// ***
+		// *** Create the pagination object
+		// ***
+
+		if (1)
+		{
+			$pageNav  = $this->get('pagination');
+
+			// *** Add layout vars to pagination
+			foreach($layout_vars as $i => $v)
+			{
+				if (isset($menu->query[$i]) && $menu->query[$i] === $v)
+				{
+					continue;
+				}
+				if ($v) $pageNav->setAdditionalUrlParam($i, $v);
+			}
+
+			// URL-encode filter values
+			$_revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
+
+			// *** Add filter values to pagination
+			foreach($jinput->get->get->getArray() as $i => $v)
+			{
+				if (isset($menu->query[$i]) && $menu->query[$i] === $v)
+				{
+					continue;
+				}
+
+				if (in_array($i, array('start', 'limitstart', 'limit')))
+				{
+					continue;
+				}
+
+				$is_fcfilter = substr($i, 0, 6) === 'filter';
+
+				if (is_array($v))
+				{
+					foreach($v as $ii => $vv)
+					{
+						if (is_array($vv))
+						{
+							foreach($vv as $iii => $vvv)
+							{
+								if ($is_fcfilter)
+								{
+									$vvv = str_replace('&', '__amp__', $vvv);
+									$vvv = strtr(rawurlencode($vvv), $_revert);
+								}
+								$pageNav->setAdditionalUrlParam($i.'['.$ii.']'.'['.$iii.']', $vvv);
+							}
+						}
+						else
+						{
+							if ($is_fcfilter)
+							{
+								$vv = str_replace('&', '__amp__', $vv);
+								$vv = strtr(rawurlencode($vv), $_revert);
+							}
+							$pageNav->setAdditionalUrlParam($i.'['.$ii.']', $vv);
+						}
+					}
+				}
+				else
+				{
+					if ($is_fcfilter)
+					{
+						$v = str_replace('&', '__amp__', $v);
+						$v = strtr(rawurlencode($v), $_revert);
+					}
+					$pageNav->setAdditionalUrlParam($i, $v);
+				}
+			}
+
+			$resultsCounter = $pageNav->getResultsCounter();  // for overriding model's result counter
+
+			$_sh404sef = defined('SH404SEF_IS_RUNNING') && \Joomla\CMS\Factory::getConfig()->get('sef');
+			if ($_sh404sef)
+			{
+				$pageNav->setAdditionalUrlParam('limit', $model->getState('limit'));
+			}
+		}
+
+		// **********************************************************************
+		// Print link ... must include layout and current filtering url vars, etc
+		// **********************************************************************
+
+		$curr_url   = str_replace('&', '&amp;', $_SERVER['REQUEST_URI']);
+		$print_link = $curr_url .(strstr($curr_url, '?') ? '&amp;'  : '?').'pop=1&amp;tmpl=component&amp;print=1';
+		$pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx', ''));
+
+		$this->layout_vars = $layout_vars;
+		$this->action = $category_link;
+		$this->print_link = $print_link;
+		$this->category = $category;
+		$this->categories = $categories;
+		$this->peercats = $peercats;
+		$this->items = $items;
+		$this->tag = $tag;
+		$this->authordescr_item_html = $authordescr_item_html;
+		$this->lists = $lists;
+		$this->params = $params;
+		$this->pageNav = $pageNav;
+		$this->pageclass_sfx = $pageclass_sfx;
+
+		$this->pagination = $pageNav;  // compatibility Alias for old templates
+		$this->resultsCounter = $resultsCounter;  // for overriding model's result counter
+		$this->limitstart = $limitstart; // compatibility shortcut
+
+		$this->filters = $filters;
+		$this->comments = $comments;
+		$this->alpha = $alpha;
+		$this->tmpl = $tmpl;
+
+		// NOTE: Moved decision of layout into the model, function decideLayout() layout variable should never be empty
+		// It will consider things like: template exists, is allowed, client is mobile, current frontend user override, etc
+
+		// !!! The following method of loading layouts, is Joomla legacy view loading of layouts
+		// TODO: EXAMINE IF NEEDED to re-use these layouts, and use \Joomla\CMS\Layout\LayoutInterface ??
+
+		// Despite layout variable not being empty, there may be missing some sub-layout files,
+		// e.g. category_somefilename.php for this reason we will use a fallback layout that surely has these files
+		$fallback_layout = $params->get('category_fallback_layout', 'grid');  // parameter does not exist yet
+		if ($clayout != $fallback_layout)
+		{
+			$this->addTemplatePath(JPATH_COMPONENT.DS.'templates'.DS.$fallback_layout);
+			$this->addTemplatePath(JPATH_SITE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.'com_flexicontent'.DS.'templates'.DS.$fallback_layout);
+		}
+
+		$this->addTemplatePath(JPATH_COMPONENT.DS.'templates'.DS.$clayout);
+		$this->addTemplatePath(JPATH_SITE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.'com_flexicontent'.DS.'templates'.DS.$clayout);
+
+		// Set layout
+		$this->isInfinite = 0;
+		$this->setLayout('category');
+
+		// ***
+		// *** Increment the hit counter ONLY once per user visit
+		// ***
+		// MOVED to flexisystem plugin due to ...
+
+		$print_logging_info = $params->get('print_logging_info');
+		if ( $print_logging_info ) { global $fc_run_times; $start_microtime = microtime(true); }
+
+		parent::display($tpl);
+
+		if ( $print_logging_info ) @$fc_run_times['template_render'] += round(1000000 * 10 * (microtime(true) - $start_microtime)) / 10;
+	}
+}
