@@ -173,25 +173,30 @@ foreach ($this->values as $n => $value)
 		: $defaut_icon_url;
 
 
-	if ($marker_path || $marker_url)
+	$wS = $hS = $wA = $hA = 0;
+	if ($marker_path || ($map_api === 'googlemap' && $marker_url))
 	{
-		// Marker Size
-		list($wS, $hS) = getimagesize($marker_path ?: $marker_url);
-
-		// Marker Anchor
-		switch($value['marker_anchor'])
+		// Marker Size — only fetch dimensions for local path or Google Maps (not OSM default icon)
+		$size_info = @getimagesize($marker_path ?: $marker_url);
+		if ($size_info)
 		{
-			case 'TopL' : $wA = 0;     $hA = 0; break;
-			case 'TopC' : $wA = $wS/2; $hA = 0; break;
-			case 'TopR' : $wA = $wS;   $hA = 0; break;
+			list($wS, $hS) = $size_info;
 
-			case 'MidL' : $wA = 0;     $hA = $hS/2; break;
-			case 'MidC' : $wA = $wS/2; $hA = $hS/2; break;
-			case 'MidR' : $wA = $wS;   $hA = $hS/2; break;
+			// Marker Anchor
+			switch($value['marker_anchor'])
+			{
+				case 'TopL' : $wA = 0;     $hA = 0; break;
+				case 'TopC' : $wA = $wS/2; $hA = 0; break;
+				case 'TopR' : $wA = $wS;   $hA = 0; break;
 
-			case 'BotL' : $wA = 0;     $hA = $hS; break;
-			case 'BotC' : $wA = $wS/2; $hA = $hS; break;
-			case 'BotR' : $wA = $wS;   $hA = $hS; break;
+				case 'MidL' : $wA = 0;     $hA = $hS/2; break;
+				case 'MidC' : $wA = $wS/2; $hA = $hS/2; break;
+				case 'MidR' : $wA = $wS;   $hA = $hS/2; break;
+
+				case 'BotL' : $wA = 0;     $hA = $hS; break;
+				case 'BotC' : $wA = $wS/2; $hA = $hS; break;
+				case 'BotR' : $wA = $wS;   $hA = $hS; break;
+			}
 		}
 	}
 
@@ -348,6 +353,7 @@ foreach ($this->values as $n => $value)
 				';
 			}
 
+			$use_custom_icon_js = !empty($value['custom_marker']) && $wS && $hS;
 			$js_perValue[] = '
 				theMap = L.map("' . $map_tagid . '").setView(['.($value['lat'] ? $value['lat'] : '0').','.($value['lon'] ? $value['lon'] : '0').'], '.($value['zoom'] ? $value['zoom'] : $map_zoom).');
 				L.tileLayer(\'' . $os_tile_server_url . '\',
@@ -357,18 +363,18 @@ foreach ($this->values as $n => $value)
 					maxZoom: 20
 				}).addTo(theMap);
 
-				var LeafIcon = L.Icon.extend({
-					options: {}
-				});
-
+				var contentPopup = ' . json_encode($addr . $map_directions) . ';
+				' . ($use_custom_icon_js ? '
+				var LeafIcon = L.Icon.extend({ options: {} });
 				var mapIcon = new LeafIcon({
-					iconUrl: \''.$marker_url.'\',
+					iconUrl: \'' . $marker_url . '\',
 					iconSize: [' . $wS . ', ' . $hS . '],
 					iconAnchor: [' . $wA . ', ' . $hA . ']
 				});
-				var contentPopup = ' . json_encode($addr . $map_directions) . ';
-
 				theMarker = L.marker(['.($value['lat'] ? $value['lat'] : '0').','.($value['lon'] ? $value['lon'] : '0').'], {icon: mapIcon}).addTo(theMap);
+				' : '
+				theMarker = L.marker(['.($value['lat'] ? $value['lat'] : '0').','.($value['lon'] ? $value['lon'] : '0').']).addTo(theMap);
+				') . '
 				theMarker.bindPopup(contentPopup);
 			';
 		}

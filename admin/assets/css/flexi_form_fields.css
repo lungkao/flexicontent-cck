@@ -1765,3 +1765,68 @@ span.add-on.fcfont-icon.icon.icon-.image-option {
 textarea.fcfield_textareaval {
 	resize: both;
 }
+
+/* ══ Admin edit form: modern field card separation ══════════════════════════
+   Each custom field gets a card-like container with a colored left accent,
+   subtle shadow, and clear spacing so fields are visually distinct.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Field card: wrap each control-group with a card look */
+#flexicontent .control-group {
+	background: #ffffff;
+	border-left: 3px solid #6366f1;
+	border-radius: 6px;
+	box-shadow: 0 1px 6px rgba(0,0,0,.07);
+	margin-bottom: 12px !important;
+	padding: 10px 14px 10px 14px;
+}
+
+/* Alternate accent colors per field type (cycling via nth-child) */
+#flexicontent .control-group:nth-child(3n+1) { border-left-color: #6366f1; }
+#flexicontent .control-group:nth-child(3n+2) { border-left-color: #0ea5e9; }
+#flexicontent .control-group:nth-child(3n+3) { border-left-color: #10b981; }
+
+/* Field label: make it bold and prominent */
+#flexicontent .control-group .control-label label {
+	font-weight: 600;
+	font-size: .85rem;
+	color: #374151;
+	letter-spacing: .01em;
+}
+
+/* Value rows (sortable list items): add subtle inset card for each value */
+#flexicontent ul.fcfield-sortables:not(.fcfield-group) > li.fcfieldval_container.valuebox {
+	background: #f9fafb !important;
+	border: 1px solid #e5e7eb !important;
+	border-width: 1px !important;
+	border-radius: 5px;
+	padding: 8px 10px 8px 8px;
+	margin-bottom: 6px;
+}
+
+/* Value rows for non-sortable divs */
+#flexicontent div.fcfieldval_container.valuebox {
+	background: #f9fafb;
+	border: 1px solid #e5e7eb !important;
+	border-width: 1px !important;
+	border-radius: 5px;
+	padding: 8px 10px 8px 8px;
+	margin-bottom: 6px;
+}
+
+/* Keep drag-helper elevated */
+#flexicontent ul.fcfield-sortables > li.fcfieldval_container.valuebox.ui-sortable-helper {
+	background-color: #fff !important;
+	box-shadow: 4px 4px 12px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* Add-value button spacing */
+#flexicontent span.fcfield-addvalue {
+	margin-top: 6px;
+}
+
+/* Section headings inside field group cards */
+#flexicontent ul.fcfield-sortables.fcfield-group > li.fcfieldval_container.valuebox {
+	border-left: 3px solid #8b5cf6 !important;
+	background: #faf5ff !important;
+}
