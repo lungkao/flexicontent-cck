@@ -1432,8 +1432,8 @@ class flexicontent_html
 				if ($load_jquery) flexicontent_html::loadJQuery();
 
 				$framework_path = \Joomla\CMS\Uri\Uri::root().$lib_path.'/bootstrap-toggle';
-				$document->getWebAssetManager()->registerAndUseScript('min', $framework_path.'/js/bootstrap2-toggle.min.js');
-				$document->getWebAssetManager()->registerAndUseStyle('min', $framework_path.'/css/bootstrap2-toggle.min.css');
+				$document->getWebAssetManager()->registerAndUseScript('fc-bootstrap-toggle', $framework_path.'/js/bootstrap2-toggle.min.js', [], ['defer' => false]);
+				$document->getWebAssetManager()->registerAndUseStyle('fc-bootstrap-toggle', $framework_path.'/css/bootstrap2-toggle.min.css');
 
 				$js .= "
 					jQuery(document).ready(function(){

@@ -2380,7 +2380,7 @@ var $proxy_option = null;
 			{
 				foreach ($themes->items->{$ilayout}->css as $css)
 				{
-					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style', $this->baseurl.'/'.$css);
+					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseStyle('fc-style-' . preg_replace('/[^a-z0-9]/i','-',basename($css,'.css')), \Joomla\CMS\Uri\Uri::root() . ltrim($css, '/'));
 				}
 			}
 
@@ -2389,7 +2389,7 @@ var $proxy_option = null;
 			{
 				foreach ($themes->items->{$ilayout}->js as $js)
 				{
-					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-tpl-'.preg_replace('/[^a-z0-9]/i','-',basename($js,'.js')), $this->baseurl.'/'.$js);
+					/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-tpl-'.preg_replace('/[^a-z0-9]/i','-',basename($js,'.js')), \Joomla\CMS\Uri\Uri::root() . ltrim($js, '/'));
 				}
 			}
 
