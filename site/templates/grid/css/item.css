@@ -1,146 +1,161 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   FLEXIcontent "grid" template — Modern Item View (2025 refresh)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Main item wrapper ─────────────────────────────────────────────── */
+body #flexicontent .fcitems {
+	max-width: 1080px;
+	margin: 2rem auto;
+	padding: 0;
+	background: #ffffff;
+	border-radius: 14px;
+	box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+	overflow: hidden;
+	color: #374151;
+	font-size: 16px;
+	line-height: 1.7;
+}
+
+/* ── Title ─────────────────────────────────────────────────────────── */
 body #flexicontent .fc_item_title,
 body #flexicontent .fc_item_title a {
-	color: inherit;
-	background-color: inherit;
-	padding: 0;
-	border-radius: 0px;
-}
-.fcitems {
-	background-color: inherit;
-	padding-top: 0px;
-	padding-right: 0px;
-	padding-left: 0px;
-	padding-bottom: 0px;
-	border-radius: 0px;
-	border: 0px solid #cccccc;
-	color: inherit;
-}
-body #flexicontent .flexi.label,
-body #flexicontent .desc-title.label {
-	background-color: rgba(255,255,255,0);
-	color: #000000;
-	border-radius: 0px;
-	padding: 0;
-	font-weight: bold;
-}
-body #flexicontent ul.tabbernav > li a {
-	background-color: #e4f1f8;
-	color: #3093c7;
-}
-body #flexicontent ul.tabbernav > li.tabberactive a::before {
-	border-top: 4px solid #3093c7;
-}
-body ul.tabbernav > li.tabberactive a,
-body ul.tabbernav > li.tabberactive a:hover,
-#flexicontent ul.tabbernav > li.tabberactive a,
-#flexicontent ul.tabbernav > li.tabberactive a:hover {
-	border-bottom: 1px solid white !important;
-	border-left: 1px solid #D0D0D0 !important;
-	border-top: 1px solid #D0D0D0 !important;
-	border-right: 1px solid #D0D0D0 !important;
-}
-body #flexicontent ul.tabbernav > li:hover a {
-	border: 1px solid #1c5675;
-	background: #1c5675;
-	color: #fff;
-}
-body .tabbertab,
-#flexicontent .tabbertab {
-	background-color: #ffffff;
-	border-radius: 0px;
-}
-body ul.tabbernav,
-#flexicontent ul.tabbernav {
-	border-bottom: 1px solid #cccccc !important;
-}
-div#fc_subtitle_tabset,
-div#fc_bottom_tabset {
-	margin-top: 40px !important;
-	margin-bottom: 40px !important;
-}
-body .flexi.infoblock {
-	padding: 10px 10px 10px 10px;
-}
-.flexi.lineinfo {
-	display: flex;
-	margin: 0 0 1em;
-	flex-direction: column;
-}
-.tabbertab .flexi.element,
-.subtitle1 .flexi.element,
-.subtitle2 .flexi.element,
-.subtitle3 .flexi.element {
-	clear: none;
+	color: #111827;
+	background: transparent;
+	padding: 2rem 2.5rem 0.5rem;
+	margin: 0;
+	font-size: clamp(1.5rem, 3vw, 2.25rem);
+	font-weight: 700;
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+	border-radius: 0;
 	display: block;
-	float: left;
-	max-width: 96% !important;
-	padding: 0% !important;
-	margin: 0.5em 2% 0.5em 2% !important;
 }
+body #flexicontent h1.fc_item_title,
+body #flexicontent h2.fc_item_title {
+	padding: 2rem 2.5rem 0.5rem;
+	margin: 0;
+}
+
+/* ── Top block: hero image + side info ─────────────────────────────── */
 .flexi.topblock {
-	overflow: hidden;
-	width: 100%;
-	margin-bottom: 10px;
 	display: grid;
-	grid-template-columns: 1fr 30%;
+	grid-template-columns: 1fr 300px;
+	grid-gap: 2rem;
 	column-gap: 2rem;
+	margin: 1.5rem 2.5rem;
+	padding: 0;
+	overflow: visible;
+	width: auto;
 }
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 	.flexi.topblock {
 		grid-template-columns: 1fr;
+		margin: 1rem 1rem;
 	}
 }
 .topblock .flexi.image {
 	display: flex;
 	flex-direction: column;
+	margin: 0;
+}
+.topblock .flexi.image img {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	border-radius: 10px;
+	box-shadow: 0 2px 18px rgba(0, 0, 0, 0.1);
+	object-fit: cover;
 }
 .topblock .flexi.image a {
 	outline: none;
+	display: block;
+	line-height: 0;
 }
 .topblock .flexi.infoblock {
-	border-radius: 5px;
-	border: 1px solid #cccccc;
+	background: #f8fafc;
+	border: 1px solid #e5e7eb;
+	border-radius: 10px;
+	padding: 1.25rem;
 	color: inherit;
-	background-color: transparent;
+	font-size: 0.92rem;
 }
-.flexi.topblock ul {
+
+/* ── Article body / introtext / fulltext ───────────────────────────── */
+body #flexicontent .fcitem_summary,
+body #flexicontent .fcitem_body,
+body #flexicontent .item-page > div > *:not(.flexi.topblock):not(.flexi.bottomblock):not(#fc_subtitle_tabset):not(#fc_bottom_tabset) {
+	padding: 0 2.5rem;
+}
+.item-page .fcitems > p,
+.item-page .fcitems > div > p {
+	padding: 0 2.5rem;
+	margin-bottom: 1rem;
+}
+
+/* ── Section labels ────────────────────────────────────────────────── */
+body #flexicontent .flexi.label,
+body #flexicontent .desc-title.label {
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #6b7280;
+	background: transparent;
 	padding: 0;
-	margin: 0;
+	margin-bottom: 0.3rem;
+	border-radius: 0;
 }
-.flexi.bottomblock.infoblock {
-	border-radius: 0px;
-	border: 0px solid #cccccc;
-	color: #cccccc;
-	background-color: #ffffff;
-	padding: 0;
+
+/* ── Field value blocks ────────────────────────────────────────────── */
+.flexi.element {
+	margin-bottom: 1.25rem;
 }
-.flexi.infoblock {
-	border: 1px solid silver;
-	margin: 0 0 10px;
-	padding: 10px;
-}
-.infoblock ul.flexi {
-	margin: 0 !important;
-	padding: 0 !important;
-}
-.infoblock ul li.flexi {
-	padding: 0;
-	background: none;
-	min-height: 10px;
-	display: inline-block;
-	vertical-align: top;
-	margin: 0%;
-	zoom: 1;
+.flexi.value {
+	color: #374151;
 }
 div.flexi.value {
 	padding: 0 !important;
 }
-.onecols ul li.flexi {
-	width: 100%;
+
+/* ── Bottom block (fields grid) ────────────────────────────────────── */
+.flexi.bottomblock.infoblock {
+	background: #f8fafc;
+	border: 1px solid #e5e7eb;
+	border-top: 1px solid #e5e7eb;
+	border-radius: 0;
+	color: #374151;
+	padding: 1.75rem 2.5rem;
+	margin-top: 2rem;
 }
-.twocols ul li.flexi {
-	min-width: 48%;
+.flexi.bottomblock .flexi.label {
+	color: #4b5563;
 }
+
+/* ── Info block: key/value layout ──────────────────────────────────── */
+.flexi.infoblock {
+	padding: 1rem 1.25rem;
+}
+.infoblock ul.flexi {
+	margin: 0 !important;
+	padding: 0 !important;
+	list-style: none;
+}
+.infoblock ul li.flexi {
+	padding: 0.5rem 0;
+	background: none;
+	min-height: 10px;
+	display: block;
+	vertical-align: top;
+	margin: 0;
+	zoom: 1;
+	border-bottom: 1px solid #e5e7eb;
+}
+.infoblock ul li.flexi:last-child {
+	border-bottom: 0;
+}
+.onecols ul li.flexi { width: 100%; }
+.twocols ul li.flexi { min-width: 48%; }
 .twocols .flexi.label {
 	min-width: 34%;
 	margin: 2px 3% 6px 0;
@@ -151,6 +166,143 @@ div.flexi.value {
 	margin: 2px 4% 6px 0;
 	box-sizing: border-box;
 }
+
+/* ── Lineinfo (label + value side-by-side) ─────────────────────────── */
+.flexi.lineinfo {
+	display: flex;
+	margin: 0 0 0.75rem;
+	flex-direction: column;
+	gap: 0.2rem;
+}
+
+/* ── Subtitle / tab wrappers ───────────────────────────────────────── */
+.tabbertab .flexi.element,
+.subtitle1 .flexi.element,
+.subtitle2 .flexi.element,
+.subtitle3 .flexi.element {
+	clear: none;
+	display: block;
+	float: none;
+	max-width: 100% !important;
+	padding: 0 !important;
+	margin: 0.75rem 0 !important;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────── */
+div#fc_subtitle_tabset,
+div#fc_bottom_tabset {
+	margin: 2rem 2.5rem !important;
+}
+body #flexicontent ul.tabbernav,
+#flexicontent ul.tabbernav {
+	border-bottom: 2px solid #e5e7eb !important;
+	padding-left: 0;
+	display: flex;
+	gap: 0.25rem;
+	flex-wrap: wrap;
+}
+body #flexicontent ul.tabbernav > li a {
+	background: transparent;
+	color: #6b7280;
+	font-weight: 500;
+	padding: 0.6rem 1.2rem;
+	border-radius: 6px 6px 0 0;
+	border: 0 !important;
+	transition: all .2s;
+}
+body #flexicontent ul.tabbernav > li a:hover {
+	background: #f3f4f6;
+	color: #111827;
+	border: 0 !important;
+}
+body ul.tabbernav > li.tabberactive a,
+body ul.tabbernav > li.tabberactive a:hover,
+#flexicontent ul.tabbernav > li.tabberactive a,
+#flexicontent ul.tabbernav > li.tabberactive a:hover {
+	background: #6366f1;
+	color: #ffffff !important;
+	border: 0 !important;
+	box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+}
+body #flexicontent ul.tabbernav > li.tabberactive a::before {
+	display: none;
+}
+body .tabbertab,
+#flexicontent .tabbertab {
+	background: #ffffff;
+	border-radius: 0 0 8px 8px;
+	padding: 1.25rem 0;
+}
+
+/* ── Address / map field ───────────────────────────────────────────── */
+.fc_addressint_container_46,
+[class*="fc_addressint_container_"] {
+	margin: 1rem 0;
+}
+.fc_addressint_container_46 > div:first-child,
+[class*="fc_addressint_container_"] > div:first-child {
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 14px rgba(0, 0, 0, 0.09);
+	min-height: 250px !important;
+}
+div[id^="map_canvas_"] {
+	min-height: 250px !important;
+	min-width: 100% !important;
+	width: 100% !important;
+	border-radius: 10px;
+}
+
+/* ── Address text ──────────────────────────────────────────────────── */
+.address {
+	padding: 0.75rem 0;
+	line-height: 1.6;
+}
+.directions a {
+	display: inline-block;
+	margin-top: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: #6366f1;
+	color: #fff !important;
+	border-radius: 6px;
+	text-decoration: none;
+	font-size: 0.88rem;
+	font-weight: 500;
+	transition: background .2s;
+}
+.directions a:hover {
+	background: #4f46e5;
+}
+
+/* ── Group wrapper ─────────────────────────────────────────────────── */
 .group {
 	overflow: auto !important;
+}
+
+/* ── Edit/state toolbar buttons ────────────────────────────────────── */
+body #flexicontent .editlinktip,
+body #flexicontent .fc-item-buttons {
+	margin: 1rem 2.5rem 0.5rem;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+	body #flexicontent .fc_item_title {
+		padding: 1.5rem 1.25rem 0.5rem;
+		font-size: 1.5rem;
+	}
+	body #flexicontent .fcitems {
+		margin: 0.5rem;
+		border-radius: 10px;
+	}
+	.flexi.topblock,
+	.flexi.bottomblock.infoblock,
+	div#fc_subtitle_tabset,
+	div#fc_bottom_tabset {
+		margin-left: 1rem !important;
+		margin-right: 1rem !important;
+	}
+	.flexi.bottomblock.infoblock {
+		padding: 1rem 1.25rem;
+	}
 }
