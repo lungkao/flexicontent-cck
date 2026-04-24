@@ -809,18 +809,13 @@ class plgFlexicontent_fieldsFile extends FCField
 					'.$remove_button.'
 					'.(!$add_position ? '' : $add_here)
 					.($use_inline_uploaders && !$file_btns_position ? '
-					<div class="buttons '.$btn_item_class.' fc-iblock ' . (FLEXI_J40GE ? ' dropdown ' : '') . '" style="padding:0 !important;">
-						<div role="button" class="' . $drop_btn_class . ' fcfield-addvalue ' . $font_icon_class . '" data-toggle="dropdown" data-bs-toggle="dropdown" style="'.$drop_btn_style.'">
-							<span class="caret"></span>
-						</div>
-						<ul class="dropdown-menu dropdown-menu-right" role="menu">
-							<li>'.$uploader_html->toggleBtn.'</li>
-							<li>'.$uploader_html->multiUploadBtn.'</li>
-							' . ($use_myfiles > 0 ? '<li>'.$uploader_html->myFilesBtn.'</li>' : '') . '
-							<li>'.$uploader_html->mediaUrlBtn.'</li>
-						</ul>
+					<div class="fc-file-action-btns fc-iblock" style="display:inline-flex; gap:4px; align-items:center; padding:0 !important;">
+						'.$uploader_html->toggleBtn.'
+						'.$uploader_html->multiUploadBtn.'
+						' . ($use_myfiles > 0 ? $uploader_html->myFilesBtn : '') . '
+						'.$uploader_html->mediaUrlBtn.'
+						'.$uploader_html->clearBtn.'
 					</div>
-					'.$uploader_html->clearBtn.'
 					' : '') . '
 				</div>
 				'.($fields_box_placing ? '<div class="fcclear"></div>' : '').'

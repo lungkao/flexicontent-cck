@@ -195,6 +195,9 @@
 				<option value="1">FLEXI_YES</option>
 			</field>
 
+			<field name="" type="separator" default="FLEXI_ALLOWED_EXTENSIONS" level="level2" />
+			<field name="upload_extensions" type="text" default="mp3,m4a,mp4a,ogg,wav,aac,flac,mp4,mp4v,mpeg,mov,webm,mkv,avi,m4v" size="80" label="FLEXI_ALLOWED_EXTENSIONS" description="Audio/video only. Extensions of files that can be uploaded to this mediafile field." />
+
 			<field name="" type="separator" default="FLEXI_MY_FILES" description="" icon_class="icon-upload" level="tab_open" box_type="1" />
 
 			<field name="" type="separator" default="FLEXI_MY_FILES_INFO" description="" level="level3" class="alert alert-info fcpadded"/>
@@ -254,7 +257,6 @@
 				<option value="0">FLEXI_SCALE</option>
 				<option value="1">FLEXI_CROP</option>
 			</field>
-
 
 			<field name="" type="separator" default="FLEXI_FIELD_EDITING" level="tabset_close" box_type="1" />
 		</fieldset>
@@ -424,6 +426,11 @@
 				<option value="0">FLEXI_NO</option>
 				<option value="1">FLEXI_YES</option>
 				<option value="2">FLEXI_YES_AS_ICON</option>
+			</field>
+			<field name="display_style" type="list" default="inline" label="Display style" description="Visual layout of file values on the frontend">
+				<option value="inline">Inline (default)</option>
+				<option value="card">Card grid</option>
+				<option value="list">List rows</option>
 			</field>
 			<field name="values_list_placement" type="multilist" subtype="radio" default="0" label="FLEXI_FIELD_VALUES_LIST_PLACEMENT" toggle_related="1" description="FLEXI_FIELD_VALUES_LIST_PLACEMENT_DESC" class="btn-group btn-group-yesno">
 				<option value="0" show_list="" hide_list="placement-slider">FLEXI_INLINE</option>

@@ -464,19 +464,14 @@ foreach ($field->value as $index => $value)
 			'.$remove_button.'
 			'.(!$add_position ? '' : $add_here)
 			.($use_inline_uploaders && !$file_btns_position ?'
-			<div class="buttons '.$btn_item_class.' fc-iblock ' . (FLEXI_J40GE ? ' dropdown ' : '') . '" style="padding:0 !important;">
-				<div role="button" class="' . $drop_btn_class . ' fcfield-addvalue ' . $font_icon_class . '" data-toggle="dropdown" data-bs-toggle="dropdown" style="'.$drop_btn_style.'">
-					<span class="caret"></span>
-				</div>
-				<ul class="dropdown-menu dropdown-menu-right" role="menu">
-					<li>'.$uploader_html->toggleBtn.'</li>
-					<li>'.$uploader_html->multiUploadBtn.'</li>
-					' . ($use_myfiles > 0 ? '<li>'.$uploader_html->myFilesBtn.'</li>' : '') . '
-					<li>'.$uploader_html->mediaUrlBtn.'</li>
-				</ul>
+			<div class="fc-image-action-btns fc-iblock" style="display:inline-flex; gap:4px; align-items:center; padding:0 !important;">
+				'.$uploader_html->toggleBtn.'
+				'.$uploader_html->multiUploadBtn.'
+				' . ($use_myfiles > 0 ? $uploader_html->myFilesBtn : '') . '
+				'.$uploader_html->mediaUrlBtn.'
+				<span class="btn btn-outline-secondary fcfont-icon icon icon-pencil fas fa-info-circle image-option" onclick="jQuery(\'.fcimg_value_props[data-name=' . $elementid_n . ']\').toggle(150);"></span>
+				'.$uploader_html->clearBtn.'
 			</div>
-			<span class="btn btn-outline-secondary fcfont-icon icon icon-pencil fas fa-info-circle image-option" onclick="jQuery(\'.fcimg_value_props[data-name=' . $elementid_n . ']\').toggle(150);"></span>
-			'.$uploader_html->clearBtn.'
 			' : '') . '
 		</div>
 		'.($fields_box_placing ? '<div class="fcclear"></div>' : '').'

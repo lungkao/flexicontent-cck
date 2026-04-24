@@ -735,8 +735,8 @@ class plgFlexicontent_fieldsMediafile extends FCField
 			//flexicontent_html::loadFramework('wavesurfer');
 			flexicontent_html::loadFramework('flexi-lib');
 			\Joomla\CMS\HTML\HTMLHelper::addIncludePath(JPATH_SITE . '/components/com_flexicontent/helpers/html');
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/wavesurfer.min.js');
-			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/plugin/wavesurfer.cursor.js');
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.min.js');
+			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js@6.6.4/dist/plugin/wavesurfer.cursor.js');
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-form', \Joomla\CMS\Uri\Uri::root() . (JDEBUG ? 'plugins/flexicontent_fields/mediafile/js/form.js' : 'plugins/flexicontent_fields/mediafile/js/form.min.js'), array('version' => FLEXI_VHASH));
 
 			$js .= "
@@ -844,18 +844,13 @@ class plgFlexicontent_fieldsMediafile extends FCField
 					'.$remove_button.'
 					'.(!$add_position ? '' : $add_here)
 					.($use_inline_uploaders && !$file_btns_position ? '
-					<div class="buttons '.$btn_item_class.' fc-iblock ' . (FLEXI_J40GE ? ' dropdown ' : '') . '" style="padding:0 !important;">
-						<div role="button" class="' . $drop_btn_class . ' fcfield-addvalue ' . $font_icon_class . '" data-toggle="dropdown" data-bs-toggle="dropdown" style="'.$drop_btn_style.'">
-							<span class="caret"></span>
-						</div>
-						<ul class="dropdown-menu dropdown-menu-right" role="menu">
-							<li>'.$uploader_html->toggleBtn.'</li>
-							<li>'.$uploader_html->multiUploadBtn.'</li>
-							' . ($use_myfiles > 0 ? '<li>'.$uploader_html->myFilesBtn.'</li>' : '') . '
-							<li>'.$uploader_html->mediaUrlBtn.'</li>
-						</ul>
+					<div class="fc-mediafile-action-btns fc-iblock" style="display:inline-flex; gap:4px; align-items:center; padding:0 !important;">
+						'.$uploader_html->toggleBtn.'
+						'.$uploader_html->multiUploadBtn.'
+						' . ($use_myfiles > 0 ? $uploader_html->myFilesBtn : '') . '
+						'.$uploader_html->mediaUrlBtn.'
+						'.$uploader_html->clearBtn.'
 					</div>
-					'.$uploader_html->clearBtn.'
 					' : '') . '
 				</div>
 				'.($fields_box_placing ? '<div class="fcclear"></div>' : '').'
@@ -1117,8 +1112,8 @@ class plgFlexicontent_fieldsMediafile extends FCField
 			//flexicontent_html::loadFramework('wavesurfer');
 			flexicontent_html::loadFramework('flexi-lib');
 			\Joomla\CMS\HTML\HTMLHelper::addIncludePath(JPATH_SITE . '/components/com_flexicontent/helpers/html');
-			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/wavesurfer.min.js');
-			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js/dist/plugin/wavesurfer.cursor.js');
+			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.min.js');
+			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('wavesurfer', 'https://unpkg.com/wavesurfer.js@6.6.4/dist/plugin/wavesurfer.cursor.js');
 			/* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-view', \Joomla\CMS\Uri\Uri::root() . (JDEBUG ? 'plugins/flexicontent_fields/mediafile/js/view.js' : 'plugins/flexicontent_fields/mediafile/js/view.min.js'), array('version' => FLEXI_VHASH));
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako.min.js', array('version' => FLEXI_VHASH));
 			///* J5/J6 WebAsset: */ $document->getWebAssetManager()->registerAndUseScript('fc-pako_deflate-min', \Joomla\CMS\Uri\Uri::root() . 'components/com_flexicontent/assets/js/pako_deflate.min.js', array('version' => FLEXI_VHASH));
