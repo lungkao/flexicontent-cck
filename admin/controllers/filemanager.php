@@ -833,7 +833,18 @@ var $records_dbtbl  = 'flexicontent_files';
 		}
 
 		// Sanitize filename further and make unique
-		$params = null;
+		// Merge field-level parameters over component params so field's upload_extensions overrides the global list
+		$params = new \Joomla\Registry\Registry();
+		$params->merge(\Joomla\CMS\Component\ComponentHelper::getParams('com_flexicontent'));
+		if ($field && isset($field->parameters) && $field->parameters->get('upload_extensions'))
+		{
+			$params->set('upload_extensions', $field->parameters->get('upload_extensions'));
+		}
+		elseif ($field && $field->field_type === 'mediafile')
+		{
+			// Safe default for mediafile: audio/video only (used when field not yet re-saved after XML update)
+			$params->set('upload_extensions', 'mp3,m4a,mp4a,ogg,wav,aac,flac,mp4,mp4v,mpeg,mov,webm,mkv,avi,m4v');
+		}
 		$err_text = null;
 		$filesize = $file['size'];
 		$filename_original = strip_tags($file['name']);  // Store original filename before sanitizing the filename

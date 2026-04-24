@@ -891,10 +891,26 @@ if ($js)
 
 											<?php if ($isFilesElement): ?>
 												<div class="fc-iblock nowrap_box" style="position: relative; vertical-align: middle;">
-							<span class="btn btn-primary <?php echo $this->btn_sm_class . ' ' . $this->tooltip_class; ?>" id="insert_selected_btn" onclick="fc_fileselement_assign_files(jQuery(this));"
+							<span class="btn btn-success <?php echo $this->btn_sm_class . ' ' . $this->tooltip_class; ?>" id="insert_selected_btn" onclick="fc_fileselement_assign_files(jQuery(this));"
+							      style="font-weight:600; font-size:1em; padding:8px 18px; box-shadow:0 2px 6px rgba(16,185,129,0.35);"
 							      data-title="<?php echo flexicontent_html::getToolTip('', 'FLEXI_FILEMAN_INSERT_SELECTED', 1, 1); ?>" data-placement="bottom">
-								<span class="icon-plus"></span> <?php echo Text::_('FLEXI_INSERT'); ?>
+								<span class="icon-plus"></span> <?php echo Text::_('FLEXI_INSERT'); ?> <span class="fc-insert-count badge" id="fc_insert_count" style="background:rgba(255,255,255,0.25); margin-left:4px; display:none;">0</span>
 							</span>
+							<script>
+							(function(){
+								function updateInsertCount(){
+									var n = jQuery('#adminForm input[name="cid[]"]:checked').length;
+									var $badge = jQuery('#fc_insert_count');
+									var $btn = jQuery('#insert_selected_btn');
+									$badge.text(n).toggle(n > 0);
+									if (n > 0) {
+										$btn.css({'animation':'none'}).removeClass('disabled');
+									}
+								}
+								jQuery(document).on('change', '#adminForm input[name="cid[]"], #adminForm input[name="toggle"]', updateInsertCount);
+								jQuery(function(){ setTimeout(updateInsertCount, 200); });
+							})();
+							</script>
 													<span class="<?php echo $this->btn_sm_class . ' ' . $this->tooltip_class; ?>" onclick="fc_fileselement_delete_files()" data-title="<?php echo flexicontent_html::getToolTip('', 'FLEXI_DELETE', 1, 1); ?>" data-placement="bottom">
 								<span class="icon-remove" style="color: darkred;"></span>
 							</span>

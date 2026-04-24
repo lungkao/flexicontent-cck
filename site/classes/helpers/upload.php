@@ -132,9 +132,80 @@ class flexicontent_upload
 		{
 			return '';
 		}
-		
+
 		return (string) substr($file, $dot + 1);
 		//return pathinfo($file, PATHINFO_EXTENSION);
+	}
+
+
+	/**
+	 * Classify an extension into a file-type family.
+	 *
+	 * @param   string  $ext  file extension (without dot)
+	 * @return  string        one of: video, audio, image, pdf, doc, xls, ppt, zip, code, default
+	 */
+	public static function fileTypeClass($ext)
+	{
+		$ext = strtolower((string) $ext);
+		$map = [
+			'video' => ['mp4','mp4v','mpeg','mpg','mov','webm','mkv','avi','m4v','flv','wmv','ogv','3gp'],
+			'audio' => ['mp3','m4a','mp4a','ogg','wav','aac','flac','opus','wma','aiff'],
+			'image' => ['jpg','jpeg','png','gif','webp','bmp','ico','svg','tif','tiff'],
+			'pdf'   => ['pdf'],
+			'doc'   => ['doc','docx','odt','rtf','txt','md'],
+			'xls'   => ['xls','xlsx','ods','csv','tsv'],
+			'ppt'   => ['ppt','pptx','odp','key'],
+			'zip'   => ['zip','rar','7z','tar','gz','bz2','xz'],
+			'code'  => ['html','htm','css','js','php','xml','json','sql','yml','yaml','ts','jsx','tsx'],
+		];
+		foreach ($map as $type => $exts) {
+			if (in_array($ext, $exts, true)) {
+				return $type;
+			}
+		}
+		return 'default';
+	}
+
+
+	/**
+	 * Render a styled, colored file-type thumbnail (SVG icon + extension label).
+	 * Used when a real image thumbnail is not available.
+	 *
+	 * @param   string  $ext       file extension (without dot)
+	 * @param   int     $size      pixel size (square)
+	 * @param   string  $filename  optional filename for alt text
+	 * @return  string             HTML
+	 */
+	public static function fileTypeThumb($ext, $size = 100, $filename = '')
+	{
+		$ext   = strtolower((string) $ext);
+		$type  = self::fileTypeClass($ext);
+		$label = strtoupper($ext !== '' ? $ext : 'FILE');
+
+		// Inline SVG icons keep this self-contained (no external font/icon dep)
+		$icons = [
+			'video'   => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M4 6h12v12H4z" opacity=".35"/><path d="M2 5v14a1 1 0 0 0 1.5.87L9 16.5V7.5L3.5 4.13A1 1 0 0 0 2 5zm9 1v12h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H11z"/></svg>',
+			'audio'   => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3z"/></svg>',
+			'image'   => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M21 5v14H3V5zm-2 2H5v8l4-4 4 4 2-2 4 4z"/><circle cx="8" cy="10" r="1.5"/></svg>',
+			'pdf'     => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".2"/><path d="M14 2H6v20h14V8zM6 20V4h8v5h5v11zm3-7h6v1H9zm0 3h6v1H9z"/></svg>',
+			'doc'     => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M14 2H6v20h14V8zM6 20V4h8v5h5v11zM8 11h9v1H8zm0 3h9v1H8zm0 3h6v1H8z"/></svg>',
+			'xls'     => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M14 2H6v20h14V8zM6 20V4h8v5h5v11zM8 11h3v2H8zm5 0h3v2h-3zm-5 3h3v2H8zm5 0h3v2h-3z"/></svg>',
+			'ppt'     => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M14 2H6v20h14V8zM6 20V4h8v5h5v11zM8 11h8v5H8z"/></svg>',
+			'zip'     => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M14 2H6v20h14V8zM6 20V4h6v2h2V4h0v5h5v11zm7-14h-2v2h2zm-2 2h-2v2h2zm2 2h-2v2h2zm-2 2h-2v2h2zm1 3h-2l-.5 3h3z"/></svg>',
+			'code'    => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M9 16l-4-4 4-4 1.4 1.4L7.8 12l2.6 2.6zm6 0l-1.4-1.4L16.2 12l-2.6-2.6L15 8l4 4z"/></svg>',
+			'default' => '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M14 2H6v20h14V8zM6 20V4h8v5h5v11z"/></svg>',
+		];
+		$icon_svg = $icons[$type] ?? $icons['default'];
+
+		$size = (int) $size;
+		$icon_size = max(24, (int) round($size * 0.42));
+		$font_size = max(10, (int) round($size * 0.13));
+		$alt = htmlspecialchars($filename ?: $label, ENT_COMPAT, 'UTF-8');
+
+		return '<div class="fc-file-thumb ft-' . $type . '" title="' . $alt . '" style="width:' . $size . 'px;height:' . $size . 'px;">'
+			. '<span class="fc-ft-icon" style="width:' . $icon_size . 'px;height:' . $icon_size . 'px;">' . $icon_svg . '</span>'
+			. '<span class="fc-ft-ext" style="font-size:' . $font_size . 'px;">' . htmlspecialchars($label, ENT_COMPAT, 'UTF-8') . '</span>'
+			. '</div>';
 	}
 
 
