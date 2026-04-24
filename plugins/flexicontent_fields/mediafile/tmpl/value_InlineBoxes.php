@@ -133,8 +133,8 @@ foreach($values as $file_id)
 	$lang = '';
 	$file_data->language = $file_data->language == '' ? '*' : $file_data->language;
 
-	// Also show 'ALL' language
-	if ($display_lang)
+	// Also show 'ALL' language — but hide entirely if no specific language is set
+	if ($display_lang && $file_data->language !== '*')
 	{
 		$lang = '<span class="fcfile_lang fc-iblock">';
 
@@ -195,7 +195,7 @@ foreach($values as $file_id)
 
 		$hits .= $display_hits == 1 || $display_hits == 3 ? '<span class="icon-eye fcicon-hits"></span> ' : '';
 		$hits .= $display_hits == 2 || $display_hits == 3 ? '<span class="fcfile_hits_label label">' . \Joomla\CMS\Language\Text::_('FLEXI_FIELD_FILE_HITS'). '</span> ' : '';
-		$hits .= '<span class="fcfile_hits_value value">'.$file_data->hits.'</span>';
+		$hits .= '<span class="fcfile_hits_value value">'.(int)$file_data->hits.'</span>';
 
 		$hits .= '</span>';
 	}
@@ -375,10 +375,10 @@ else if ($prop !== 'display_properties_only') :
 
 			// The Download Button
 			$_download_btn_html = '
-				<button type="button" onclick="window.open(\''.$dl_link.'\', ' . ($non_file_url ? "''": "'_self'") . ')"
+				<button type="button" onclick="window.open(\''.htmlspecialchars($dl_link, ENT_QUOTES, 'UTF-8').'\', ' . ($non_file_url ? "''": "'_self'") . ')"
 					class="' . $file_classes . ' btn-success fcfile_downloadFile ' . $analytics_classes . '" title="'.htmlspecialchars($downloadsinfo, ENT_COMPAT, 'UTF-8').'"
 				>
-					' . ($compact_display != 2 ? $downloadstext : '') . '
+					' . ($compact_display != 2 ? htmlspecialchars($downloadstext, ENT_COMPAT, 'UTF-8') : '') . '
 					' . ($compact_display == 2 ? ' <span class="icon-download"></span>' : '') . '
 				</button>';
 			// Do not add it here ... we will add it inline with player
@@ -390,13 +390,13 @@ else if ($prop !== 'display_properties_only') :
 			$view_link = $dl_link . (strpos($dl_link, '?') !== false ? '&amp;' : '?') . 'method=view';
 			$view_file_classes = $file_classes . ' btn-info fcfile_viewFile';
 			$actions_arr[] = '
-				<button type="button" data-href="' . $view_link . '" class="' . $view_file_classes .'" title="' . $viewinfo . '" '
+				<button type="button" data-href="' . htmlspecialchars($view_link, ENT_COMPAT, 'UTF-8') . '" class="' . $view_file_classes .'" title="' . $viewinfo . '" '
 					. ($viewinside>=2 ? ' onclick="var url = jQuery(this).attr(\'data-href\'); window.open(url, ' . ($viewinside==3 ? "'_self'" : "") . ');" ' : '')
 					. ($viewinside==1 ? ' onclick="var url = jQuery(this).attr(\'data-href\'); fc_showDialog(url, \'fc_modal_popup_container\', 0, 0, 0, 0, {title:\''. $filetitle_escaped .'\'}); return false;" ' : '')
 					. ($viewinside==0 ? ' onclick="var url = jQuery(this).attr(\'data-href\'); jQuery.fancybox.open([{ src: url , type: \'iframe\'}]); "' : '')
 					. '
 				>
-					' . ($compact_display != 2 ? $viewtext : '') . '
+					' . ($compact_display != 2 ? htmlspecialchars($viewtext, ENT_COMPAT, 'UTF-8') : '') . '
 					' . ($compact_display == 2 ? ' <span class="icon-eye"></span>' : '') . '
 				</button>';
 			$fancybox_needed = $viewinside == 0;
@@ -433,12 +433,14 @@ else if ($prop !== 'display_properties_only') :
 		{
 			$send_form_url = 'index.php?option=com_flexicontent&tmpl=component'
 				.'&task=call_extfunc&exttype=plugins&extfolder=flexicontent_fields&extname=file&extfunc=share_file_form'
-				.'&file_id='.$file_id.'&content_id='.$item->id.'&field_id='.$field->id;
+				.'&file_id='.(int)$file_id.'&content_id='.(int)$item->id.'&field_id='.(int)$field->id;
+			$_share_url_esc = htmlspecialchars($send_form_url, ENT_COMPAT, 'UTF-8');
+			$_share_txt_esc = htmlspecialchars($sharetext, ENT_COMPAT, 'UTF-8');
 			$actions_arr[] =
-				'<button class="' . $file_classes . ' fcfile_shareFile" title="'.$shareinfo.'" data-href="'.$send_form_url.'"
-					onclick="var url = jQuery(this).attr(\'data-href\'); fc_showDialog(url, \'fc_modal_popup_container\', 0, 800, 800, 0, {title:\''.htmlspecialchars($sharetext, ENT_COMPAT, 'UTF-8').'\'}); return false;" '.
+				'<button class="' . $file_classes . ' fcfile_shareFile" title="'.$shareinfo.'" data-href="'.$_share_url_esc.'"
+					onclick="var url = jQuery(this).attr(\'data-href\'); fc_showDialog(url, \'fc_modal_popup_container\', 0, 800, 800, 0, {title:\''.$_share_txt_esc.'\'}); return false;" '.
 				'>
-					' . ($compact_display != 2 ? htmlspecialchars($sharetext, ENT_COMPAT, 'UTF-8') : '') . '
+					' . ($compact_display != 2 ? $_share_txt_esc : '') . '
 					' . ($compact_display == 2 ? ' <span class="icon-mail"></span>' : '') . '
 				</button>';
 		}
@@ -459,9 +461,9 @@ else if ($prop !== 'display_properties_only') :
 			if ( !$authorized && $noaccess_addvars)
 			{
 				$vars = array(
-					'fc_field_id="' . $field->id,
-					'fc_item_id="' . $item->id,
-					'fc_file_id="' . $file_id,
+					'fc_field_id=' . (int)$field->id,
+					'fc_item_id=' . (int)$item->id,
+					'fc_file_id=' . (int)$file_id,
 				);
 				$dl_link .= strpos($dl_link, '?') !== false ? '&amp;' : '?';
 				$dl_link .= implode('&amp;', $vars);
@@ -470,19 +472,20 @@ else if ($prop !== 'display_properties_only') :
 			// The download link, if filename/title not shown, then display a 'download' prompt text
 			$actions_arr[] =
 				($filename_shown && $link_filename ? $icon.' ' : '')
-				.'<a href="' . $dl_link . '" class="' . $file_classes . ' fcfile_downloadFile ' . $analytics_classes . '" title="' . htmlspecialchars($downloadsinfo, ENT_COMPAT, 'UTF-8') . '" ' . ($non_file_url ? 'target="_blank"' : '') . '>'
-				.($filename_shown && $link_filename ? $name_str : $downloadstext)
+				.'<a href="' . htmlspecialchars($dl_link, ENT_COMPAT, 'UTF-8') . '" class="' . $file_classes . ' fcfile_downloadFile ' . $analytics_classes . '" title="' . htmlspecialchars($downloadsinfo, ENT_COMPAT, 'UTF-8') . '" ' . ($non_file_url ? 'target="_blank"' : '') . '>'
+				.($filename_shown && $link_filename ? $name_str : htmlspecialchars($downloadstext, ENT_COMPAT, 'UTF-8'))
 				.'</a>';
 		}
 
 		if ($authorized && $allowview && !$file_data->url)
 		{
+			$_view_link_esc = htmlspecialchars($dl_link . (strpos($dl_link, '?') !== false ? '&amp;' : '?') . 'method=view', ENT_COMPAT, 'UTF-8');
 			$actions_arr[] = '
-				<a href="' . $dl_link . (strpos($dl_link, '?') !== false ? '&amp;' : '?') . 'method=view" ' . ($viewinside==2 ? 'target="_blank"' : '')
+				<a href="' . $_view_link_esc . '" ' . ($viewinside==2 ? 'target="_blank"' : '')
 					. ' class="' . ($viewinside==0 ? 'fancybox ' : '') . $file_classes . ' fcfile_viewFile" '.($viewinside==0 ? 'data-type="iframe" ' : '')
 					. ($viewinside==1 ? ' onclick="var url = jQuery(this).attr(\'href\');  fc_showDialog(url, \'fc_modal_popup_container\', 0, 0, 0, 0, {title:\''. $filetitle_escaped .'\'}); return false;" ' : '')
 					. ' title="' . $viewinfo . '" >
-					' . $viewtext . '
+					' . htmlspecialchars($viewtext, ENT_COMPAT, 'UTF-8') . '
 				</a>';
 			$fancybox_needed = $viewinside == 0;
 		}
@@ -495,13 +498,13 @@ else if ($prop !== 'display_properties_only') :
 
 			$attribs  = ' class="'. $addtocart_classes .'"'
 				. ' title="'. $addtocartinfo .'"'
-				. ' filename="'. $filetitle_escaped .'"'
-				. ' fieldid="'. $field->id .'"'
-				. ' contentid="'. $item->id .'"'
-				. ' fileid="'. $file_data->id .'"';
+				. ' data-filename="'. $filetitle_escaped .'"'
+				. ' data-fieldid="'. (int)$field->id .'"'
+				. ' data-contentid="'. (int)$item->id .'"'
+				. ' data-fileid="'. (int)$file_data->id .'"';
 			$actions_arr[] = '
 				<a href="javascript:;" '. $attribs .' >
-					' . $addtocarttext . '
+					' . htmlspecialchars($addtocarttext, ENT_COMPAT, 'UTF-8') . '
 				</a>';
 		}
 
@@ -515,17 +518,22 @@ else if ($prop !== 'display_properties_only') :
 		{
 			$send_form_url = 'index.php?option=com_flexicontent&tmpl=component'
 				.'&task=call_extfunc&exttype=plugins&extfolder=flexicontent_fields&extname=file&extfunc=share_file_form'
-				.'&file_id='.$file_id.'&content_id='.$item->id.'&field_id='.$field->id;
+				.'&file_id='.(int)$file_id.'&content_id='.(int)$item->id.'&field_id='.(int)$field->id;
+			$_share_url_esc = htmlspecialchars($send_form_url, ENT_COMPAT, 'UTF-8');
+			$_share_txt_esc = htmlspecialchars($sharetext, ENT_COMPAT, 'UTF-8');
 			$actions_arr[] =
-				'<a href="'.$send_form_url.'" class="fcfile_shareFile" title="'.$shareinfo.'" '.
-				'  onclick="var url = jQuery(this).attr(\'href\'); fc_showDialog(url, \'fc_modal_popup_container\', 0, 800, 800, 0, {title:\''.$sharetext.'\'}); return false;">'
-				.$sharetext
+				'<a href="'.$_share_url_esc.'" class="fcfile_shareFile" title="'.$shareinfo.'" '.
+				'  onclick="var url = jQuery(this).attr(\'href\'); fc_showDialog(url, \'fc_modal_popup_container\', 0, 800, 800, 0, {title:\''.$_share_txt_esc.'\'}); return false;">'
+				.$_share_txt_esc
 				.'</a>';
 		}
 	}
 
 	//Display the buttons "DOWNLOAD, SHARE, ADD TO CART" before or after the filename
-	$html = (static::$isItemsManager || (!$html && !$actions_arr) ? '' : '<fieldset><legend></legend>') . '
+	$_display_style = $field->parameters->get('display_style', 'inline');
+	$_style_class   = in_array($_display_style, array('card','list'), true) ? ' fc-file-style-' . $_display_style : '';
+
+	$html = (static::$isItemsManager || (!$html && !$actions_arr) ? '' : '<fieldset class="fc-file-value' . $_style_class . '"><legend></legend>') . '
 		' .
 		($buttonsposition ? $html : '') .
 		($actions_arr ? '
@@ -537,9 +545,12 @@ else if ($prop !== 'display_properties_only') :
 
 	if ($wf_add_waveform)
 	{
+		$ext        = strtolower(flexicontent_upload::getExt($file_data->filename));
+		$video_exts = array('mp4','mp4v','mpeg','mpg','mov','webm','mkv','avi','m4v','flv','wmv','ogv','3gp');
+		$is_video   = in_array($ext, $video_exts, true);
+
 		if ($create_preview)
 		{
-			$ext         = strtolower(flexicontent_upload::getExt($file_data->filename));
 			$previewname = preg_replace('/\.' . $ext . '$/i', '', basename($file_data->filename)) . '.mp3';
 			$peaksname   = preg_replace('/\.' . $ext . '$/i', '', basename($file_data->filename)) . '.json';
 			$previewpath = 'audio_preview/' . $previewname;
@@ -552,6 +563,38 @@ else if ($prop !== 'display_properties_only') :
 		}
 
 		$fnn = $item->id . '_' . $FN_n;
+	}
+
+	// === VIDEO / AUDIO: native HTML5 player (replaces WaveSurfer) ===
+	if ($wf_add_waveform && !empty($file_data->filename))
+	{
+		$audio_exts = array('mp3','m4a','mp4a','ogg','wav','aac','flac','opus','wma','aiff');
+		$is_audio   = in_array($ext, $audio_exts, true);
+		$media_url  = rtrim($base_url, '/') . '/' . rawurlencode(basename($file_data->filename));
+
+		if ($is_video)
+		{
+			$html .= '<div class="fcclear"></div>
+		<div class="fc_mediafile_player_box fc_mediafile_video_box">
+			<video controls preload="metadata" style="max-width:100%; width:100%; height:auto; border-radius:4px; background:#000;">
+				<source src="' . htmlspecialchars($media_url, ENT_COMPAT, 'UTF-8') . '" type="video/' . ($ext === 'mov' ? 'mp4' : $ext) . '" />
+			</video>
+		</div>';
+		}
+		elseif ($is_audio)
+		{
+			$_audio_type = ($ext === 'm4a' || $ext === 'mp4a' || $ext === 'aac') ? 'mp4' : ($ext === 'wav' ? 'wav' : $ext);
+			$html .= '<div class="fcclear"></div>
+		<div class="fc_mediafile_player_box fc_mediafile_audio_box" style="padding:8px 0;">
+			<audio controls preload="metadata" style="width:100%; max-width:100%;">
+				<source src="' . htmlspecialchars($media_url, ENT_COMPAT, 'UTF-8') . '" type="audio/' . $_audio_type . '" />
+			</audio>
+		</div>';
+		}
+	}
+	// === Legacy WaveSurfer (kept for back-compat; no longer triggered when file exists) ===
+	elseif (false && $wf_add_waveform)
+	{
 
 		$html .= '<div class="fcclear"></div>'
 		. '

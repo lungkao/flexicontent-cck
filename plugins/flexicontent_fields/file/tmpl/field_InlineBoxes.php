@@ -20,6 +20,7 @@ foreach ($field->value as $file_id)
 	$filename_original = $file_data->filename_original ? $file_data->filename_original : $file_data->filename;
 
 	$preview_css = 'width:100px; height:100px;';
+	$type_thumb_html = '';  // Phase A: styled file-type thumbnail for non-images
 
 	if (!in_array(strtolower($file_data->ext), $imagesExt))
 	{
@@ -32,6 +33,11 @@ foreach ($field->value as $file_id)
 		}
 		$preview_text = mb_strtoupper($file_data->ext);
 		$has_preview = false;
+
+		if (!empty($file_data->filename) && !empty($file_data->ext))
+		{
+			$type_thumb_html = flexicontent_upload::fileTypeThumb($file_data->ext, 100, $file_data->filename);
+		}
 	}
 	else
 	{
@@ -248,8 +254,8 @@ HTML;
 
 	$field->html[] = '
 
-		<span class="fc_filedata_storage_name" style="display:none;">'.$file_data->filename.'</span>
-		<div class="fc_filedata_txt_nowrap nowrap_hidden">'.$file_data->filename.'<br/>'.$file_data->altname.'</div>
+		<span class="fc_filedata_storage_name" style="display:none;">'.htmlspecialchars($file_data->filename, ENT_COMPAT, 'UTF-8').'</span>
+		<div class="fc_filedata_txt_nowrap nowrap_hidden">'.htmlspecialchars($file_data->filename, ENT_COMPAT, 'UTF-8').'<br/>'.htmlspecialchars($file_data->altname, ENT_COMPAT, 'UTF-8').'</div>
 		<input class="fc_filedata_txt inlinefile-data-txt '. $info_txt_classes . $required_class .'" style="'.(($use_myfiles == 4 && !$use_quantum) || !in_array($form_info_header, [1,3]) ? 'display:none' : '').'"
 			readonly="readonly" name="'.$fieldname_n.'[file-data-txt]" id="'.$elementid_n.'_file-data-txt" '.$info_txt_tooltip.'
 			value="'.htmlspecialchars($file_data->filename, ENT_COMPAT, 'UTF-8').'"
@@ -287,8 +293,8 @@ HTML;
 
 			<div class="inlinefile-prv-box" style="'. ($use_myfiles == 4 && $inputmode == 1 && !$use_quantum ? 'width: 100%' : 'flex-basis: auto;') . '">
 				'.($form_file_preview && $use_myfiles != 4 ? '<div class="fcfield_preview_box' . ($form_file_preview === 2 ? ' auto' : '') . '" style="'.$preview_css.'">
-					<div class="fc_preview_text">' . $preview_text . '</div>
-					<img id="'.$elementid_n.'_image_preview" src="'.$preview_src.'" class="fc_preview_thumb" alt="Preview image placeholder"/></div>' : '').'
+					'.($type_thumb_html ?: '<div class="fc_preview_text">' . $preview_text . '</div>
+					<img id="'.$elementid_n.'_image_preview" src="'.$preview_src.'" class="fc_preview_thumb" alt="Preview image placeholder"/>').'</div>' : '').'
 				'.(!$media_field_html && !empty($uploader_html) ? $uploader_html->container : $media_field_html).'
 			</div>
 
@@ -325,7 +331,7 @@ HTML;
 					<label class="' . $add_on_class . ' fc-lbl inlinefile-desc-lbl '.$tooltip_class.'" title="'.flexicontent_html::getToolTip('FLEXI_DESCRIPTION', 'FLEXI_FILE_DESCRIPTION_DESC', 1, 1).'" id="'.$elementid_n.'_file-desc-lbl" for="'.$elementid_n.'_file-desc">
 						'.Text::_( 'FLEXI_DESCRIPTION' ).'
 					</label>
-					<textarea id="'.$elementid_n.'_file-desc" cols="24" rows="3" name="'.$fieldname_n.'[file-desc]" class="fc_filedesc fcfield_textareaval">'.(!isset($form_data[$file_id]) ? $file_data->description : $form_data[$file_id]['file-desc']).'</textarea>
+					<textarea id="'.$elementid_n.'_file-desc" cols="24" rows="3" name="'.$fieldname_n.'[file-desc]" class="fc_filedesc fcfield_textareaval">'.htmlspecialchars(!isset($form_data[$file_id]) ? $file_data->description : $form_data[$file_id]['file-desc'], ENT_COMPAT, 'UTF-8').'</textarea>
 				</div>' : '').
 
 			( $iform_dir ? '

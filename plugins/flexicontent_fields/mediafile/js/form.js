@@ -285,6 +285,12 @@ class fc_Waveform_LazyLoad
 		//linGrad.addColorStop(0.5, 'rgba(183, 183, 183, 0.88)');
 
 
+		// Bail if WaveSurfer container is missing (e.g. cloned row, video-only field)
+		if (!document.querySelector('#fc_mediafile_audio_spectrum_' + fnn))
+		{
+			return;
+		}
+
 		// Create WaveSurfer object
 		var audio_spectrum = WaveSurfer.create({
 			container: '#fc_mediafile_audio_spectrum_' + fnn,
@@ -824,14 +830,14 @@ class fc_Waveform_LazyLoad
 
 		// Load the audio file
 		var audio_spectrum = container.find('.fc_mediafile_audio_spectrum').data('audio_spectrum');
-		if (!!filename)
+		if (!!filename && audio_spectrum)
 		{
 			audio_spectrum._dummyProgress();
 
 			jQuery.ajax({
 				dataType: 'json',
 				url: jsonPeaks
-			}).success(function (response)
+			}).done(function (response)
 			{
 				var data = response.data;
 				data.unshift(data[1]);
@@ -863,7 +869,7 @@ class fc_Waveform_LazyLoad
 		return true;
 	}
 
-	fcfield_mediafile.getFileBasename = function(str) 
+	fcfield_mediafile.getFileBasename = function(str)
 	{
 		var base = new String(str).substring(str.lastIndexOf('/') + 1); 
 		if (base.lastIndexOf(".") != -1)
@@ -947,14 +953,14 @@ class fc_Waveform_LazyLoad
 		container.find('.fc_filedesc').val(file.description);
 
 		// Load the audio file
-		if (!!file.filename)
+		if (!!file.filename && audio_spectrum)
 		{
 			audio_spectrum._dummyProgress();
 
 			jQuery.ajax({
 				dataType: 'json',
 				url: jsonPeaks
-			}).success(function (response)
+			}).done(function (response)
 			{
 				var data = response.data;
 				data.unshift(data[1]);

@@ -54,7 +54,7 @@ defined('_JEXEC') or die;
 		<div class="formelm">
 			<label for="desc_field" style="vertical-align:top;">
 			<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FIELD_FILE_EMAIL_DESCRIPTION'); ?></label>
-			<textarea id="desc_field" name="desc" class="inputbox" cols="40" rows="5" /><?php echo $data->desc; ?></textarea>
+			<textarea id="desc_field" name="desc" class="inputbox" cols="40" rows="5" /><?php echo htmlspecialchars($data->desc, ENT_COMPAT, 'UTF-8'); ?></textarea>
 		</div>
 		<p>
 			<button class="btn" onclick="return Joomla.submitbutton('send');">

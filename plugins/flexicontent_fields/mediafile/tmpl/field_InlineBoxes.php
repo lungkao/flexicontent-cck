@@ -28,6 +28,7 @@ foreach ($field->value as $file_id)
 	$file_data->waveform_peaks   = !$file_data->filename ? '' : 'audio_preview/' . str_ireplace('.'.$ext, '', basename($file_data->filename)) . '.json';
 
 	$preview_css = 'width:100px; height:100px;';
+	$type_thumb_html = '';  // Phase A: styled file-type thumbnail for non-images
 
 	if (!in_array(strtolower($file_data->ext), $imagesExt))
 	{
@@ -40,6 +41,12 @@ foreach ($field->value as $file_id)
 		}
 		$preview_text = mb_strtoupper($file_data->ext);
 		$has_preview = false;
+
+		// Render a colored, icon-based thumbnail only when a real file is present
+		if (!empty($file_data->filename) && !empty($file_data->ext))
+		{
+			$type_thumb_html = flexicontent_upload::fileTypeThumb($file_data->ext, 100, $file_data->filename);
+		}
 	}
 	else
 	{
@@ -254,8 +261,8 @@ HTML;
 
 	$field->html[] = '
 
-		<span class="fc_filedata_storage_name" style="display:none;">'.$file_data->filename.'</span>
-		<div class="fc_filedata_txt_nowrap nowrap_hidden">'.$file_data->filename.'<br/>'.$file_data->altname.'</div>
+		<span class="fc_filedata_storage_name" style="display:none;">'.htmlspecialchars($file_data->filename, ENT_COMPAT, 'UTF-8').'</span>
+		<div class="fc_filedata_txt_nowrap nowrap_hidden">'.htmlspecialchars($file_data->filename, ENT_COMPAT, 'UTF-8').'<br/>'.htmlspecialchars($file_data->altname, ENT_COMPAT, 'UTF-8').'</div>
 		<input class="fc_filedata_txt inlinefile-data-txt '. $info_txt_classes . $required_class .'" style="'.(($use_myfiles == 4 && !$use_quantum) || !in_array($form_info_header, [1,3]) ? 'display:none' : '').'"
 			readonly="readonly" name="'.$fieldname_n.'[file-data-txt]" id="'.$elementid_n.'_file-data-txt" '.$info_txt_tooltip.'
 			value="'.htmlspecialchars($filename_original, ENT_COMPAT, 'UTF-8').'"
@@ -264,7 +271,7 @@ HTML;
 			data-wfpreview="'.htmlspecialchars($file_data->waveform_preview, ENT_COMPAT, 'UTF-8').'"
 			data-wfpeaks="'.htmlspecialchars($file_data->waveform_peaks, ENT_COMPAT, 'UTF-8').'"
 		/>
-		<input type="hidden" id="'.$elementid_n.'_file-id" name="'.$fieldname_n.'[file-id]" value="'.htmlspecialchars($file_id, ENT_COMPAT, 'UTF-8').'" />'.'
+		<input type="hidden" class="fc-file-id" id="'.$elementid_n.'_file-id" name="'.$fieldname_n.'[file-id]" value="'.htmlspecialchars($file_id, ENT_COMPAT, 'UTF-8').'" />'.'
 
 		'.( (!$multiple || $use_ingroup) && !$required_class && $use_myfiles != 4 ? '
 		<div class="fcclear"></div>
@@ -295,8 +302,8 @@ HTML;
 
 			<div class="inlinefile-prv-box" style="'. ($use_myfiles == 4 && $inputmode == 1 && !$use_quantum ? 'width: 100%' : 'flex-basis: auto;') . '">
 				'.($form_file_preview && $use_myfiles != 4 ? '<div class="fcfield_preview_box' . ($form_file_preview === 2 ? ' auto' : '') . '" style="'.$preview_css.'">
-					<div class="fc_preview_text">' . $preview_text . '</div>
-					<img id="'.$elementid_n.'_image_preview" src="'.$preview_src.'" class="fc_preview_thumb" alt="Preview image placeholder"/></div>' : '').'
+					'.($type_thumb_html ?: '<div class="fc_preview_text">' . $preview_text . '</div>
+					<img id="'.$elementid_n.'_image_preview" src="'.$preview_src.'" class="fc_preview_thumb" alt="Preview image placeholder"/>').'</div>' : '').'
 				'.(!$media_field_html && !empty($uploader_html) ? $uploader_html->container : $media_field_html).'
 			</div>
 
@@ -333,7 +340,7 @@ HTML;
 					<label class="' . $add_on_class . ' fc-lbl inlinefile-desc-lbl '.$tooltip_class.'" title="'.flexicontent_html::getToolTip('FLEXI_DESCRIPTION', 'FLEXI_FILE_DESCRIPTION_DESC', 1, 1).'" id="'.$elementid_n.'_file-desc-lbl" for="'.$elementid_n.'_file-desc">
 						'.Text::_( 'FLEXI_DESCRIPTION' ).'
 					</label>
-					<textarea id="'.$elementid_n.'_file-desc" cols="24" rows="3" name="'.$fieldname_n.'[file-desc]" class="fc_filedesc fcfield_textareaval">'.(!isset($form_data[$file_id]) ? $file_data->description : $form_data[$file_id]['file-desc']).'</textarea>
+					<textarea id="'.$elementid_n.'_file-desc" cols="24" rows="3" name="'.$fieldname_n.'[file-desc]" class="fc_filedesc fcfield_textareaval">'.htmlspecialchars(!isset($form_data[$file_id]) ? $file_data->description : $form_data[$file_id]['file-desc'], ENT_COMPAT, 'UTF-8').'</textarea>
 				</div>' : '').
 
 			( $iform_dir ? '
@@ -363,23 +370,67 @@ HTML;
 
 		<div class="fcclear"></div>
 
+		' . (function($_download_btn_html = '') use ($file_data, $ext, $compactWaveform, $fnn, $field, $n, $field_name_js, $wf_load_progress, $wf_zoom_slider, $allowdownloads) {
+
+			$_video_exts_edit = array('mp4','mp4v','mpeg','mpg','mov','webm','mkv','avi','m4v','flv','wmv','ogv','3gp');
+			$_audio_exts_edit = array('mp3','m4a','mp4a','ogg','wav','aac','flac','opus','wma','aiff');
+			$_has_file        = !empty($file_data->filename);
+			$_is_video_edit   = $_has_file && in_array(strtolower($ext), $_video_exts_edit, true);
+			$_is_audio_edit   = $_has_file && in_array(strtolower($ext), $_audio_exts_edit, true);
+
+			if ($_is_video_edit || $_is_audio_edit)
+			{
+				$_media_dir = empty($file_data->secure) ? 'components/com_flexicontent/medias' : 'components/com_flexicontent/documents';
+				$_media_url_edit  = \Joomla\CMS\Uri\Uri::root(true) . '/' . trim($_media_dir, '/') . '/' . rawurlencode(basename($file_data->filename));
+			}
+
+			if ($_is_video_edit)
+			{
+				$_video_type_edit = ($ext === 'mov' ? 'mp4' : $ext);
+
+				return '
+		<div class="fc_mediafile_player_box fc_mediafile_video_box" style="margin-top:6px;">
+			<video controls preload="metadata" style="max-width:100%; width:100%; max-height:240px; height:auto; border-radius:4px; background:#000;">
+				<source src="' . htmlspecialchars($_media_url_edit, ENT_COMPAT, 'UTF-8') . '" type="video/' . $_video_type_edit . '" />
+			</video>
+		</div>';
+			}
+
+			if ($_is_audio_edit)
+			{
+				$_audio_type_edit = ($ext === 'm4a' || $ext === 'mp4a' || $ext === 'aac') ? 'mp4' : ($ext === 'wav' ? 'wav' : $ext);
+
+				return '
+		<div class="fc_mediafile_player_box fc_mediafile_audio_box" style="margin-top:6px; padding:8px 0;">
+			<audio controls preload="metadata" style="width:100%; max-width:100%;">
+				<source src="' . htmlspecialchars($_media_url_edit, ENT_COMPAT, 'UTF-8') . '" type="audio/' . $_audio_type_edit . '" />
+			</audio>
+		</div>';
+			}
+
+			// No file yet → return empty (WaveSurfer would only fail here)
+			if (!$_has_file)
+			{
+				return '';
+			}
+
+			return '
 		<div class="fc_mediafile_player_box' . ($compactWaveform ? ' fc_compact' : '') . '">
 
 			<div class="fc_mediafile_controls_outer">
 
-				<!--div id="fc_mediafile_current_time_' . $fnn . '" class="media_time">00:00:00</div-->
 				<div id="fc_mediafile_controls_' . $fnn . '" class="fc_mediafile_controls">
 					<a href="javascript:;" class="btn playBtn">
-						<span class="icon-play-circle controls"></span><span class="btnControlsText">' . Text::_('FLEXI_FIELD_MEDIAFILE_PLAY') . '</span>
+						<span class="icon-play-circle controls"></span><span class="btnControlsText">' . \Joomla\CMS\Language\Text::_('FLEXI_FIELD_MEDIAFILE_PLAY') . '</span>
 					</a>
 					<a href="javascript:;" class="btn pauseBtn" style="display: none;">
-						<span class="icon-pause-circle controls"></span><span class="btnControlsText">' . Text::_('FLEXI_FIELD_MEDIAFILE_PAUSE') . '</span>
+						<span class="icon-pause-circle controls"></span><span class="btnControlsText">' . \Joomla\CMS\Language\Text::_('FLEXI_FIELD_MEDIAFILE_PAUSE') . '</span>
 					</a>
 					<a href="javascript:;" class="btn stopBtn" style="display: none;">
-						<span class="icon-stop-circle controls"></span><span class="btnControlsText">' . Text::_('FLEXI_FIELD_MEDIAFILE_STOP') . '</span>
+						<span class="icon-stop-circle controls"></span><span class="btnControlsText">' . \Joomla\CMS\Language\Text::_('FLEXI_FIELD_MEDIAFILE_STOP') . '</span>
 					</a>
 					<a href="javascript:;" class="btn loadBtn" style="display: none;">
-						<span class="icon-loop controls"></span><span class="btnControlsText">' . Text::_('FLEXI_FIELD_MEDIAFILE_LOAD') . '</span>
+						<span class="icon-loop controls"></span><span class="btnControlsText">' . \Joomla\CMS\Language\Text::_('FLEXI_FIELD_MEDIAFILE_LOAD') . '</span>
 					</a>
 					' . ($allowdownloads ? $_download_btn_html : '') . '
 					' . (!$wf_zoom_slider ? '' : '
@@ -408,7 +459,8 @@ HTML;
 
 			</div>
 
-		</div>
+		</div>';
+		})(isset($_download_btn_html) ? $_download_btn_html : '') . '
 		';
 
 
