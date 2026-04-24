@@ -361,7 +361,26 @@
 							<option value="slide-left">Slide from left</option>
 						</field>
 
-						<field name="ibox_minsize_std" type="list" cssprep="less" default="260px" label="Columns layout (auto)" description="CSS auto-fill fallback — ignored when per-breakpoint columns below are set" class="">
+						<!-- Responsive column control -->
+						<field name="std_cols_desktop" type="list" default="3" label="Columns (desktop &gt;=960px)" description="Number of columns on desktop" class="">
+							<option value="1">1 column</option>
+							<option value="2">2 columns</option>
+							<option value="3">3 columns</option>
+							<option value="4">4 columns</option>
+							<option value="5">5 columns</option>
+							<option value="6">6 columns</option>
+						</field>
+						<field name="std_cols_tablet" type="list" default="2" label="Columns (tablet &gt;=640px)" description="Number of columns on tablet" class="">
+							<option value="1">1 column</option>
+							<option value="2">2 columns</option>
+							<option value="3">3 columns</option>
+						</field>
+						<field name="std_cols_mobile" type="list" default="1" label="Columns (mobile)" description="Number of columns on mobile" class="">
+							<option value="1">1 column</option>
+							<option value="2">2 columns</option>
+						</field>
+
+						<field name="ibox_minsize_std" type="list" cssprep="less" default="260px" label="Fallback min column size" description="CSS auto-fill fallback — ignored when per-breakpoint columns above are set" class="">
 							<option value="100%">1 column (full width)</option>
 							<option value="480px">2 columns (large)</option>
 							<option value="300px">2–3 columns (medium)</option>
