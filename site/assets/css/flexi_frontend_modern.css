@@ -1430,7 +1430,25 @@ header.fc-edit-toolbar {
 /* ══════════════════════════════════════════════════════════════
    STANDARD — compact grid
    ══════════════════════════════════════════════════════════════ */
-.standard-block.fc-items-block { gap:1.25rem !important; }
+.standard-block.fc-items-block {
+  gap:1.25rem !important;
+  grid-template-columns:repeat(var(--fc-cols-m,1),1fr) !important;
+}
+@media(min-width:640px){
+  .standard-block.fc-items-block {
+    grid-template-columns:repeat(var(--fc-cols-t,2),1fr) !important;
+  }
+}
+@media(min-width:960px){
+  .standard-block.fc-items-block {
+    grid-template-columns:repeat(var(--fc-cols-d,3),1fr) !important;
+  }
+}
+/* Override for styles that force 1-col */
+.standard-block.fc-std-style-horizontal,
+.standard-block.fc-std-style-magazine {
+  grid-template-columns:1fr !important;
+}
 .standard-block.fc-items-block .fc-item-block-standard-wrapper-innerbox {
   border-radius:12px !important;
   box-shadow:0 1px 3px rgba(0,0,0,.05),0 2px 10px rgba(0,0,0,.04) !important;

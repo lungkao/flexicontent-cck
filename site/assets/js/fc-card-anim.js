@@ -1,70 +1,66 @@
-/* FLEXIcontent Card Scroll Animations + Hero content wrapper */
+/* FLEXIcontent Card Scroll Animations + :has() fallback */
 (function(){
   'use strict';
 
-  /* ── 1. Wrap hero content in .fc-content-col ─────────────────── */
-  /* Hero layout needs content in a flex column wrapper */
-  function wrapHeroContent(){
-    var blocks = document.querySelectorAll('.featured-block.fc-feat-style-hero');
-    blocks.forEach(function(block){
-      var wrappers = block.querySelectorAll('.fc-item-block-featured-wrapper-innerbox');
-      wrappers.forEach(function(box){
-        if(box.querySelector('.fc-content-col')) return;
-        var figure = box.querySelector('figure.image_featured');
-        var wrap = document.createElement('div');
-        wrap.className = 'fc-content-col';
-        var children = Array.prototype.slice.call(box.children);
-        children.forEach(function(child){
-          if(child !== figure && child.tagName !== 'HEADER') wrap.appendChild(child);
-        });
-        if(wrap.children.length > 0) box.appendChild(wrap);
-      });
+  function applyGridFallback(){
+    if(CSS&&CSS.supports&&CSS.supports('selector(:has(*))')) return;
+    function fixBlock(block,wrapperSel,idxSel){
+      var wrapper=block.querySelector(wrapperSel+'[data-total]');
+      if(!wrapper) return;
+      var total=parseInt(wrapper.getAttribute('data-total'),10);
+      if(total===2) block.style.gridTemplateColumns='1fr 1fr';
+      if(total===3) block.style.gridTemplateColumns='1fr 1fr';
+      if(total===4) block.style.gridTemplateColumns='repeat(3,1fr)';
+      if(total>=3){
+        var f=block.querySelector(idxSel+'[data-index="0"]');
+        if(f&&total===3){f.style.gridRow='1/3';f.style.gridColumn='1';}
+        if(f&&total===4) f.style.gridColumn='1/-1';
+        if(total===3){
+          ['1','2'].forEach(function(i){
+            var el=block.querySelector(idxSel+'[data-index="'+i+'"]');
+            if(el) el.style.gridColumn='2';
+          });
+        }
+      }
+    }
+    document.querySelectorAll('.featured-block.fc-items-block').forEach(function(b){
+      fixBlock(b,'.fc-item-block-featured-wrapper','.fc-item-block-featured-wrapper');
+    });
+    document.querySelectorAll('.fc-featured-section').forEach(function(b){
+      fixBlock(b,'.fc-feat-wrapper','.fc-feat-wrapper');
     });
   }
 
-  /* ── 2. Scroll animation via IntersectionObserver ─────────────── */
   function initAnimations(){
     if(!window.IntersectionObserver) return;
-
-    function setupBlock(block, animAttr){
-      var anim = block.getAttribute(animAttr);
+    function setup(block,animAttr,itemSel){
+      var anim=block.getAttribute(animAttr);
       if(!anim) return;
-      var items = block.querySelectorAll(
-        animAttr === 'data-feat-anim'
-          ? '.fc-item-block-featured-wrapper'
-          : '.fc-item-block-standard-wrapper'
-      );
-      items.forEach(function(item, i){
-        item.classList.add('fc-anim-ready', 'fc-anim-'+anim);
-        item.style.transitionDelay = Math.min(i * 80, 400) + 'ms';
+      var items=block.querySelectorAll(itemSel);
+      items.forEach(function(item,i){
+        item.classList.add('fc-anim-ready','fc-anim-'+anim);
+        item.style.transitionDelay=Math.min(i*80,400)+'ms';
       });
-
-      var obs = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(entry.isIntersecting){
-            entry.target.classList.add('fc-anim-visible');
-            obs.unobserve(entry.target);
-          }
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){e.target.classList.add('fc-anim-visible');obs.unobserve(e.target);}
         });
-      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-
+      },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
       items.forEach(function(item){ obs.observe(item); });
     }
-
     document.querySelectorAll('.featured-block.fc-items-block[data-feat-anim]')
-      .forEach(function(b){ setupBlock(b, 'data-feat-anim'); });
+      .forEach(function(b){ setup(b,'data-feat-anim','.fc-item-block-featured-wrapper'); });
     document.querySelectorAll('.standard-block.fc-items-block[data-std-anim]')
-      .forEach(function(b){ setupBlock(b, 'data-std-anim'); });
+      .forEach(function(b){ setup(b,'data-std-anim','.fc-item-block-standard-wrapper'); });
+    document.querySelectorAll('.fc-featured-section[data-feat-anim]')
+      .forEach(function(b){ setup(b,'data-feat-anim','.fc-feat-wrapper'); });
+    document.querySelectorAll('.fc-standard-section[data-std-anim]')
+      .forEach(function(b){ setup(b,'data-std-anim','.fc-std-item'); });
   }
 
-  /* ── Init ─────────────────────────────────────────────────────── */
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', function(){
-      wrapHeroContent();
-      initAnimations();
-    });
-  } else {
-    wrapHeroContent();
-    initAnimations();
-  }
+  function init(){ applyGridFallback(); initAnimations(); }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',init);
+  } else { init(); }
 })();
