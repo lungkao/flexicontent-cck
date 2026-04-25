@@ -219,9 +219,9 @@ defined('_JEXEC') or die('Restricted access');
 
 		$markerDirections_linkHtml = '
 <div class="marker_directions">
-	<a href="' . $markerDirections_link . '" target="_blank" class="fc-map-link btn btn-secondary">
+	<a href="' . htmlspecialchars($markerDirections_link, ENT_COMPAT, 'UTF-8') . '" target="_blank" class="fc-map-link btn btn-secondary">
 		<span class="fc-map-link-icon"></span>
-		<span class="fc-map-link-text">	' . $directionName . '</span>
+		<span class="fc-map-link-text">	' . htmlspecialchars($directionName, ENT_COMPAT, 'UTF-8') . '</span>
 	</a>
 </div>
 ';
@@ -327,8 +327,8 @@ defined('_JEXEC') or die('Restricted access');
 
 	$mapLocations[] = "[
 					'<div class=\"marker-info-contents-box\">$contentWindows <div class=\"marker_actions\">$link $markerDirections_linkHtml</div></div>'," .
-		$locationCoords['lat'] . ", " .
-		$locationCoords['lon'] . ", " .
+		(float)$locationCoords['lat'] . ", " .
+		(float)$locationCoords['lon'] . ", " .
 		(!$marker_url ? "'__default__'" :
 			"'" . $marker_url . "', " .
 			"'" . $markerWidth . "', " .

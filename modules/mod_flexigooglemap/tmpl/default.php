@@ -162,11 +162,11 @@ switch ($mapapi) {
     }
 	<?php if ($mapapi === 'openstreetmap'): ?>
     #fc_module_map_<?= $module->id; ?>.fc_module_map .leaflet-popup-pane {
-        opacity: <?= $marker_opacity ?> !important;
+        opacity: <?= (float)$marker_opacity ?> !important;
     }
 	<?php elseif ($mapapi === 'googlemap'): ?>
     #fc_module_map_<?= $module->id; ?>.fc_module_map .gm-style-iw {
-        opacity: <?= $marker_opacity ?> !important;
+        opacity: <?= (float)$marker_opacity ?> !important;
     }
 	<?php endif; ?>
 
