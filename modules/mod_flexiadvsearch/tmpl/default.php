@@ -406,11 +406,13 @@ $doc->addScriptDeclaration($js);
 		$q = $app->input->getString('q', '');
 		$searchword = $app->input->getString('filter', $q);
 
+		$_searchword_esc       = htmlspecialchars($searchword, ENT_COMPAT, 'UTF-8');
+		$_search_inner_prompt_esc = htmlspecialchars($search_inner_prompt, ENT_COMPAT, 'UTF-8');
 		$output[] = '
 			<input type="'.($search_autocomplete==2 ? 'hidden' : 'text').'"
 				data-txt_ac_lang="' . \Joomla\CMS\Factory::getLanguage()->getTag() . '"
 id="mod_search_searchword-'.$module->id.'" class="'.($isJ4 ? 'form-control ' : '').$text_search_class.'"
-				placeholder="'.$search_inner_prompt.'" label="'.$search_inner_prompt.'"  name="q" '.($search_autocomplete==2 ? '' : ' size="'.$search_inner_width.'" maxlength="'.$maxchars.'"').' value="'.$searchword.'" aria-label="'.$search_inner_prompt.'"  />';
+				placeholder="'.$_search_inner_prompt_esc.'" label="'.$_search_inner_prompt_esc.'"  name="q" '.($search_autocomplete==2 ? '' : ' size="'.(int)$search_inner_width.'" maxlength="'.(int)$maxchars.'"').' value="'.$_searchword_esc.'" aria-label="'.$_search_inner_prompt_esc.'"  />';
 
 		// Search's GO button
 		if ($button) :

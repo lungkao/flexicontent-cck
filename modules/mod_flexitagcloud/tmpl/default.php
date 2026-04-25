@@ -8,9 +8,9 @@ defined('_JEXEC') or die('Restricted access');
 		<?php if (!$params->get('seo_mode', 1)) : ?>
 		<span><?php echo $item->screenreader.' '; ?></span>
 		<?php endif; ?>
-		<a href="<?php echo $item->link; ?>" class="tag<?php echo $item->size; ?>" 
+		<a href="<?php echo htmlspecialchars($item->link, ENT_COMPAT, 'UTF-8'); ?>" class="tag<?php echo (int)$item->size; ?>"
 			<?php echo (!$item->description ? '' : ' title="' . htmlspecialchars(flexicontent_html::striptagsandcut($item->description, 200), ENT_COMPAT, 'UTF-8')) . '" ';?>
-		><?php echo $item->name; ?></a>
+		><?php echo htmlspecialchars($item->name, ENT_COMPAT, 'UTF-8'); ?></a>
 	</li>
 <?php endforeach; ?>
 </ul>

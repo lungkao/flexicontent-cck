@@ -129,11 +129,13 @@ foreach ($list as $cat) :
 		
 		if ($src)
 		{
-			$image = '<img src="'.$phpThumbURL.$src.$conf.'" alt="'.$cat->title.'" title="'.$cat->title.'" style="float: ' . $cat_image_float . '" />';
+			$_cat_title_esc = htmlspecialchars($cat->title, ENT_COMPAT, 'UTF-8');
+			$image = '<img src="' . htmlspecialchars($phpThumbURL . $src . $conf, ENT_COMPAT, 'UTF-8') . '" alt="' . $_cat_title_esc . '" title="' . $_cat_title_esc . '" style="float: ' . htmlspecialchars($cat_image_float, ENT_COMPAT, 'UTF-8') . '" />';
 		}
 		elseif ($default_image)
 		{
-			$image = sprintf($default_image, $cat->title, $cat->title);
+			$_cat_title_esc = htmlspecialchars($cat->title, ENT_COMPAT, 'UTF-8');
+			$image = sprintf($default_image, $_cat_title_esc, $_cat_title_esc);
 		}
 
 		// Create image display and its link if category image is non-empty
@@ -156,10 +158,10 @@ foreach ($list as $cat) :
 		<?php endif; ?>
 
 		<h<?php echo $item_heading + $levelup; ?>>
-			<a href="<?php echo $cat->link; ?>">
-			<?php echo $cat->title;?>
+			<a href="<?php echo htmlspecialchars($cat->link, ENT_COMPAT, 'UTF-8'); ?>">
+			<?php echo htmlspecialchars($cat->title, ENT_COMPAT, 'UTF-8'); ?>
 				<?php if ($numitems && isset($globalcats[$cat->id])) : ?>
-					(<?php echo $totalitems; ?>)
+					(<?php echo (int)$totalitems; ?>)
 				<?php endif; ?>
 			</a>
 		</h<?php echo $item_heading + $levelup; ?>>
