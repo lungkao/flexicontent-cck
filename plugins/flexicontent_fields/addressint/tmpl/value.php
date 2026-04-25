@@ -205,7 +205,7 @@ foreach ($this->values as $n => $value)
 
 	if ($addr_display_mode === 'plaintext' && !empty($value['addr_display']))
 	{
-		$addr = '<div class="address">' . str_replace("\n", '<br />', $value['addr_display']) . '</div>';
+		$addr = '<div class="address">' . nl2br(htmlspecialchars($value['addr_display'], ENT_COMPAT, 'UTF-8')) . '</div>';
 	}
 
 	// prefer addr_display if available
@@ -277,7 +277,7 @@ foreach ($this->values as $n => $value)
 	}
 
 	// generate map directions link html
-	$map_directions = '<div class="directions"><a href="'.$map_link.'" target="_blank">'.$directions_link_label.'</a></div>';
+	$map_directions = '<div class="directions"><a href="' . htmlspecialchars($map_link, ENT_COMPAT, 'UTF-8') . '" target="_blank">' . htmlspecialchars($directions_link_label, ENT_COMPAT, 'UTF-8') . '</a></div>';
 
 	// generate map (only if lat and lon available)
 	$map = '';
@@ -294,8 +294,8 @@ foreach ($this->values as $n => $value)
 				$map .= '
 				<div class="fc_addressint_map">
 					<div class="fc_addressint_map_canvas"
-						data-maplatlon="{lat: ' . ($value['lat'] ? $value['lat'] : '0') . ', lng: ' . ($value['lon'] ? $value['lon'] : '0') . '}"
-						data-mapzoom="' . ($value['zoom'] ? $value['zoom'] : $map_zoom) . '"
+						data-maplatlon="{lat: ' . (float)$value['lat'] . ', lng: ' . (float)$value['lon'] . '}"
+						data-mapzoom="' . (int)($value['zoom'] ? $value['zoom'] : $map_zoom) . '"
 						data-mapaddr="' . htmlspecialchars(json_encode($value['addr1']), ENT_COMPAT, 'UTF-8') . '"
 						data-maptype="google.maps.MapTypeId.'.strtoupper($map_type_view).'"
 						data-mapcontent="' . htmlspecialchars(json_encode($addr . $map_directions), ENT_COMPAT, 'UTF-8') . '"
@@ -355,7 +355,7 @@ foreach ($this->values as $n => $value)
 
 			$use_custom_icon_js = !empty($value['custom_marker']) && $wS && $hS;
 			$js_perValue[] = '
-				theMap = L.map("' . $map_tagid . '").setView(['.($value['lat'] ? $value['lat'] : '0').','.($value['lon'] ? $value['lon'] : '0').'], '.($value['zoom'] ? $value['zoom'] : $map_zoom).');
+				theMap = L.map("' . $map_tagid . '").setView([' . (float)$value['lat'] . ',' . (float)$value['lon'] . '], ' . (int)($value['zoom'] ? $value['zoom'] : $map_zoom) . ');
 				L.tileLayer(\'' . $os_tile_server_url . '\',
 				{
 					attribution: \'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>\',
@@ -371,9 +371,9 @@ foreach ($this->values as $n => $value)
 					iconSize: [' . $wS . ', ' . $hS . '],
 					iconAnchor: [' . $wA . ', ' . $hA . ']
 				});
-				theMarker = L.marker(['.($value['lat'] ? $value['lat'] : '0').','.($value['lon'] ? $value['lon'] : '0').'], {icon: mapIcon}).addTo(theMap);
+				theMarker = L.marker([' . (float)$value['lat'] . ',' . (float)$value['lon'] . '], {icon: mapIcon}).addTo(theMap);
 				' : '
-				theMarker = L.marker(['.($value['lat'] ? $value['lat'] : '0').','.($value['lon'] ? $value['lon'] : '0').']).addTo(theMap);
+				theMarker = L.marker([' . (float)$value['lat'] . ',' . (float)$value['lon'] . ']).addTo(theMap);
 				') . '
 				theMarker.bindPopup(contentPopup);
 			';

@@ -130,9 +130,9 @@ foreach ($values as $value)
 			<tr class="fc_gm_addr_row">
 				<td class="key"><label class="fc-prop-lbl addrint_addr1-lbl" for="'.$elementid_n.'_addr1">'.\Joomla\CMS\Language\Text::_('PLG_FLEXICONTENT_FIELDS_ADDRESSINT_STREET_ADDRESS').'</label></td>
 				<td>
-					<textarea class="fcfield_textval addrint_addr1 ' . (in_array('street_address', $required_props) ? ' required' : '') . $disabled_class . '" ' . $disabled_attr . ' id="'.$elementid_n.'_addr1" name="'.$fieldname_n.'[addr1]" maxlength="400" cols="47" rows="2">'.$value['addr1'].'</textarea>'
-					.($use_addr2 ? '<br/><textarea class="fcfield_textval addrint_addr2" id="'.$elementid_n.'_addr2" name="'.$fieldname_n.'[addr2]" maxlength="400" rows="2">'.$value['addr2'].'</textarea>' : '')
-					.($use_addr3 ? '<br/><textarea class="fcfield_textval addrint_addr3" id="'.$elementid_n.'_addr3" name="'.$fieldname_n.'[addr3]" maxlength="400" rows="2">'.$value['addr3'].'</textarea>' : '')
+					<textarea class="fcfield_textval addrint_addr1 ' . (in_array('street_address', $required_props) ? ' required' : '') . $disabled_class . '" ' . $disabled_attr . ' id="'.$elementid_n.'_addr1" name="'.$fieldname_n.'[addr1]" maxlength="400" cols="47" rows="2">'.htmlspecialchars($value['addr1'], ENT_COMPAT, 'UTF-8').'</textarea>'
+					.($use_addr2 ? '<br/><textarea class="fcfield_textval addrint_addr2" id="'.$elementid_n.'_addr2" name="'.$fieldname_n.'[addr2]" maxlength="400" rows="2">'.htmlspecialchars($value['addr2'], ENT_COMPAT, 'UTF-8').'</textarea>' : '')
+					.($use_addr3 ? '<br/><textarea class="fcfield_textval addrint_addr3" id="'.$elementid_n.'_addr3" name="'.$fieldname_n.'[addr3]" maxlength="400" rows="2">'.htmlspecialchars($value['addr3'], ENT_COMPAT, 'UTF-8').'</textarea>' : '')
 					.'
 				</td>
 			</tr>
@@ -282,7 +282,7 @@ foreach ($values as $value)
 	 */
 
 	$js .= '
-	fcfield_addrint.LatLon["'.$elementid_n.'"] = {lat: '.($value['lat'] ? $value['lat'] : '0').', lng: '.($value['lon'] ? $value['lon'] : '0').'};
+	fcfield_addrint.LatLon["'.$elementid_n.'"] = {lat: ' . (float)$value['lat'] . ', lng: ' . (float)$value['lon'] . '};
 	';
 
 	$dom_ready_js .= '

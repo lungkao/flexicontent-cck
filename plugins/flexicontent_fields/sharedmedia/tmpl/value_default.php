@@ -43,10 +43,10 @@ foreach ($values as $value)
 
 	// Create field's html
 	$html_meta = '
-		'.($display_title  && !empty($value['title'])  ? '<h'.$headinglevel.'>' . $value['title']  . '</h'.$headinglevel.'>' : '') .'
-		'.($display_author && !empty($value['author']) ? '<span class="label text-white bg-info label-info label-small fc_sm_author-lbl">'.\Joomla\CMS\Language\Text::_('Author').'</span> <b class="fc_sm_author">' . $value['author'] . '</b> ' : '') .'
+		'.($display_title  && !empty($value['title'])  ? '<h'.$headinglevel.'>' . htmlspecialchars($value['title'], ENT_COMPAT, 'UTF-8')  . '</h'.$headinglevel.'>' : '') .'
+		'.($display_author && !empty($value['author']) ? '<span class="label text-white bg-info label-info label-small fc_sm_author-lbl">'.\Joomla\CMS\Language\Text::_('Author').'</span> <b class="fc_sm_author">' . htmlspecialchars($value['author'], ENT_COMPAT, 'UTF-8') . '</b> ' : '') .'
 		'.($duration_str ? '<span class="label text-white bg-info label-info label-small fc_sm_duration-lbl">'.\Joomla\CMS\Language\Text::_('Duration').'</span> <b class="fc_sm_duration">'.$duration_str.'</b> ' : '') .'
-		'.($display_description && !empty($value['description']) ? '<div class="description">' . $value['description'] . '</div>' : '');
+		'.($display_description && !empty($value['description']) ? '<div class="description">' . htmlspecialchars($value['description'], ENT_COMPAT, 'UTF-8') . '</div>' : '');
 
 	$player_id     = 'player-' . $field->name . '_' . $item->id . '_' . $n;
 	$player_params = '';//'&origin=http://localhost';

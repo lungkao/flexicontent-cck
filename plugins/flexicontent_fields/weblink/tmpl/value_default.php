@@ -61,7 +61,7 @@ foreach ($values as $value)
 
 	if ($isVideo)
 	{
-		if ($fbox_loaded)
+		if (!$fbox_loaded)
 		{
 			$fbox_loaded = true;
 			flexicontent_html::loadFramework('fancybox');
@@ -92,14 +92,14 @@ foreach ($values as $value)
 	}
 	else
 	{
-		$link_params .= $target ? ' target="'.$target.'"' : '';
+		$link_params .= $target ? ' target="' . htmlspecialchars($target, ENT_COMPAT, 'UTF-8') . '"' : '';
 	}
 
 	$link_params .= ''
 		. ($title  ? ' title="' . htmlspecialchars($title, ENT_COMPAT, 'UTF-8') . '"' : '')
-		. ($id     ? ' id="' . $id . '"' : '')
-		. ($class ? ' class="' . $class . '"' : '')
-		. ($rel    ? ' rel="' . $rel . '" ' : '');
+		. ($id     ? ' id="' . htmlspecialchars($id, ENT_COMPAT, 'UTF-8') . '"' : '')
+		. ($class  ? ' class="' . htmlspecialchars($class, ENT_COMPAT, 'UTF-8') . '"' : '')
+		. ($rel    ? ' rel="' . htmlspecialchars($rel, ENT_COMPAT, 'UTF-8') . '" ' : '');
 
 	// Direct access to the web-link, hits counting not possible
 	if ($isVideo || $field->parameters->get('use_direct_link', 0) || $field->parameters->get('link_source', 0) == -1)
@@ -129,15 +129,15 @@ foreach ($values as $value)
 			: $image;
 		$img_tag = ($display_image == 1 ? '<br>' : '') . '
 			<div style="position: relative; display: inline-block;">
-				<img src="' . $img_src . '" alt="' . htmlspecialchars($title, ENT_COMPAT, 'UTF-8') . '" width="' . $image_w . '" height="' . $image_h . '" style="width: ' . $image_w . 'px; width: ' . $image_h . 'px; "/>
+				<img src="' . htmlspecialchars($img_src, ENT_COMPAT, 'UTF-8') . '" alt="' . htmlspecialchars($title, ENT_COMPAT, 'UTF-8') . '" width="' . (int)$image_w . '" height="' . (int)$image_h . '" style="width: ' . (int)$image_w . 'px; height: ' . (int)$image_h . 'px; "/>
 				' . $playbackicon . '
 			</div>
 		';
 	}
 
 	// Create indirect link to web-link address with custom displayed text
-	$html = '<a href="' .$href. '" '.$link_params.' itemprop="url">'
-		. ($img_tag && $display_image == 2 ? '' : $linktext)
+	$html = '<a href="' . htmlspecialchars($href, ENT_COMPAT, 'UTF-8') . '" ' . $link_params . ' itemprop="url">'
+		. ($img_tag && $display_image == 2 ? '' : htmlspecialchars($linktext, ENT_COMPAT, 'UTF-8'))
 		. $img_tag
 	. '</a>';
 
