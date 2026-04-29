@@ -189,12 +189,19 @@
 
 	fcfield_file.assignFile = function(value_container_id, file, keep_modal, config_name)
 	{
-		// Decode php utf8_encode
+		// Decode php utf8_encode — handle both old-style encoded strings and already-UTF8 strings
+		// e.g. Thai filenames that are already valid UTF-8 must NOT be passed through decodeURIComponent()
+		// directly (throws URIError). Use escape() first to percent-encode, then decodeURIComponent().
+		// If the value is already valid UTF-8 (Thai etc.), escape() produces %uXXXX which is non-standard
+		// and decodeURIComponent throws — catch falls back to the original string unchanged.
 		for (const key in file) {
-			try {
-				file[key] = decodeURIComponent(file[key]);
-			} catch(err) {
-				file[key] = file[key];
+			if (typeof file[key] === 'string') {
+				try {
+					file[key] = decodeURIComponent(escape(file[key]));
+				} catch (e) {
+					// Already valid UTF-8 (e.g. Thai filename) — keep as-is
+					file[key] = file[key];
+				}
 			}
 		}
 

@@ -1058,8 +1058,11 @@ class FlexicontentViewCategory extends \Joomla\CMS\MVC\View\HtmlView
 
 			$resultsCounter = $pageNav->getResultsCounter();  // for overriding model's result counter
 
-			$_sh404sef = defined('SH404SEF_IS_RUNNING') && \Joomla\CMS\Factory::getConfig()->get('sef');
-			if ($_sh404sef)
+			// Fix: SH404SEF_IS_RUNNING constant no longer exists in Joomla 5.
+			// Previously this prevented 'limit' from being appended to pagination URLs,
+			// causing the per-page filter to reset when navigating to page 2+.
+			$_use_sef = \Joomla\CMS\Factory::getConfig()->get('sef');
+			if ($_use_sef)
 			{
 				$pageNav->setAdditionalUrlParam('limit', $model->getState('limit'));
 			}
