@@ -35,6 +35,7 @@
 	
 	<update> <!-- Runs on update -->
 		<schemas>
+			<schemapath type="mysql">installation/sql/updates/mysql</schemapath>
 		</schemas>
 	</update>
 	

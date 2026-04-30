@@ -379,3 +379,62 @@ CREATE TABLE IF NOT EXISTS `#__flexicontent_file_usage` (
 	KEY  `context` (`context`),
 	KEY  `prop` (`prop`)
 ) ENGINE=MyISAM CHARACTER SET `utf8` COLLATE `utf8_general_ci`
+
+-- ---------------------------------------------------------------------------
+-- Pro Templates (v6.1.0-alpha.5)
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `#__flexicontent_pro_layouts` (
+  `id`               INT(11) UNSIGNED    NOT NULL AUTO_INCREMENT,
+  `title`            VARCHAR(255)        NOT NULL DEFAULT '',
+  `type_id`          INT(11)             NOT NULL DEFAULT 0,
+  `catid`            INT(11)             NOT NULL DEFAULT 0,
+  `assignment_type`  VARCHAR(32)         NOT NULL DEFAULT 'global',
+  `assignment_value` VARCHAR(100)        NOT NULL DEFAULT '',
+  `layout_data`      LONGTEXT            NULL,
+  `theme_id`         INT(11)             NOT NULL DEFAULT 0,
+  `state`            TINYINT(1)          NOT NULL DEFAULT 1,
+  `ordering`         INT(11)             NOT NULL DEFAULT 0,
+  `note`             VARCHAR(255)        NOT NULL DEFAULT '',
+  `created`          DATETIME            NULL DEFAULT NULL,
+  `created_by`       INT(11)             NOT NULL DEFAULT 0,
+  `modified`         DATETIME            NULL DEFAULT NULL,
+  `modified_by`      INT(11)             NOT NULL DEFAULT 0,
+  `checked_out`      INT(11)             NULL DEFAULT NULL,
+  `checked_out_time` DATETIME            NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_state`      (`state`),
+  KEY `idx_type_cat`   (`type_id`, `catid`),
+  KEY `idx_assignment` (`assignment_type`, `assignment_value`(50)),
+  KEY `idx_checkout`   (`checked_out`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__flexicontent_pro_themes` (
+  `id`               INT(11) UNSIGNED    NOT NULL AUTO_INCREMENT,
+  `title`            VARCHAR(255)        NOT NULL DEFAULT '',
+  `theme_data`       LONGTEXT            NULL,
+  `state`            TINYINT(1)          NOT NULL DEFAULT 1,
+  `ordering`         INT(11)             NOT NULL DEFAULT 0,
+  `created`          DATETIME            NULL DEFAULT NULL,
+  `created_by`       INT(11)             NOT NULL DEFAULT 0,
+  `modified`         DATETIME            NULL DEFAULT NULL,
+  `modified_by`      INT(11)             NOT NULL DEFAULT 0,
+  `checked_out`      INT(11)             NULL DEFAULT NULL,
+  `checked_out_time` DATETIME            NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_state`    (`state`),
+  KEY `idx_checkout` (`checked_out`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__flexicontent_pro_revisions` (
+  `id`            INT(11) UNSIGNED    NOT NULL AUTO_INCREMENT,
+  `layout_id`     INT(11) UNSIGNED    NOT NULL DEFAULT 0,
+  `title`         VARCHAR(255)        NOT NULL DEFAULT '',
+  `layout_data`   LONGTEXT            NULL,
+  `revision_type` VARCHAR(32)         NOT NULL DEFAULT 'manual',
+  `created`       DATETIME            NULL DEFAULT NULL,
+  `created_by`    INT(11)             NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_layout_id` (`layout_id`),
+  KEY `idx_type`      (`revision_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
