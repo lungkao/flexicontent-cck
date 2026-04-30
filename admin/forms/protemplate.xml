@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fieldset name="basic">
+
+		<field
+			name="id"
+			type="hidden"
+		/>
+
+		<field
+			name="title"
+			type="text"
+			label="FLEXI_TITLE"
+			required="true"
+			class="form-control"
+			size="60"
+		/>
+
+		<field
+			name="type_id"
+			type="sql"
+			label="FLEXI_PROTEMPLATE_TYPE"
+			description="FLEXI_PROTEMPLATE_TYPE_DESC"
+			query="SELECT id, name AS title FROM #__flexicontent_types WHERE published=1 ORDER BY name"
+			key_field="id"
+			value_field="title"
+			default="0"
+			first_option="FLEXI_PROTEMPLATE_ALL_TYPES"
+			first_hasnt_key="true"
+			class="form-select"
+		/>
+
+		<field
+			name="catid"
+			type="sql"
+			label="FLEXI_CATEGORY"
+			description="FLEXI_PROTEMPLATE_CATID_DESC"
+			query="SELECT id, title FROM #__categories WHERE extension='com_flexicontent' AND published=1 ORDER BY title"
+			key_field="id"
+			value_field="title"
+			default="0"
+			first_option="FLEXI_PROTEMPLATE_ALL_CATS"
+			first_hasnt_key="true"
+			class="form-select"
+		/>
+
+		<field
+			name="assignment_type"
+			type="list"
+			label="FLEXI_PROTEMPLATE_ASSIGNMENT_TYPE"
+			description="FLEXI_PROTEMPLATE_ASSIGNMENT_TYPE_DESC"
+			default="global"
+			class="form-select"
+		>
+			<option value="global">FLEXI_PROTEMPLATE_ASSIGN_GLOBAL</option>
+			<option value="type">FLEXI_PROTEMPLATE_ASSIGN_TYPE</option>
+			<option value="category">FLEXI_PROTEMPLATE_ASSIGN_CATEGORY</option>
+			<option value="item">FLEXI_PROTEMPLATE_ASSIGN_ITEM</option>
+			<option value="menu">FLEXI_PROTEMPLATE_ASSIGN_MENU</option>
+		</field>
+
+		<field
+			name="assignment_value"
+			type="text"
+			label="FLEXI_PROTEMPLATE_ASSIGNMENT_VALUE"
+			description="FLEXI_PROTEMPLATE_ASSIGNMENT_VALUE_DESC"
+			default=""
+			class="form-control"
+			size="100"
+		/>
+
+		<field
+			name="theme_id"
+			type="hidden"
+			default="0"
+		/>
+
+		<field
+			name="layout_data"
+			type="hidden"
+			default=""
+		/>
+
+		<field
+			name="state"
+			type="list"
+			label="JSTATUS"
+			default="1"
+			class="form-select"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+
+		<field
+			name="ordering"
+			type="number"
+			label="JFIELD_ORDERING_LABEL"
+			default="0"
+			class="form-control"
+		/>
+
+		<field
+			name="note"
+			type="text"
+			label="JGLOBAL_FIELD_NOTE_LABEL"
+			default=""
+			class="form-control"
+			size="255"
+		/>
+
+	</fieldset>
+</form>

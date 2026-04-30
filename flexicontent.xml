@@ -82,6 +82,8 @@
 			<menu link="option=com_flexicontent&amp;view=fields">FLEXI_FIELDS</menu>
 			<menu link="option=com_flexicontent&amp;view=tags">FLEXI_TAGS</menu>
 			<menu link="option=com_flexicontent&amp;view=templates">FLEXI_TEMPLATES</menu>
+			<menu link="option=com_flexicontent&amp;view=protemplates">FLEXI_PROTEMPLATES</menu>
+			<menu link="option=com_flexicontent&amp;view=prothemes">FLEXI_PROTHEMES</menu>
 			<menu link="option=com_flexicontent&amp;view=users">FLEXI_USERS</menu>
 			<menu link="option=com_flexicontent&amp;view=groups">FLEXI_GROUPS</menu>
 			<menu link="option=com_flexicontent&amp;view=filemanager">FLEXI_FILEMANAGER</menu>
@@ -104,6 +106,7 @@
 			<folder>assets</folder>
 			<folder>controllers</folder>
 			<folder>elements</folder>
+			<folder>forms</folder>
 			<folder>helpers</folder>
 			<folder>installation</folder>
 			<folder>models</folder>

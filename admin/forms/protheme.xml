@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fieldset name="basic">
+
+		<field
+			name="id"
+			type="hidden"
+		/>
+
+		<field
+			name="title"
+			type="text"
+			label="FLEXI_TITLE"
+			required="true"
+			class="form-control"
+			size="60"
+		/>
+
+		<field
+			name="theme_data"
+			type="hidden"
+			default=""
+		/>
+
+		<field
+			name="state"
+			type="list"
+			label="JSTATUS"
+			default="1"
+			class="form-select"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+
+		<field
+			name="ordering"
+			type="number"
+			label="JFIELD_ORDERING_LABEL"
+			default="0"
+			class="form-control"
+		/>
+
+	</fieldset>
+</form>
