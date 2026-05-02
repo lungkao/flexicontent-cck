@@ -26,7 +26,6 @@
   /*
    * Replicates these CSS :has() patterns that control grid layout:
    *   flexi_frontend_modern.css  — 22 occurrences
-   *   yootheme_grid/css/category.css — 5 occurrences
    *
    * Patterns covered:
    *   A) .featured-block.fc-items-block — total=2 (1fr 1fr)
