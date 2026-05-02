@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<name>mod_flexicontent - 'modern' Layout</name>
+	<author>FLEXIcontent Team</author>
+	<creationDate>2026</creationDate>
+	<copyright>Copyright (C) 2026 flexicontent.org</copyright>
+	<license>GNU/GPL v2</license>
+	<version>1.0</version>
+	<description>Modern grid layout — simplified params, CSS Grid responsive, Pro Theme support.</description>
+
+	<fields name="params">
+
+		<fieldset name="layout" addfieldpath="/administrator/components/com_flexicontent/elements">
+
+			<!-- ============================================================
+			     PRESET
+			     ============================================================ -->
+			<field name="modern_sep_preset" type="separator" default="Preset" level="level1" />
+
+			<field name="modern_preset_note" type="note"
+				description="Load a saved preset to quickly fill all settings below. &lt;a href='index.php?option=com_flexicontent&amp;view=modulepresets' target='_blank'&gt;Manage Presets →&lt;/a&gt;" />
+
+			<!-- ============================================================
+			     LAYOUT
+			     ============================================================ -->
+			<field name="modern_sep_layout" type="separator" default="Layout" level="level1" />
+
+			<field name="modern_mode" type="list" default="card"
+				label="Card style"
+				description="card = image top / list = image left / compact = text only">
+				<option value="card">Card (image top)</option>
+				<option value="list">List (image left)</option>
+				<option value="compact">Compact (text only)</option>
+			</field>
+
+			<field name="modern_cols_desktop" type="list" default="3"
+				label="Columns — Desktop"
+				description="Number of columns on screens ≥ 769 px">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+			</field>
+
+			<field name="modern_cols_tablet" type="list" default="2"
+				label="Columns — Tablet"
+				description="Number of columns on screens 481–768 px">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+			</field>
+
+			<field name="modern_cols_mobile" type="list" default="1"
+				label="Columns — Mobile"
+				description="Number of columns on screens ≤ 480 px">
+				<option value="1">1</option>
+				<option value="2">2</option>
+			</field>
+
+			<field name="modern_gap" type="list" default="md"
+				label="Grid gap"
+				description="Space between cards">
+				<option value="none">None</option>
+				<option value="sm">Small (0.75rem)</option>
+				<option value="md">Medium (1.5rem)</option>
+				<option value="lg">Large (2.5rem)</option>
+			</field>
+
+			<field name="modern_img_ratio" type="list" default="56.25"
+				label="Image aspect ratio"
+				description="Height as % of card width">
+				<option value="56.25">16:9 (56.25 %)</option>
+				<option value="75">4:3 (75 %)</option>
+				<option value="100">1:1 square (100 %)</option>
+				<option value="133.33">3:4 portrait (133 %)</option>
+				<option value="0">Free height</option>
+			</field>
+
+			<!-- ============================================================
+			     CONTENT TOGGLES
+			     ============================================================ -->
+			<field name="modern_sep_content" type="separator" default="Content" level="level1" />
+
+			<field name="modern_show_image" type="radio" default="1"
+				label="Show image"
+				description="Display item thumbnail" class="btn-group btn-group-yesno">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</field>
+
+			<field name="modern_show_category" type="radio" default="1"
+				label="Show category badge"
+				description="" class="btn-group btn-group-yesno">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</field>
+
+			<field name="modern_show_date" type="list" default="created"
+				label="Show date"
+				description="Which date to display, or hide">
+				<option value="">Hidden</option>
+				<option value="created">Created</option>
+				<option value="modified">Modified</option>
+				<option value="publish_up">Publish date</option>
+			</field>
+
+			<field name="modern_show_text" type="radio" default="1"
+				label="Show intro text"
+				description="" class="btn-group btn-group-yesno">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</field>
+
+			<field name="modern_text_chars" type="text" default="120"
+				label="Intro text — max characters"
+				description="0 = no limit" filter="integer" />
+
+			<field name="modern_title_chars" type="text" default="80"
+				label="Title — max characters"
+				description="0 = no limit" filter="integer" />
+
+			<field name="modern_show_readmore" type="radio" default="1"
+				label="Show Read more link"
+				description="" class="btn-group btn-group-yesno">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</field>
+
+			<field name="modern_readmore_label" type="text" default="Read more →"
+				label="Read more label"
+				description="Text for the read more link" />
+
+			<!-- ============================================================
+			     IMAGE
+			     ============================================================ -->
+			<field name="modern_sep_image" type="separator" default="Image" level="level1" />
+
+			<field name="modern_img_width" type="text" default="400"
+				label="Thumbnail width (px)"
+				description="0 = original" filter="integer" />
+
+			<field name="modern_img_height" type="text" default="225"
+				label="Thumbnail height (px)"
+				description="0 = auto" filter="integer" />
+
+			<!-- ============================================================
+			     STYLE
+			     ============================================================ -->
+			<field name="modern_sep_style" type="separator" default="Style" level="level1" />
+
+			<field name="modern_card_shadow" type="radio" default="1"
+				label="Card shadow"
+				description="" class="btn-group btn-group-yesno">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</field>
+
+			<field name="modern_card_hover" type="radio" default="1"
+				label="Hover lift effect"
+				description="Card lifts slightly on hover" class="btn-group btn-group-yesno">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</field>
+
+			<field name="modern_custom_class" type="text" default=""
+				label="Custom CSS class"
+				description="Extra class added to the module wrapper" />
+
+		</fieldset>
+
+	</fields>
+
+</form>

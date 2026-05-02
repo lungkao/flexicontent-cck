@@ -1,0 +1,252 @@
+/**
+ * FLEXIcontent Module — Modern Template
+ * File: modules/mod_flexicontent/tmpl/modern/modern.css
+ *
+ * CSS custom properties are set inline by PHP on .fcmod-modern so every
+ * module instance on the same page can have independent grid settings.
+ *
+ * Layout modes (class on .fcmod-modern):
+ *   .fcmod-card    — vertical card  (image top, content below)
+ *   .fcmod-list    — horizontal card (image left 40%, content right)
+ *   .fcmod-compact — text-only list  (no image block)
+ *
+ * Gap presets (class on .fcmod-modern):
+ *   .gap-none | .gap-sm | .gap-md (default) | .gap-lg
+ */
+
+/* ============================================================
+   1. CSS Custom Property Defaults
+   ============================================================
+   These are fallback values. PHP overrides them via a style=""
+   attribute on .fcmod-modern at render time.
+   ============================================================ */
+.fcmod-modern {
+  --fcmod-cols:      3;
+  --fcmod-cols-t:    2;        /* tablet breakpoint columns  */
+  --fcmod-cols-m:    1;        /* mobile breakpoint columns  */
+  --fcmod-gap:       1.5rem;
+  --fcmod-img-ratio: 56.25%;   /* 16:9 aspect ratio          */
+}
+
+/* ============================================================
+   2. Grid Container
+   ============================================================ */
+.fcmod-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--fcmod-cols), 1fr);
+  gap: var(--fcmod-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tablet breakpoint — switch to --fcmod-cols-t */
+@media (max-width: 768px) {
+  .fcmod-grid {
+    grid-template-columns: repeat(var(--fcmod-cols-t), 1fr);
+  }
+}
+
+/* Mobile breakpoint — switch to --fcmod-cols-m */
+@media (max-width: 480px) {
+  .fcmod-grid {
+    grid-template-columns: repeat(var(--fcmod-cols-m), 1fr);
+  }
+}
+
+/* ============================================================
+   3. Gap Presets
+   Override --fcmod-gap via a utility class on .fcmod-modern.
+   ============================================================ */
+.fcmod-modern.gap-none .fcmod-grid { gap: 0; }
+.fcmod-modern.gap-sm   .fcmod-grid { gap: 0.75rem; }
+.fcmod-modern.gap-md   .fcmod-grid { gap: 1.5rem; }   /* same as default */
+.fcmod-modern.gap-lg   .fcmod-grid { gap: 2.5rem; }
+
+/* ============================================================
+   4. Card Wrapper (shared across all modes)
+   ============================================================ */
+.fcmod-card-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;          /* fills the grid cell vertically    */
+}
+
+/* Optional drop shadow — add .has-shadow on .fcmod-modern */
+.fcmod-modern.has-shadow .fcmod-card-wrap {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
+}
+
+/* Hover lift — add .has-hover on .fcmod-modern */
+.fcmod-modern.has-hover .fcmod-card-wrap:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   5. Card Image Box (aspect-ratio via padding-top trick)
+   ============================================================ */
+.fcmod-card-img {
+  position: relative;
+  overflow: hidden;
+  /* padding-top creates the aspect-ratio box */
+  padding-top: var(--fcmod-img-ratio);
+  flex-shrink: 0;
+}
+
+/* The <img> sits inside the padding box */
+.fcmod-card-img img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================================
+   6. Card Body
+   ============================================================ */
+.fcmod-card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  flex: 1;               /* stretch to fill remaining height  */
+}
+
+/* ============================================================
+   7. Meta Row (category badge + date)
+   ============================================================ */
+.fcmod-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+/* Category pill badge */
+.fcmod-category-badge {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   8. Title
+   ============================================================ */
+.fcmod-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.fcmod-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.fcmod-title a:hover,
+.fcmod-title a:focus {
+  color: #2563eb;
+}
+
+/* ============================================================
+   9. Intro Text
+   ============================================================ */
+.fcmod-text {
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 8px 0;
+  flex: 1;               /* push read-more to the bottom      */
+}
+
+/* ============================================================
+   10. Read More Link
+   ============================================================ */
+.fcmod-readmore {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.fcmod-readmore:hover,
+.fcmod-readmore:focus {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   11. MODE: List  (.fcmod-list on .fcmod-modern)
+   Horizontal card — image fixed on the left, content on right.
+   ============================================================ */
+.fcmod-modern.fcmod-list .fcmod-card-wrap {
+  flex-direction: row;
+}
+
+.fcmod-modern.fcmod-list .fcmod-card-img {
+  flex: 0 0 40%;
+  padding-top: 0;        /* cancel the aspect-ratio trick      */
+  height: 180px;
+}
+
+.fcmod-modern.fcmod-list .fcmod-card-body {
+  flex: 1;
+  padding: 16px;
+}
+
+/* On very narrow screens, fall back to vertical stacking */
+@media (max-width: 480px) {
+  .fcmod-modern.fcmod-list .fcmod-card-wrap {
+    flex-direction: column;
+  }
+
+  .fcmod-modern.fcmod-list .fcmod-card-img {
+    flex: none;
+    height: auto;
+    padding-top: var(--fcmod-img-ratio);
+  }
+}
+
+/* ============================================================
+   12. MODE: Compact  (.fcmod-compact on .fcmod-modern)
+   Text-only list — no image block, divider between items.
+   ============================================================ */
+.fcmod-modern.fcmod-compact .fcmod-card-img {
+  display: none;
+}
+
+.fcmod-modern.fcmod-compact .fcmod-card-wrap {
+  border-bottom: 1px solid #e5e7eb;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 12px 0;
+}
+
+/* Remove top padding from first item, bottom border from last */
+.fcmod-modern.fcmod-compact .fcmod-grid > *:first-child .fcmod-card-wrap {
+  padding-top: 0;
+}
+
+.fcmod-modern.fcmod-compact .fcmod-grid > *:last-child .fcmod-card-wrap {
+  border-bottom: none;
+}
