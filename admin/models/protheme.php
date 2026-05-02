@@ -110,6 +110,26 @@ class FlexicontentModelProtheme extends FCModelAdmin
 		return true;
 	}
 
+	public function canEdit($record = null, $user = null)
+	{
+		if ($user) {
+			throw new \Exception(__FUNCTION__ . '(): Error model does not support checking ACL of specific user', 500);
+		}
+		$user = \Joomla\CMS\Factory::getUser();
+		return $user->authorise('flexicontent.managetemplates', 'com_flexicontent')
+		    || $user->authorise('core.admin', 'com_flexicontent');
+	}
+
+	public function canEditState($record = null, $user = null)
+	{
+		return $this->canEdit($record);
+	}
+
+	public function canDelete($record = null)
+	{
+		return $this->canEdit();
+	}
+
 	public function getTable($type = 'flexicontent_pro_themes', $prefix = '', $config = [])
 	{
 		return Table::getInstance($type, '', $config);

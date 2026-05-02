@@ -221,6 +221,36 @@ class FlexicontentModelProtemplate extends FCModelAdmin
 	}
 
 	// -------------------------------------------------------------------------
+	// ACL
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Check if current user can create / edit a Pro Template layout.
+	 * Reuses the same permission as regular Templates (flexicontent.managetemplates).
+	 */
+	public function canEdit($record = null, $user = null)
+	{
+		if ($user) {
+			throw new \Exception(__FUNCTION__ . '(): Error model does not support checking ACL of specific user', 500);
+		}
+		$user = \Joomla\CMS\Factory::getUser();
+		return $user->authorise('flexicontent.managetemplates', 'com_flexicontent')
+		    || $user->authorise('core.admin', 'com_flexicontent');
+	}
+
+	/** @inheritdoc */
+	public function canEditState($record = null, $user = null)
+	{
+		return $this->canEdit($record);
+	}
+
+	/** @inheritdoc */
+	public function canDelete($record = null)
+	{
+		return $this->canEdit();
+	}
+
+	// -------------------------------------------------------------------------
 	// JTable
 	// -------------------------------------------------------------------------
 
