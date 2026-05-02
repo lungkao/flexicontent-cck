@@ -1,727 +1,473 @@
 <?php
 /**
- * @version 1.5 stable $Id: import.php 1883 2014-04-09 17:49:21Z ggppdk $
- * @package Joomla
- * @subpackage FLEXIcontent
- * @copyright (C) 2009 Emmanuel Danan - www.vistamedia.fr
- * @license GNU/GPL v2
+ * FLEXIcontent Import — Step 1: Upload & Configure
  *
- * FLEXIcontent is a derivative work of the excellent QuickFAQ component
- * @copyright (C) 2008 Christoph Lukes
- * see www.schlu.net for more information
+ * Clean Bootstrap 5 form replacing the old 7-tab tabber layout.
+ * Two actions:
+ *   a) "Preview & Map Fields" → previewcsv → import_map.php (Step 2)
+ *   b) "Quick Import"         → initcsv    (field names must match exactly)
  *
- * FLEXIcontent is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * @package     FLEXIcontent
+ * @license     GNU/GPL v2
  */
 
 defined('_JEXEC') or die('Restricted access');
 
-$params = $this->cparams;
-$document	= \Joomla\CMS\Factory::getDocument();
-$cparams  = \Joomla\CMS\Component\ComponentHelper::getParams('com_flexicontent');
+/** @var FlexicontentViewImport $this */
+
+$fv     = $this->formvals;   // saved/default values from model state
+$lists  = $this->lists;      // pre-built HTML select elements
+$token  = \Joomla\CMS\HTML\HTMLHelper::_('form.token');
+$link   = 'index.php?option=com_flexicontent&view=import';
 
 if (FLEXI_J40GE) \Joomla\CMS\Toolbar\ToolbarHelper::inlinehelp();
-
-// For tabsets/tabs ids (focusing, etc)
-$tabSetCnt = -1;
-$tabSetMax = -1;
-$tabCnt = array();
-$tabSetStack = array();
-
-// Load JS tabber lib
-/* J5/J6 WebAsset: */ $this->document->getWebAssetManager()->registerAndUseScript('fc-tabber-minimized', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/js/tabber-minimized.js' : 'components/com_flexicontent/assets/js/tabber-minimized.min.js'), array('version' => FLEXI_VHASH));
-/* J5/J6 WebAsset: */ $this->document->getWebAssetManager()->registerAndUseStyle('fc-tabber', \Joomla\CMS\Uri\Uri::root().(JDEBUG ? 'components/com_flexicontent/assets/css/tabber.css' : 'components/com_flexicontent/assets/css/tabber.min.css'), array('version' => FLEXI_VHASH));
-$this->document->addScriptDeclaration(' document.write(\'<style type="text/css">.fctabber{display:none;}<\/style>\'); ');  // temporarily hide the tabbers until javascript runs
 ?>
 
+<div id="flexicontent" class="flexicontent">
 
-<div id="flexicontent" class="flexicontent fcconfig-form">
+<form action="index.php" method="post" name="adminForm" id="adminForm"
+      class="form-validate"
+      enctype="multipart/form-data">
 
-<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-validate form-horizontal" enctype="multipart/form-data" >
+	<!-- ════════════════════════════════════════════════════════════════
+	     SECTION 1: File upload + Content Type
+	     ════════════════════════════════════════════════════════════════ -->
+	<div class="card mb-3 border-primary">
+		<div class="card-header bg-primary text-white fw-semibold">
+			📁 Step 1 — Upload CSV File &amp; Select Content Type
+		</div>
+		<div class="card-body">
+			<div class="row g-3">
 
+				<div class="col-md-6">
+					<label for="csvfile" class="form-label fw-semibold">
+						CSV File <span class="text-danger">*</span>
+					</label>
+					<input type="file" name="csvfile" id="csvfile"
+					       class="form-control required" accept=".csv,.txt" />
+					<div class="form-text">Supported: standard CSV (Excel), or FLEXIcontent custom format.</div>
+				</div>
 
-<div class="<?php echo FLEXI_J40GE ? 'row' : 'row-fluid'; ?>">
+				<div class="col-md-6">
+					<label for="type_id" class="form-label fw-semibold">
+						Content Type <span class="text-danger">*</span>
+					</label>
+					<div id="type_id-wrapper">
+						<?php echo $lists['type_id']; ?>
+					</div>
+					<div class="form-text">Used to identify fields and set type for new items.</div>
+				</div>
 
-<?php if (!empty( $this->sidebar) && FLEXI_J40GE == false) : ?>
-
-	<div id="j-sidebar-container" class="span2 col-md-2">
-
-		<?php echo str_replace('type="button"', '', $this->sidebar); ?>
-
+			</div>
+		</div>
 	</div>
-	
-	<div id="j-main-container" class="span10 col-md-10">
 
-	<?php else : ?>
+	<!-- ════════════════════════════════════════════════════════════════
+	     SECTION 2: Import Mode & Defaults (accordion)
+	     ════════════════════════════════════════════════════════════════ -->
+	<div class="accordion mb-3" id="accImport">
 
-		<div id="j-main-container" class="span12 col-md-12">
+		<!-- ── 2a. Import Mode ───────────────────────────────────────── -->
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="hMode">
+				<button class="accordion-button" type="button"
+				        data-bs-toggle="collapse" data-bs-target="#colMode"
+				        aria-expanded="true" aria-controls="colMode">
+					⚙️ Import Mode &amp; Defaults
+				</button>
+			</h2>
+			<div id="colMode" class="accordion-collapse collapse show"
+			     aria-labelledby="hMode">
+				<div class="accordion-body">
+					<div class="row g-3">
 
-<?php endif;?>
-
-
-<?php
-array_push($tabSetStack, $tabSetCnt);
-$tabSetCnt = ++$tabSetMax;
-$tabCnt[$tabSetCnt] = 0;
-?>
-
-
-<!-- tabber start -->
-<div class="fctabber fields_tabset" id="fcform_tabset_<?php echo $tabSetCnt; ?>">
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-home-2">
-		<h3 class="tabberheading"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_BASIC");?></h3>
-		
-		<br/>
-		<table class="fc-form-tbl align-top">
-			
-			<tr>
-				<td class="key"><label class="label">Id</label></td>
-				<td class="data" style="width: 300px;">
-					<?php
-						$dv = $this->model->getState('id_col');
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="radio" id="id_col0" name="id_col" value="0" <?php echo $dv==0 ? 'checked="checked"' : ''; ?> />
-						<label for="id_col0"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_AUTO_NEW_ID");?> - <?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_CREATE_ITEMS");?></label> <br/>
-
-						<div style="border: 1px dashed; padding: 12px">
-							<b><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_ID_COL");?></b><br/>
-							<input type="radio" id="id_col1" name="id_col" value="1" <?php echo $dv==1 ? 'checked="checked"' : ''; ?> />
-							<label for="id_col1"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_CREATE_ITEMS");?></label> <br/>
-		
-							<input type="radio" id="id_col2" name="id_col" value="2" <?php echo $dv==2 ? 'checked="checked"' : ''; ?> />
-							<label for="id_col2"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_CREATE_UPDATE_ITEMS");?></label> <br/>
-		
-							<input type="radio" id="id_col3" name="id_col" value="3" <?php echo $dv==3 ? 'checked="checked"' : ''; ?> />
-							<label for="id_col3"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_UPDATE_ITEMS");?></label>
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">Item ID handling</label>
+							<?php $dv = $fv['id_col']; ?>
+							<div class="mb-2">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="id_col"
+									       id="id_col0" value="0" <?php echo $dv==0 ? 'checked' : ''; ?> />
+									<label class="form-check-label" for="id_col0">
+										Auto-assign IDs — create new items only
+									</label>
+								</div>
+								<div class="border rounded p-2 mt-1">
+									<small class="text-muted fw-semibold d-block mb-1">Use 'id' column in CSV:</small>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="id_col"
+										       id="id_col1" value="1" <?php echo $dv==1 ? 'checked' : ''; ?> />
+										<label class="form-check-label" for="id_col1">Create items with given IDs</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="id_col"
+										       id="id_col2" value="2" <?php echo $dv==2 ? 'checked' : ''; ?> />
+										<label class="form-check-label" for="id_col2">Create <em>or</em> update</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="id_col"
+										       id="id_col3" value="3" <?php echo $dv==3 ? 'checked' : ''; ?> />
+										<label class="form-check-label" for="id_col3">Update existing items only</label>
+									</div>
+								</div>
+							</div>
 						</div>
+
+						<div class="col-md-6">
+							<div class="alert alert-info mb-2" style="font-size:.875rem;">
+								<b>Defaults apply to new items only.</b><br>
+								<b>'Use column'</b> applies to both new and existing items.
+							</div>
+
+							<label class="form-label fw-semibold">
+								Language
+							</label>
+							<?php echo $lists['languages']; ?>
+						</div>
+
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">Main Category <span class="text-danger">*</span></label>
+							<?php echo $lists['maincat']; ?>
+							<div class="form-check mt-1">
+								<input class="form-check-input" type="checkbox"
+								       name="maincat_col" id="maincat_col" value="1"
+								       <?php echo $fv['maincat_col'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="maincat_col">
+									Override with 'catid' column
+								</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">Secondary Categories</label>
+							<?php echo $lists['seccats']; ?>
+							<div class="form-check mt-1">
+								<input class="form-check-input" type="checkbox"
+								       name="seccats_col" id="seccats_col" value="1"
+								       <?php echo $fv['seccats_col'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="seccats_col">
+									Override with 'cid' column (comma-sep IDs)
+								</label>
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<label class="form-label fw-semibold">State</label>
+							<?php echo $lists['states']; ?>
+						</div>
+
+						<div class="col-md-4">
+							<label class="form-label fw-semibold">Access Level</label>
+							<?php echo $lists['access']; ?>
+						</div>
+
+						<div class="col-md-4">
+							<label for="items_per_step" class="form-label fw-semibold">Items per batch</label>
+							<input type="number" name="items_per_step" id="items_per_step"
+							       min="1" max="50"
+							       value="<?php echo (int) $fv['items_per_step']; ?>"
+							       class="form-control" />
+							<div class="form-text">Max 50. Lower = safer for large files.</div>
+						</div>
+
+					</div><!-- /row -->
+				</div><!-- /accordion-body -->
+			</div><!-- /colMode -->
+		</div><!-- /accordion-item -->
+
+
+		<!-- ── 2b. Tags & Metadata ───────────────────────────────────── -->
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="hMeta">
+				<button class="accordion-button collapsed" type="button"
+				        data-bs-toggle="collapse" data-bs-target="#colMeta"
+				        aria-expanded="false" aria-controls="colMeta">
+					🏷️ Tags, Author &amp; Dates (optional)
+				</button>
+			</h2>
+			<div id="colMeta" class="accordion-collapse collapse"
+			     aria-labelledby="hMeta">
+				<div class="accordion-body">
+					<div class="row g-3">
+
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">Tags column</label>
+							<div>
+								<?php $dv = $fv['tags_col']; ?>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="tags_col" value="0"
+									       id="tags_col0" <?php echo $dv==0 ? 'checked' : ''; ?> />
+									<label class="form-check-label" for="tags_col0">Do not import tags</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="tags_col" value="1"
+									       id="tags_col1" <?php echo $dv==1 ? 'checked' : ''; ?> />
+									<label class="form-check-label" for="tags_col1">Use 'tags_names' column (comma-sep names)</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="tags_col" value="2"
+									       id="tags_col2" <?php echo $dv==2 ? 'checked' : ''; ?> />
+									<label class="form-check-label" for="tags_col2">Use 'tags_raw' column (comma-sep IDs)</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">Author</label>
+							<div>
+								<?php $dv = $fv['created_by_col']; ?>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="created_by_col" value="0"
+									       id="created_by_col0" <?php echo $dv==0 ? 'checked' : ''; ?> />
+									<label class="form-check-label" for="created_by_col0">Current logged-in user</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="created_by_col" value="1"
+									       id="created_by_col1" <?php echo $dv==1 ? 'checked' : ''; ?> />
+									<label class="form-check-label" for="created_by_col1">Use 'created_by' column (user ID)</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">Dates in CSV</label>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="created_col" value="1"
+								       id="created_col" <?php echo $fv['created_col'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="created_col">Use 'created' column</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="publish_up_col" value="1"
+								       id="publish_up_col" <?php echo $fv['publish_up_col'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="publish_up_col">Use 'publish_up' column</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="publish_down_col" value="1"
+								       id="publish_down_col" <?php echo $fv['publish_down_col'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="publish_down_col">Use 'publish_down' column</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">META data columns</label>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="metadesc_col" value="1"
+								       id="metadesc_col" <?php echo $fv['metadesc_col'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="metadesc_col">Use 'metadesc' column</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="metakey_col" value="1"
+								       id="metakey_col" <?php echo $fv['metakey_col'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="metakey_col">Use 'metakey' column</label>
+							</div>
+						</div>
+
+					</div><!-- /row -->
+				</div><!-- /accordion-body -->
+			</div><!-- /colMeta -->
+		</div><!-- /accordion-item -->
+
+
+		<!-- ── 2c. CSV Format ────────────────────────────────────────── -->
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="hFmt">
+				<button class="accordion-button collapsed" type="button"
+				        data-bs-toggle="collapse" data-bs-target="#colFmt"
+				        aria-expanded="false" aria-controls="colFmt">
+					📋 CSV Format Settings
+				</button>
+			</h2>
+			<div id="colFmt" class="accordion-collapse collapse"
+			     aria-labelledby="hFmt">
+				<div class="accordion-body">
+
+					<div class="alert alert-info mb-3" style="font-size:.875rem;">
+						<b>Standard CSV (Excel compatible):</b>
+						Field separator <code>,</code> &nbsp;·&nbsp;
+						Enclosure <code>"</code> &nbsp;·&nbsp;
+						Item separator <code>\n</code> &nbsp;·&nbsp;
+						Multi-value <code>%%</code> &nbsp;·&nbsp;
+						Multi-property <code>!!</code>
 					</div>
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_ALL_IDS_CHECKED_BEFORE_IMPORT");?></span>
-				</td>
-			</tr>
 
-			<tr>
-				<td class="key"><label class="label" id="type_id-lbl" for="type_id"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_ITEM_TYPE");?></label></td>
-				<td class="data" colspan="2">
-					<?php echo $this->lists['type_id'];?>
-					<span class="fc-mssg-inline fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_("Used by NEW items only");?></span>
-					<span class="fc-mssg-inline fc-warning fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_("For existing items. It is only used to identify field names in column header row. Type will not be modified.");?></span>
-				</td>
-			</tr>
+					<div class="row g-3">
 
-			<tr>
-				<td colspan="3">
-					<div class="fcsep_level2"><?php echo \Joomla\CMS\Language\Text::_('Defaults'); ?></div>
-					<div class="alert alert-info fc-iblock">
-						<?php echo \Joomla\CMS\Language\Text::_("- <b>'Use column'</b> effects both NEW / Existing items. <br> - <b>Specific</b> value effects <b>only NEW</b> items");?>
-					</div>
-				</td>
-			</tr>
+						<div class="col-md-4">
+							<label for="field_separator" class="form-label">Field separator</label>
+							<input type="text" name="field_separator" id="field_separator"
+							       value="<?php echo htmlspecialchars($fv['field_separator']); ?>"
+							       class="form-control required" />
+						</div>
 
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_LANGUAGE");?></label></td>
-				<td class="data" colspan="2">
-					<?php echo str_replace('<br />', '', $this->lists['languages']); ?>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_STATE");?></label></td>
-				<td class="data" colspan="2">
-					<?php echo str_replace('<br />', '', $this->lists['states']); ?>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label" id="access-lbl" for="access"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_ACCESS_LEVEL");?></label></td>
-				<td class="data" colspan="2">
-					<?php echo str_replace('<br />', '', $this->lists['access']); ?>
-				</td>
-			</tr>
-			
-		</table>
+						<div class="col-md-4">
+							<label for="enclosure_char" class="form-label">Enclosure char</label>
+							<input type="text" name="enclosure_char" id="enclosure_char"
+							       value="<?php echo htmlspecialchars($fv['enclosure_char']); ?>"
+							       class="form-control" />
+						</div>
 
-		<br/><br/>
-		<table style="border-collapse: collapse; border: 0; border-spacing: 0;">
-			<tr>
-				<td style="vertical-align:top; font-family:tahoma; font-size:12px;">
-					
-					<fieldset>
-						<legend style="color: darkgreen;"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CSV_FILE_EXAMPLE' ); ?></legend>
-						<div class="alert alert-info">BASIC format, 1st row consists of <br/> - either CUSTOM field names &nbsp; (e.g. mygallery) <br/> - or CORE properties names &nbsp; (e.g. catid)</div>
-						<span class="fcimport_sampleline">title ~~ text ~~ catid ~~ textfield3 ~~ emailfield6 ~~ weblinkfld8 </span><br/>
-						<span class="fcimport_sampleline">~~ title 4 ~~ description 4 ~~ 31 ~~ textfield3 value ~~ userd@somedomain.com ~~ www.somedomaina.com</span><br/>
-						<span class="fcimport_sampleline">~~ title 5 ~~ description 5 ~~ 54 ~~ textfield3 value ~~ usere@somedomain.com ~~ www.somedomainb.com</span><br/>
-					</fieldset>
-				</td>
-			</tr>
-		</table>
+						<div class="col-md-4">
+							<label for="record_separator" class="form-label">Item (record) separator</label>
+							<input type="text" name="record_separator" id="record_separator"
+							       value="<?php echo htmlspecialchars($fv['record_separator']); ?>"
+							       class="form-control required" />
+						</div>
+
+						<div class="col-md-4">
+							<label for="mval_separator" class="form-label">Multi-value separator</label>
+							<input type="text" name="mval_separator" id="mval_separator"
+							       value="<?php echo htmlspecialchars($fv['mval_separator']); ?>"
+							       class="form-control required" />
+						</div>
+
+						<div class="col-md-4">
+							<label for="mprop_separator" class="form-label">Multi-property separator</label>
+							<input type="text" name="mprop_separator" id="mprop_separator"
+							       value="<?php echo htmlspecialchars($fv['mprop_separator']); ?>"
+							       class="form-control required" />
+						</div>
+
+						<div class="col-md-4">
+							<label for="debug_records" class="form-label">Preview rows (test mode)</label>
+							<input type="number" name="debug_records" id="debug_records"
+							       value="<?php echo (int) $fv['debug_records']; ?>"
+							       class="form-control" min="0" />
+						</div>
+
+					</div><!-- /row -->
+				</div><!-- /accordion-body -->
+			</div><!-- /colFmt -->
+		</div><!-- /accordion-item -->
+
+
+		<!-- ── 2d. Media & Advanced ──────────────────────────────────── -->
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="hAdv">
+				<button class="accordion-button collapsed" type="button"
+				        data-bs-toggle="collapse" data-bs-target="#colAdv"
+				        aria-expanded="false" aria-controls="colAdv">
+					🔧 Media Folders &amp; Advanced
+				</button>
+			</h2>
+			<div id="colAdv" class="accordion-collapse collapse"
+			     aria-labelledby="hAdv">
+				<div class="accordion-body">
+					<div class="row g-3">
+
+						<div class="col-md-6">
+							<label for="media_folder" class="form-label">Media / image folder</label>
+							<input type="text" name="media_folder" id="media_folder"
+							       value="<?php echo htmlspecialchars($this->model->getState('media_folder')); ?>"
+							       class="form-control" />
+							<div class="form-text">Relative to Joomla root. E.g. <code>tmp/fcimport_media</code></div>
+						</div>
+
+						<div class="col-md-6">
+							<label for="docs_folder" class="form-label">Documents folder</label>
+							<input type="text" name="docs_folder" id="docs_folder"
+							       value="<?php echo htmlspecialchars($this->model->getState('docs_folder')); ?>"
+							       class="form-control" />
+						</div>
+
+						<div class="col-md-6">
+							<label class="form-label">File field checking</label>
+							<div>
+								<?php if (!empty($this->file_fields)) : ?>
+									<?php foreach ($this->file_fields as $i => $ff) : ?>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox"
+										       name="skip_file_field[]"
+										       id="skip_ff_<?php echo $i; ?>"
+										       value="<?php echo htmlspecialchars($ff->name); ?>" />
+										<label class="form-check-label" for="skip_ff_<?php echo $i; ?>">
+											Skip file check:
+											<?php echo htmlspecialchars($ff->label); ?>
+											<small class="text-muted">[<?php echo htmlspecialchars($ff->name); ?>]</small>
+										</label>
+									</div>
+									<?php endforeach; ?>
+								<?php else : ?>
+									<span class="text-muted">No file fields found.</span>
+								<?php endif; ?>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="form-check mt-3">
+								<input class="form-check-input" type="checkbox"
+								       name="ignore_unused_cols" id="ignore_unused_cols" value="1"
+								       <?php echo $fv['ignore_unused_cols'] ? 'checked' : ''; ?> />
+								<label class="form-check-label" for="ignore_unused_cols">
+									Ignore unused / unrecognised columns
+								</label>
+							</div>
+						</div>
+
+					</div><!-- /row -->
+				</div><!-- /accordion-body -->
+			</div><!-- /colAdv -->
+		</div><!-- /accordion-item -->
+
+
+		<!-- ── 2e. Quick Format Example ──────────────────────────────── -->
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="hEx">
+				<button class="accordion-button collapsed" type="button"
+				        data-bs-toggle="collapse" data-bs-target="#colEx"
+				        aria-expanded="false" aria-controls="colEx">
+					📖 CSV Format Example (Quick Import)
+				</button>
+			</h2>
+			<div id="colEx" class="accordion-collapse collapse"
+			     aria-labelledby="hEx">
+				<div class="accordion-body">
+					<p><b>Header row</b> must contain exact FLEXIcontent field names (or core property names):</p>
+					<pre class="bg-light p-2 rounded" style="font-size:.8rem;">title,text,catid,mygallery,emailfield,weblinkfld
+"My article","Article body text",31,"photo.jpg","user@example.com","https://example.com"</pre>
+					<ul class="small mb-0">
+						<li>Multi-value: <code>val1%%val2%%val3</code></li>
+						<li>Multi-property: <code>[-addr-]=email@x.com!![-text-]=Label</code></li>
+						<li>Use <b>Preview &amp; Map Fields</b> to avoid needing exact names.</li>
+					</ul>
+				</div>
+			</div>
+		</div><!-- /accordion-item -->
+
+	</div><!-- /accordion -->
+
+
+	<!-- ════════════════════════════════════════════════════════════════
+	     ACTION BUTTONS
+	     ════════════════════════════════════════════════════════════════ -->
+	<div class="d-flex flex-wrap gap-2 mb-4">
+
+		<button type="submit" name="task" value="previewcsv"
+		        class="btn btn-primary btn-lg">
+			🔀 Preview &amp; Map Fields →
+		</button>
+
+		<div class="vr d-none d-md-block mx-1"></div>
+
+		<button type="submit" name="task" value="initcsv"
+		        class="btn btn-outline-secondary">
+			⚡ Quick Import
+			<small class="d-block" style="font-size:.7rem;">(header row must use exact FC field names)</small>
+		</button>
+
+		<button type="submit" name="task" value="testcsv"
+		        class="btn btn-outline-info">
+			🔍 Test File Format
+		</button>
 
 	</div>
-	
-	
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-calendar">
-		<h3 class="tabberheading"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_PUBLISHING");?></h3>
-		
-		<br/>
-		<table class="fc-form-tbl align-top">
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_CREATOR_AUTHOR");?></label></td>
-				<td class="data">
-					<?php
-						$dv = $this->model->getState('created_by_col');
-						$checked0 = $dv==0 ? 'checked="checked"' : '';
-						$checked1 = $dv==1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="radio" id="created_by_col0" name="created_by_col" value="0" <?php echo $checked0; ?> />
-						<label for="created_by_col0"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_CREATOR_CURR_USER");?></label>
-						<input type="radio" id="created_by_col1" name="created_by_col" value="1" <?php echo $checked1; ?> />
-						<label for="created_by_col1"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_CREATOR_USE_COL");?></label>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_MODIFIER");?></label></td>
-				<td class="data">
-					<?php
-						$dv = $this->model->getState('modified_by_col');
-						$checked0 = $dv==0 ? 'checked="checked"' : '';
-						$checked1 = $dv==1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="radio" id="modified_by_col0" name="modified_by_col" value="0" <?php echo $checked0; ?> />
-						<label for="modified_by_col0"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_MODIFIER_NONE_USER");?></label>
-						<input type="radio" id="modified_by_col1" name="modified_by_col" value="1" <?php echo $checked1; ?> />
-						<label for="modified_by_col1"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_MODIFIER_USE_COL");?></label>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_META_DATA");?></label></td>
-				<td class="data">
-					<?php
-						$_desc_checked = $this->model->getState('metadesc_col') == 1 ? 'checked="checked"' : '';
-						$_key_checked  = $this->model->getState('metakey_col') == 1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="checkbox" id="metadesc_col" name="metadesc_col" value="1" <?php echo $_desc_checked; ?> />
-						<label for="metadesc_col"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_METADESC_COL");?></label>
-						<input type="checkbox" id="metakey_col" name="metakey_col" value="1" <?php echo $_key_checked; ?> />
-						<label for="metakey_col"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_METAKEY_COL");?></label>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_CUSTOM_TITLE");?></label></td>
-				<td class="data">
-					<?php
-						$_desc_checked = $this->model->getState('custom_ititle_col') == 1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="checkbox" id="custom_ititle_col" name="custom_ititle_col" value="1" <?php echo $_desc_checked; ?> />
-						<label for="custom_ititle_col"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_CUSTOM_TITLE_COL");?></label>
-						<span class="icon-info hasTooltip" style="font-size: 18px;" title="<?php echo htmlspecialchars(\Joomla\CMS\Language\Text::_('FLEXI_CUSTOM_TITLE_DESC'), ENT_COMPAT, 'UTF-8'); ?>"></span>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td colspan="2">
-					<br/>
-					<div class="fc-mssg fc-info"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_ENTER_VALID_DATES");?></div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_CREATION_DATE");?></label></td>
-				<td class="data">
-					<?php
-						$dv = $this->model->getState('created_col');
-						$checked0 = $dv==0 ? 'checked="checked"' : '';
-						$checked1 = $dv==1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="radio" id="created_col0" name="created_col" value="0" <?php echo $checked0; ?> />
-						<label for="created_col0"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_CREATION_CURR_DATE");?></label>
-						<input type="radio" id="created_col1" name="created_col" value="1" <?php echo $checked1; ?> />
-						<label for="created_col1"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_CREATION_USE_COL");?></label>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_MODIFICATION_DATE");?></label></td>
-				<td class="data">
-					<?php
-						$dv = $this->model->getState('modified_col');
-						$checked0 = $dv==0 ? 'checked="checked"' : '';
-						$checked1 = $dv==1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="radio" id="modified_col0" name="modified_col" value="0" <?php echo $checked0; ?> />
-						<label for="modified_col0"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_MODIFICATION_NEVER_DATE");?></label>
-						<input type="radio" id="modified_col1" name="modified_col" value="1" <?php echo $checked1; ?> />
-						<label for="modified_col1"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_MODIFICATION_USE_COL");?></label>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_PUBLICATION_DATES");?></label></td>
-				<td class="data">
-					<?php
-						$_up_checked   = $this->model->getState('publish_up_col') == 1 ? 'checked="checked"' : '';
-						$_down_checked = $this->model->getState('publish_down_col') == 1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="checkbox" id="publish_up_col" name="publish_up_col" value="1" <?php echo $_up_checked; ?> />
-						<label for="publish_up_col"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_PUBLISH_UP_COL");?></label>
-						<input type="checkbox" id="publish_down_col" name="publish_down_col" value="1" <?php echo $_down_checked; ?> />
-						<label for="publish_down_col"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_PUBLISH_DOWN_COL");?></label>
-					</div>
-				</td>
-			</tr>
-			
-		</table>
-		
-	</div>
-	
-	
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-tree-2">
-		<h3 class="tabberheading hasTooltip" title="<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CATS_TIP' ); ?>"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_CATEGORIES");?></h3>
 
-		<br/>
-		<table class="fc-form-tbl align-top">
-			
-			<tr>
-				<td class="" colspan="2">
-					<div class="alert alert-info fc-iblock">
-						<?php echo \Joomla\CMS\Language\Text::_("- <b>'Use column'</b> effects both NEW / Existing items. <br> - <b>Specific</b> value effects <b>only NEW</b> items");?>
-					</div>
-					<div class="fcsep_level2"><?php echo \Joomla\CMS\Language\Text::_('Defaults'); ?></div>
-				</td>
-			</tr>
-
-			<tr>
-				<td class="key"><label class="label" for="maincat"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_MAIN_CATEGORY' ); ?></label></td>
-				<td class="data"><?php echo $this->lists['maincat']; ?></td>
-			</tr>
-			
-			<tr>
-				<td class="key"><label class="label" for="seccats"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_SECONDARY_CATEGORIES' ); ?></label></td>
-				<td class="data"><?php echo $this->lists['seccats']; ?></td>
-			</tr>
-			
-			<tr>
-				<td class="" colspan="2">
-					<br/><div class="fcsep_level2"><?php echo \Joomla\CMS\Language\Text::_('Override defaults via file columns'); ?></div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key" style="text-align:left;">
-					<label class="label" for="maincat_col" style="clear:both;"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_FILE_OVERRIDE' ); ?> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_MAIN_CATEGORY' ); ?></label>
-				</td>
-				<td class="data">
-					<?php
-						$checked = $this->model->getState('maincat_col') == 1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="checkbox" id="maincat_col" name="maincat_col" value="1" <?php echo $checked; ?> /> <label for="maincat_col">(Use 'catid' column, e.g. 54)</label>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key" style="text-align:left;">
-					<label class="label" for="seccats_col" style="clear:both;"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_FILE_OVERRIDE' ); ?> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_SECONDARY_CATEGORIES' ); ?></label>
-				</td>
-				<td class="data">
-					<?php
-						$checked = $this->model->getState('seccats_col') == 1 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="checkbox" id="seccats_col" name="seccats_col" value="1" <?php echo $checked; ?> /> <label for="seccats_col">(Use 'cid' column, e.g. 54,14,51)</label>
-					</div>
-				</td>
-			</tr>
-			
-		</table>
-		
-	</div>
-
-
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-tags-2">
-		<h3 class="tabberheading hasTooltip" title="<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_TAGS_TIP' ); ?>"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_TAGS");?></h3>
-		
-		<br/>
-		<div class="fc-mssg-inline fc-info"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_TAGS_WILL_BE_CREATED_BEFORE_IMPORT");?></div>
-
-		<table class="fc-form-tbl align-top">
-			
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_TAGS");?></label></td>
-				<td class="data">
-					<?php
-						$dv = $this->model->getState('tags_col');
-						$checked0 = $dv==0 ? 'checked="checked"' : '';
-						$checked1 = $dv==1 ? 'checked="checked"' : '';
-						$checked2 = $dv==2 ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="radio" id="tags_col0" name="tags_col" value="0" <?php echo $checked0; ?> />
-						<label for="tags_col0">a. <?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_DO_NOT_IMPORT_TAGS");?></label>
-						<div class="fcclear"></div>
-						<input type="radio" id="tags_col1" name="tags_col" value="1" <?php echo $checked1; ?> />
-						<label for="tags_col1">b. <?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_TAG_NAMES_COL");?></label>
-						<div class="fcclear"></div>
-						<input type="radio" id="tags_col2" name="tags_col" value="2" <?php echo $checked2; ?> />
-						<label for="tags_col2">c. <?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_USE_TAG_IDS_COL");?></label>
-					</div>
-				</td>
-			</tr>
-		</table>
-		
-	</div>
-
-
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-images">
-		<h3 class="tabberheading hasTooltip" title="<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_ABOUT_NEW_FILES' ); ?>">Media / Document fields</h3>
-		
-		<table class="fc-form-tbl align-top">
-			
-			<tr>
-				<td class="" colspan="3">
-					<br/>
-					<div class="fc-mssg fc-info"> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_ABOUT_NEW_FILES' ); ?> </div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key">
-					<label class="label" for="media_folder"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_MEDIA_FOLDER' ); ?></label>
-				</td>
-				<td class="data">
-					<input type="text" name="media_folder" id="media_folder" value="<?php echo $this->model->getState('media_folder'); ?>" class="fcfield_textval" size="40"/>
-				</td>
-				<td class="data" rowspan="2">
-					<div class="fc-mssg fc-info fc-nobgimage">
-						<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_FOLDER_DESC' ); ?><br/><br/>
-						<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_FILE_IN_SUBFOLDER_DESC' ); ?>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key">
-					<label class="label" for="docs_folder"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_DOCUMENTS_FOLDER' ); ?></label>
-				</td>
-				<td class="data">
-					<input type="text" name="docs_folder" id="docs_folder" value="<?php echo $this->model->getState('docs_folder'); ?>" class="fcfield_textval" size="40"/>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="" colspan="3">
-					<br/>
-					<div class="fc-mssg-inline fc-note"> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_SKIP_FILE_CHECK_DESC' ); ?> </div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key">
-					<label class="label" for="docs_folder"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_SKIP_FILE_CHECK' ); ?></label>
-				</td>
-				<td class="data" style="max-width:40%; white-space: unset;">
-					<div class="group-fcset fc_input_set fc-cleared">
-						<?php foreach ($this->file_fields as $i=> $file_fieid) : ?>
-							<input type="checkbox" id="skip_file_field_<?php echo $i; ?>" name="skip_file_field[]" value="<?php echo $file_fieid->name; ?>" />
-							<label for="skip_file_field_<?php echo $i; ?>" class=""><?php echo $file_fieid->label." <small>[".$file_fieid->name."]</small>"; ?></label>
-						<?php endforeach; ?>
-					</div>
-				</td>
-				<td class="data">
-				</td>
-			</tr>
-			
-		</table>
-		
-	</div>
-
-
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-options">
-		<h3 class="tabberheading hasTooltip" title="<?php echo \Joomla\CMS\Language\Text::_( '' ); ?>"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CSV_FILE_N_FORMAT' ); ?></h3>
-		
-		<br/>
-		<table class="fc-form-tbl align-top">
-			<tr>
-				<td class="key">
-					<label class="label" for="csvfile"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSVFILE' ); ?></label>
-				</td>
-				<td class="data">
-					<input type="file" name="csvfile" id="csvfile" class="required" />
-				</td>
-				<td class="data">
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key">
-					<label class="label" for="debug_records"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_DISPLAY_FIELDS_OF_FIRST_RECORDS' ); ?></label>
-				</td>
-				<td class="data">
-					<input type="text" name="debug_records" id="debug_records" value="<?php echo (int)$this->model->getState('debug_records'); ?>" class="fcfield_textval" /> &nbsp;
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-warning fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_DISPLAY_FIELDS_OF_FIRST_RECORDS_DESC' ); ?></span>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="" colspan="3">
-					<div class="fcsep_level2"> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CSV_FILE_FORMAT' ); ?> </div>
-					<div class="alert alert-info fcpadded"> <b>NOTE:</b> Format compatible to EXCEL CSV <b>and</b> FC CSV export file is<br>
-						<b><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_FIELD_SEPARATOR' ); ?></b>: <span class="badge">,</span>
-						<b><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_FIELD_ENCLOSE_CHAR' ); ?></b>: <span class="badge">"</span>
-						<b><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_ITEM_SEPARATOR' ); ?></b>: <span class="badge">\n</span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="key">
-					<label class="label" for="field_separator"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_FIELD_SEPARATOR' ); ?> </label>
-				</td>
-				<td class="data">
-					<input type="text" name="field_separator" id="field_separator" value="<?php echo htmlspecialchars($this->model->getState('field_separator')); ?>" class="fcfield_textval required" /> &nbsp;
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_FIELD_SEPARATOR_DESC' ); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<td class="key">
-					<label class="label" for="enclosure_char"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_FIELD_ENCLOSE_CHAR' ); ?></label>
-				</td>
-				<td class="data">
-					<input type="text" name="enclosure_char" id="enclosure_char" value="<?php echo htmlspecialchars($this->model->getState('enclosure_char')); ?>" class="fcfield_textval" /> &nbsp;
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_FIELD_ENCLOSE_CHAR_DESC' ); ?></span>
-				</td>
-			</tr>
-			<tr>
-				<td class="key">
-					<label class="label" for="record_separator"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_ITEM_SEPARATOR' ); ?> </label>
-				</td>
-				<td class="data">
-					<input type="text" name="record_separator" id="record_separator" value="<?php echo htmlspecialchars($this->model->getState('record_separator')); ?>" class="fcfield_textval required" /> &nbsp;
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_ITEM_SEPARATOR_DESC' ); ?></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td colspan="3">
-					<br/><br/>
-					<div class="fcsep_level2"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_IMPORT_MVAL_MPROP_FIELDS'); ?></div>
-				</td>
-			</tr>
-
-			<tr>
-				<td class="key">
-					<label class="label" for="mval_separator"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_MVAL_SEPARATOR' ); ?> </label>
-				</td>
-				<td class="data">
-					<input type="text" name="mval_separator" id="mval_separator" value="<?php echo htmlspecialchars($this->model->getState('mval_separator')); ?>" class="fcfield_textval required" /> &nbsp;
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_MVAL_SEPARATOR_DESC' ); ?></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td class="key">
-					<label class="label" for="mprop_separator"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_MPROP_SEPARATOR' ); ?> </label>
-				</td>
-				<td class="data">
-					<input type="text" name="mprop_separator" id="mprop_separator" value="<?php echo htmlspecialchars($this->model->getState('mprop_separator')); ?>" class="fcfield_textval required" /> &nbsp;
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CSV_MPROP_SEPARATOR_DESC' ); ?></span>
-				</td>
-			</tr>
-			
-		</table>
-		
-	</div>
-
-
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-wrench">
-		<h3 class="tabberheading hasTooltip" title="<?php echo \Joomla\CMS\Language\Text::_( '' ); ?>"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ADVANCED' ); ?></h3>
-		
-		<br/>
-		<table class="fc-form-tbl align-top">
-								
-			<tr>
-				<td class="key"><label class="label"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_IGNORE_UNUSED_COLUMNS");?></label></td>
-				<td class="data">
-					<?php
-						$_ignore_unused_cols_checked = $this->model->getState('ignore_unused_cols') ? 'checked="checked"' : '';
-					?>
-					<div class="group-fcset fc_input_set fc-cleared">
-						<input type="checkbox" id="ignore_unused_cols" name="ignore_unused_cols" value="1" <?php echo $_ignore_unused_cols_checked; ?> />
-						<label for="ignore_unused_cols"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_IGNORE_REDUDANT_COLS' ); ?></label>
-					</div>
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_("FLEXI_IMPORT_IGNORE_REDUDANT_COLS_DESC");?></span>
-				</td>
-			</tr>
-			
-			<tr>
-				<td class="key">
-					<label class="label" for="items_per_step"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_ITEMS_PER_STEP' ); ?></label>
-				</td>
-				<td class="data">
-					<input type="text" name="items_per_step" id="items_per_step" value="<?php echo $this->model->getState('items_per_step'); ?>" class="fcfield_textval required" size="40"/>
-				</td>
-				<td class="data">
-					<span class="fc-mssg fc-info fc-nobgimage"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_ITEMS_PER_STEP_DESC' ); ?></span>
-				</td>
-			</tr>
-			
-		</table>
-		
-	</div>
-
-
-	<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="icon-book">
-		<h3 class="tabberheading hasTooltip" title="<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CSV_FILE_EXAMPLE' ).' / '.\Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CSV_FILE_FORMAT_EXPLANATION' ); ?>">Example</h3>
-		
-		<table style="border-collapse: collapse; border: 0; border-spacing: 0;">
-			<tr>
-				<td style="vertical-align:top; font-family:tahoma; font-size:12px;">
-					<br/>
-					<fieldset>
-						<legend style='color: darkgreen;'><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CSV_FILE_EXAMPLE' ); ?></legend>
-						<span class="fcimport_sampleline">title ~~ text ~~ catid ~~ textfield3 ~~ emailfield6 ~~ weblinkfld8 ~~ single_value_field22 ~~ multi_value_field24 </span><br/>
-						<span class="fcimport_sampleline">~~ title 1 ~~ description 1 ~~ 31 ~~ textfield3 value ~~ [-addr-]=usera@somedomain.com!![-text-]=usera ~~ www.somedomaina.com ~~ f22_valuea ~~ f24_value01%%f24_value02%%f24_value03 </span><br/>
-						<span class="fcimport_sampleline">~~ title 2 ~~ description 2 ~~ 54 ~~ textfield3 value ~~ [-addr-]=userb@somedomain.com!![-text-]=userb ~~ www.somedomainb.com ~~ f22_valuea ~~ f24_value04%%f24_value05%%f24_value06 </span><br/>
-						<span class="fcimport_sampleline">~~ title 3 ~~ description 3 ~~ 67 ~~ textfield3 value ~~ [-addr-]=userc@somedomain.com!![-text-]=userc ~~ www.somedomainc.com ~~ f22_valuea ~~ f24_value07%%f24_value08%%f24_value09 </span><br/>
-						<span class="fcimport_sampleline">~~ title 4 ~~ description 4 ~~ 12 ~~ textfield3 value ~~ userd@somedomain.com ~~ [-link-]=www.somedomaind.com!![-title-]=somedomainD ~~ f22_valuea ~~ f24_value10%%f24_value11%%f24_value12 </span><br/>
-						<span class="fcimport_sampleline">~~ title 5 ~~ description 5 ~~ 19 ~~ textfield3 value ~~ usere@somedomain.com ~~ [-link-]=www.somedomaine.com!![-title-]=somedomainE ~~ f22_valuea ~~ f24_value13%%f24_value14%%f24_value15 </span><br/>
-					</fieldset>
-				</td>
-			</tr>
-			
-			<tr>
-				<td style="vertical-align:top;">
-					<br/>
-					<fieldset>
-						<legend style='color: darkgreen;'><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_IMPORT_CSV_FILE_FORMAT_EXPLANATION' ); ?></legend>
-						
-						<br/>			
-						<ol>
-							<li>
-								<b>First line</b> of the CSV file: &nbsp; &nbsp; must contain the <b>field names</b> <u>(and not the field labels!)</u><br/><br/>
-							</li>
-							<li>
-								<b>Field separator</b> of the CSV file: &nbsp; &nbsp; separate fields with a string<b>, that does not appear inside the data</b>, e.g. &nbsp; ~~<br/><br/>
-							</li>
-							<li>
-								<b>Item separator</b> of the CSV file: &nbsp; &nbsp; separate items with a string<b>, that does not appear inside the data</b>, e.g. &nbsp; \n~~<br/><br/>
-							</li>
-							<li>
-								<b>Supported fields:</b><br/><br/>
-								<ol type="a">
-									<li>
-										<span class="fc-mssg-inline fc-info fc-nobgimage">Item properties</span>
-										<br/> - title, description, alias, access, language, 
-										<br/> - created_by (user id), modified_by (user id),
-										<br/> - created (date), modified (date), publish_up (date), publish_down (date)
-										<br/> - etc
-									</li>
-									<li>
-										<span class="fc-mssg-inline fc-info fc-nobgimage">Indexable fields</span>
-										<br/> select, radio, radioimage (single value)
-										<br/> selectmultiple, selectmultple, checkbox, checkboximage (multi-value)
-										<br/> <b>Note</b>:
-										<br/>  - use their "value" and not their label
-										<br/>  - separate multiple values with %%
-										<br/> e.g. 4%%2%%5
-									</li>
-									<li>
-										<span class="fc-mssg-inline fc-info fc-nobgimage">Multi-value fields</span>
-										<br/> text, date, email, weblink, ... etc
-										<br/> <b>Usage</b>: separate multiple values with <span class="badge">%%</span>
-									</li>
-									<li>
-										<span class="fc-mssg-inline fc-info fc-nobgimage">Multi-property per value fields</span>
-										<br/> email, weblink, international address, termlist, etc
-										<br/> <b>Usage</b>: <span class="badge">[-propertyname-]=propertyvalue</span>, and <b>separate</b> mutliple properties with <span class="badge">!!</span>
-										<br/> - <b>email field</b> properties: addr, text
-										<br/> - <b>weblink field</b> properties: link, title, hits
-										<br/> - <b>extended weblink field</b> properties: link, title, linktext, class, id
-										<br/> - <b>international address field</b> properties: name, addr1, addr2, addr3, city, province, state, country, zip, zip_suffix,lat, lon, url, zoom
-										<br/> - <b>termlist field</b> properties: title, text
-										<br/> - ... etc
-										<br/> <b>Note</b>: Some support special "shorthand" formats: e.g. email and weblink allow (respectively) to enter 
-										<br/>  - just email: <u>usera@somedomain.com</u>
-										<br/>  - just url: <u>www.some-address-some-where.com</u>
-										<br/>
-									</li>
-									<li>
-										<span class="fc-mssg-inline fc-info fc-nobgimage">Related items field</span> , use item ids, e.g. to add items 451 , 567, 321 as related items use:
-										<br/> <u>451%%567%%321</u>
-									</li>
-									<li>
-										<span class="fc-mssg-inline fc-info fc-nobgimage">Image / gallery field</span> must contain the file name (<b>new file</b>)
-										<br/> <b>Note</b>:
-										<br/>  - new files must be placed inside media folder
-										<br/>  - it can be the name of an existing image name (if image field is in DB-mode)
-										<br/>  - since image field is multi-property / multi-value it can use format of these fields too, <b>properties</b> are: originalname, alt, title, desc, urllink
-									</li>
-									<li>
-										<span class="fc-mssg-inline fc-info fc-nobgimage">File field</span> must contain the file name (<b>new file</b>), OR it can be the id of an existing document (filemanager 's file ID)
-										<br/> <b>Note:</b>
-										<br/>  - new files must be placed inside the document folder<br/>
-									</li>
-								</ol>
-							</li>
-						</ol>
-					</fieldset>
-				</td>
-			</tr>
-		</table>
-		
-	</div>
-</div>
-<!-- tabber end -->
-<?php $tabSetCnt = array_pop($tabSetStack); ?>
-
-
-	<!-- Common management form fields -->
-	<input type="hidden" name="option" value="com_flexicontent" />
+	<!-- ── Hidden common fields ──────────────────────────────────────── -->
+	<input type="hidden" name="option"     value="com_flexicontent" />
 	<input type="hidden" name="controller" value="import" />
-	<input type="hidden" name="view" value="import" />
-	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="fcform" value="1" />
-	<?php echo \Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
-
-	<!-- fc_perf -->
-
-	</div>  <!-- j-main-container -->
-</div>  <!-- row / row-fluid-->
+	<input type="hidden" name="view"       value="import" />
+	<input type="hidden" name="task"       value="" />
+	<input type="hidden" name="fcform"     value="1" />
+	<?php echo $token; ?>
 
 </form>
-</div><!-- #flexicontent end -->
+</div><!-- #flexicontent -->

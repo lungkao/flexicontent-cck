@@ -46,9 +46,163 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 		parent::__construct($config);
 
 		// Register task aliases
-		$this->registerTask('initcsv',   'importcsv');
-		$this->registerTask('clearcsv',  'importcsv');
-		$this->registerTask('testcsv',   'importcsv');
+		$this->registerTask('initcsv',    'importcsv');
+		$this->registerTask('clearcsv',   'importcsv');
+		$this->registerTask('testcsv',    'importcsv');
+		$this->registerTask('mapinitcsv', 'importcsv');  // mapped-column import
+	}
+
+
+	/**
+	 * Preview uploaded CSV: parse columns + first rows, store in session, redirect to mapping layout.
+	 *
+	 * @return void
+	 * @since 4.0
+	 */
+	public function previewcsv()
+	{
+		$app     = \Joomla\CMS\Factory::getApplication();
+		$jinput  = $app->input;
+		$session = $app->getSession();
+		$user    = $app->getIdentity();
+
+		\Joomla\CMS\Session\Session::checkToken('request') or jexit(\Joomla\CMS\Language\Text::_('JINVALID_TOKEN'));
+
+		$link = 'index.php?option=com_flexicontent&view=import';
+
+		// Require content type
+		$type_id = $jinput->get('type_id', 0, 'int');
+		if (!$type_id)
+		{
+			$app->enqueueMessage('Please select a Content Type before previewing.', 'error');
+			$this->setRedirect($link);
+			return;
+		}
+
+		// Require uploaded file
+		$csvfile = @$_FILES['csvfile']['tmp_name'] ?? '';
+		if (!$csvfile || !is_file($csvfile))
+		{
+			$app->enqueueMessage('Please upload a CSV file.', 'error');
+			$this->setRedirect($link);
+			return;
+		}
+
+		// Expand escape sequences in separator strings
+		$pattern = '/(?<!\\\)(\\\(?:n|r|t|v|f|[0-7]{1,3}|x[0-9a-f]{1,2}))/i';
+		$expand  = function ($m) { $r = $m[1]; eval("\$r = \"$r\";"); return $r; };
+
+		$field_sep  = preg_replace_callback($pattern, $expand, $jinput->get('field_separator', ',', 'string'));
+		$encl_char  = preg_replace_callback($pattern, $expand, $jinput->get('enclosure_char', '"', 'string'));
+		$rec_sep    = $jinput->get('record_separator', '\n', 'string');
+
+		// ── Save uploaded file to a deterministic temp path ──────────────────
+		$tmpfile = JPATH_SITE . '/tmp/fcimport_preview_' . (int) $user->id . '.csv';
+
+		if (!@copy($csvfile, $tmpfile))
+		{
+			$app->enqueueMessage('Could not save temporary file. Check that the tmp/ folder is writable.', 'error');
+			$this->setRedirect($link);
+			return;
+		}
+
+		// ── Parse columns + preview rows ──────────────────────────────────────
+		$columns      = [];
+		$preview_rows = [];
+
+		// Standard CSV (comma / quote) → fast PHP parser
+		if ($field_sep === ',' && $encl_char !== '')
+		{
+			$fp = @fopen($tmpfile, 'r');
+
+			if ($fp)
+			{
+				$row_idx = 0;
+
+				while ($row_idx <= 10 && ($row = fgetcsv($fp, 0, $field_sep, $encl_char)) !== false)
+				{
+					if ($row_idx === 0)
+					{
+						$columns = $row;
+					}
+					else
+					{
+						$preview_rows[] = $row;
+					}
+
+					$row_idx++;
+				}
+
+				fclose($fp);
+			}
+		}
+
+		// Non-standard / FLEXIcontent custom format → use FC utility
+		if (empty($columns))
+		{
+			$content = file_get_contents($tmpfile);
+			$parsed  = FLEXIUtilities::csvstring_to_array($content, $field_sep, $encl_char, "\n");
+
+			if ($parsed && count($parsed) > 0)
+			{
+				$columns      = array_shift($parsed);
+				$preview_rows = array_slice($parsed, 0, 6);
+			}
+		}
+
+		// Strip BOM + control chars from column names
+		foreach ($columns as $i => $col)
+		{
+			$columns[$i] = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', trim($col));
+		}
+
+		if (empty(array_filter($columns)))
+		{
+			$app->enqueueMessage('Could not detect CSV columns. Please verify the file and separator settings.', 'error');
+			@unlink($tmpfile);
+			$this->setRedirect($link);
+			return;
+		}
+
+		// ── Collect all Step-1 config params to carry through to Step-2 ──────
+		$preview = [
+			'tmpfile'          => $tmpfile,
+			'columns'          => $columns,
+			'rows'             => $preview_rows,
+			'type_id'          => $type_id,
+			'field_separator'  => $jinput->get('field_separator',  ',',  'string'),
+			'enclosure_char'   => $jinput->get('enclosure_char',   '"',  'string'),
+			'record_separator' => $jinput->get('record_separator', '\n', 'string'),
+			'mval_separator'   => $jinput->get('mval_separator',   '%%', 'string'),
+			'mprop_separator'  => $jinput->get('mprop_separator',  '!!', 'string'),
+			'id_col'           => $jinput->get('id_col',           0,    'int'),
+			'maincat'          => $jinput->get('maincat',          0,    'int'),
+			'maincat_col'      => $jinput->get('maincat_col',      0,    'int'),
+			'seccats'          => $jinput->get('seccats',          [],   'array'),
+			'seccats_col'      => $jinput->get('seccats_col',      0,    'int'),
+			'language'         => $jinput->get('language',         '*',  'string'),
+			'state'            => $jinput->get('state',            1,    'int'),
+			'access'           => $jinput->get('access',           1,    'int'),
+			'tags_col'         => $jinput->get('tags_col',         0,    'int'),
+			'created_by_col'   => $jinput->get('created_by_col',   0,    'int'),
+			'modified_by_col'  => $jinput->get('modified_by_col',  0,    'int'),
+			'metadesc_col'     => $jinput->get('metadesc_col',     0,    'int'),
+			'metakey_col'      => $jinput->get('metakey_col',      0,    'int'),
+			'custom_ititle_col'=> $jinput->get('custom_ititle_col',0,    'int'),
+			'modified_col'     => $jinput->get('modified_col',     0,    'int'),
+			'created_col'      => $jinput->get('created_col',      0,    'int'),
+			'publish_up_col'   => $jinput->get('publish_up_col',   0,    'int'),
+			'publish_down_col' => $jinput->get('publish_down_col', 0,    'int'),
+			'items_per_step'   => $jinput->get('items_per_step',   5,    'int'),
+			'ignore_unused_cols'=> 1,  // always ignore unmapped columns
+			'debug_records'    => $jinput->get('debug_records',    0,    'int'),
+			'media_folder'     => $jinput->get('media_folder',     'tmp/fcimport_media', 'string'),
+			'docs_folder'      => $jinput->get('docs_folder',      'tmp/fcimport_docs',  'string'),
+		];
+
+		$session->set('csvimport_preview', serialize($preview), 'flexicontent');
+
+		$this->setRedirect('index.php?option=com_flexicontent&view=import&layout=map');
 	}
 
 
@@ -173,6 +327,7 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 			// *** INITIALIZE (prepare) import by getting configuration and reading CSV file
 			// ***
 
+			case 'mapinitcsv':
 			case 'initcsv':
 			case 'testcsv':
 
@@ -267,8 +422,46 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 					$app->redirect($link);
 				}
 
-				// Retrieve the uploaded CSV file
-				$csvfile = @$_FILES["csvfile"]["tmp_name"];
+				// ── For mapped imports (mapinitcsv): override config from session preview ─
+				$_col_map = [];
+
+				if ($task === 'mapinitcsv')
+				{
+					$_preview = unserialize($session->get('csvimport_preview', '', 'flexicontent'));
+
+					if (empty($_preview) || empty($_preview['tmpfile']) || !is_file($_preview['tmpfile']))
+					{
+						$app->enqueueMessage('Preview session expired. Please upload the file again.', 'error');
+						$app->redirect($link);
+					}
+
+					// Use the temp file saved during previewcsv
+					$csvfile = $_preview['tmpfile'];
+
+					// Collect column mapping submitted from import_map.php
+					$_col_map = $jinput->get('col_map', [], 'array');
+
+					// Force ignore_unused_cols so unmapped columns are silently skipped
+					$conf['ignore_unused_cols'] = 1;
+
+					// Override missing conf values from session preview (handles maincat etc.)
+					foreach (['type_id','maincat','maincat_col','seccats','seccats_col',
+					          'language','state','access','tags_col','created_by_col','modified_by_col',
+					          'metadesc_col','metakey_col','custom_ititle_col','modified_col','created_col',
+					          'publish_up_col','publish_down_col','items_per_step','media_folder','docs_folder',
+					          'field_separator','enclosure_char','record_separator','mval_separator','mprop_separator'] as $_pk)
+					{
+						if (empty($conf[$_pk]) && !empty($_preview[$_pk]))
+						{
+							$conf[$_pk] = $_preview[$_pk];
+						}
+					}
+				}
+				else
+				{
+					// Retrieve the uploaded CSV file (normal flow)
+					$csvfile = @$_FILES["csvfile"]["tmp_name"];
+				}
 
 				if (!is_file($csvfile))
 				{
@@ -361,6 +554,68 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 				{
 					// Only Printable latin ASCII in fieldname. This will also remove any UTF-8 BOM header at first column name ...
 					$conf['columns'][$i] = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $v);
+				}
+
+				// ── Apply field mapping (mapinitcsv): rename CSV headers → FC field names ──
+				if (!empty($_col_map))
+				{
+					foreach ($conf['columns'] as $i => $col)
+					{
+						if (isset($_col_map[$col]))
+						{
+							$mapped = trim($_col_map[$col]);
+							// '__skip__' → rename to a unique token so it falls through as unused column
+							$conf['columns'][$i] = ($mapped === '' || $mapped === '__skip__')
+								? ('__skip_' . $i . '__')
+								: $mapped;
+						}
+					}
+
+					// ── Sync xxx_col flags from mapped column names ──────────────────────────
+					// When the user explicitly maps a column to a core property via the
+					// mapping UI, enable the corresponding "use column" flag so that the
+					// existing validation/parsing logic picks it up correctly.
+					$_mapped_cols = $conf['columns'];
+
+					if (in_array('catid', $_mapped_cols))
+					{
+						$conf['maincat_col'] = 1;
+					}
+
+					if (in_array('cid', $_mapped_cols))
+					{
+						$conf['seccats_col'] = 1;
+					}
+
+					if (in_array('state', $_mapped_cols))
+					{
+						$conf['state'] = -99;  // signal: read from column
+					}
+
+					if (in_array('access', $_mapped_cols))
+					{
+						$conf['access'] = 0;   // signal: read from column
+					}
+
+					if (in_array('language', $_mapped_cols))
+					{
+						$conf['language'] = '-99';  // signal: read from column
+					}
+
+					foreach (['created_by','modified_by','metadesc','metakey','custom_ititle',
+					          'modified','created','publish_up','publish_down','tags_names','tags_raw'] as $_cf)
+					{
+						if (in_array($_cf, $_mapped_cols))
+						{
+							$conf[$_cf . '_col'] = 1;
+						}
+					}
+
+					// tags_raw and tags_names both map to tags_col
+					if (in_array('tags_raw', $_mapped_cols) || in_array('tags_names', $_mapped_cols))
+					{
+						$conf['tags_col'] = 1;
+					}
 				}
 
 				$q = $db->getQuery(true)
@@ -678,7 +933,7 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 				$this->checkfiles($conf, $parse_log, $task);
 				$this->parsevalues($conf, $parse_log, $task);
 
-				if ($task === 'initcsv')
+				if ($task === 'initcsv' || $task === 'mapinitcsv')
 				{
 					// Set import configuration and file data into session
 					$session->set('csvimport_config',
@@ -687,6 +942,12 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 					);
 
 					$session->set('csvimport_lineno', 0, 'flexicontent');
+
+					// Clear the preview session now that config is ready
+					if ($task === 'mapinitcsv')
+					{
+						$session->set('csvimport_preview', '', 'flexicontent');
+					}
 
 					// Set a message that import task was prepared and redirect
 					$app->enqueueMessage(

@@ -169,6 +169,44 @@ public function display($tpl = null)
 		 */
 
 
+		/**
+		 * Field-mapping wizard Step 2: show mapping UI after previewcsv
+		 * LAYOUT: -- import_map.php --
+		 */
+		if ($layout === 'map')
+		{
+			$_preview_raw = $session->get('csvimport_preview', '', 'flexicontent');
+			$_preview     = $_preview_raw ? unserialize($_preview_raw) : null;
+
+			if (empty($_preview) || empty($_preview['columns']))
+			{
+				$app->enqueueMessage('No preview data found. Please upload a file first.', 'warning');
+				$app->redirect('index.php?option=com_flexicontent&view=import');
+				return;
+			}
+
+			// Load FC fields for the selected type
+			$_type_id = (int) $_preview['type_id'];
+			$q = $db->getQuery(true)
+				->select('fi.id, fi.name, fi.label, fi.field_type, fi.iscore')
+				->from('#__flexicontent_fields AS fi')
+				->join('INNER', '#__flexicontent_fields_type_relations AS ftrel ON ftrel.field_id = fi.id AND ftrel.type_id = ' . $_type_id)
+				->where('fi.field_type NOT IN (' . implode(',', array_map([$db, 'quote'], ['separator', 'coreprops'])) . ')')
+				->order('fi.ordering ASC, fi.name ASC');
+			$_fc_fields = $db->setQuery($q)->loadObjectList();
+
+			// Get type name for display
+			$_types     = flexicontent_html::getTypesList($_type_ids = false, $_check_perms = false, $_published = true);
+			$_type_name = isset($_types[$_type_id]) ? $_types[$_type_id]->name : 'Type #' . $_type_id;
+
+			$this->preview   = $_preview;
+			$this->fc_fields = $_fc_fields;
+			$this->type_name = $_type_name;
+			$this->setLayout('import');
+			parent::display('map');
+			return;
+		}
+
 
 		/**
 		 * Execute the import task, display a log-like AJAX-based layout,
