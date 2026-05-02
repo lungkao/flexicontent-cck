@@ -85,7 +85,6 @@
 			<menu link="option=com_flexicontent&amp;view=templates">FLEXI_TEMPLATES</menu>
 			<menu link="option=com_flexicontent&amp;view=protemplates">FLEXI_PROTEMPLATES</menu>
 			<menu link="option=com_flexicontent&amp;view=prothemes">FLEXI_PROTHEMES</menu>
-			<menu link="option=com_flexicontent&amp;view=modulepresets">FLEXI_MODULE_PRESETS</menu>
 			<menu link="option=com_flexicontent&amp;view=users">FLEXI_USERS</menu>
 			<menu link="option=com_flexicontent&amp;view=groups">FLEXI_GROUPS</menu>
 			<menu link="option=com_flexicontent&amp;view=filemanager">FLEXI_FILEMANAGER</menu>
