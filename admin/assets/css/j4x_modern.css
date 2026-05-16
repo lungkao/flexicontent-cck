@@ -1583,6 +1583,166 @@ body.com_flexicontent #flexicontent.fcitem-form,
   gap: .375rem !important;
 }
 
+/* ──────────────────────────────────────────────────────────────────
+   Select2 v3 widget normalization
+   ─────────────────────────────────────────────────────────────────
+   Joomla 4/5 in this project still ships Select2 v3 (markup:
+   div.select2-container > a.select2-choice > span.select2-chosen
+   + span.select2-arrow). The v3 default look is a narrow content-
+   sized pill with rounded corners. We override to render it as a
+   rectangle that matches native <input>/<select> so users see
+   visual consistency regardless of which widget Joomla chose for
+   a given field. Scoped to .controls so we do not touch the
+   filter-bar variants (those use .btn-group .select2-container
+   and have their own rules in flexicontentbackend.css).
+   ────────────────────────────────────────────────────────────── */
+
+/* Container fills its flex parent (paired with B6 rule 1). */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container,
+.com_flexicontent #flexicontent .control-group > .controls.container_fcfield > .select2-container {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: 1 1 auto !important;
+  vertical-align: middle;
+}
+
+/* The clickable trigger becomes an input-shaped rectangle. */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-height: 2.5rem !important;
+  padding: .4rem .85rem !important;
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  background: var(--fc-bg-card) !important;
+  background-image: none !important;
+  color: var(--fc-text) !important;
+  font-size: var(--fc-fs-base) !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  transition: border-color var(--fc-transition), box-shadow var(--fc-transition) !important;
+}
+
+/* Selected-value text fills available space; truncates with ellipsis. */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice > .select2-chosen {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Chevron column on the right. */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice > .select2-arrow {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: 1.5rem !important;
+  height: auto !important;
+  margin-left: .25rem !important;
+  padding-left: .25rem !important;
+  border-left: 1px solid var(--fc-border) !important;
+  border-radius: 0 !important;
+  background: none !important;
+}
+
+/* Built-in v3 <b role="presentation"> chevron glyph: use CSS triangle
+   so we are independent of the bundled sprite image (which inherits
+   the wrong color on dark Atum themes). */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice > .select2-arrow > b {
+  display: block !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 auto !important;
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  border-top: 5px solid var(--fc-text-muted) !important;
+  background: none !important;
+  transition: border-top-color var(--fc-transition) !important;
+}
+
+/* Inline clear-selection "x" glyph — keep but quiet down. */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice > .select2-search-choice-close {
+  display: none !important;   /* legacy; v3 only shows for multi-select */
+}
+
+/* Hover state: subtle border darken. */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice:hover {
+  border-color: var(--fc-text-muted) !important;
+}
+
+/* Focus / open state — match B2 focus tokens, not Select2 default blue glow. */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container.select2-container-active > .select2-choice,
+.com_flexicontent #flexicontent .control-group > .controls .select2-container.select2-dropdown-open > .select2-choice,
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice:focus,
+.com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-focusser:focus + .select2-choice {
+  border-color: var(--fc-primary) !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
+  outline-offset: 2px !important;
+}
+
+/* Disabled / readonly. */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container.select2-container-disabled > .select2-choice {
+  opacity: .6 !important;
+  cursor: not-allowed !important;
+  background: var(--fc-bg) !important;
+}
+
+/* Native invalid-state hook: Select2 v3 mirrors .invalid from the
+   underlying <select>. Keep this scoped — must NOT match the
+   ambient .required class on the container (that is not an error
+   indicator; it just mirrors the source field's required attr). */
+.com_flexicontent #flexicontent .control-group > .controls .select2-container.invalid > .select2-choice,
+.com_flexicontent #flexicontent .control-group > .controls .select2-container.is-invalid > .select2-choice {
+  border-color: var(--fc-danger) !important;
+  box-shadow: 0 0 0 3px rgba(220,38,38,.12) !important;
+}
+
+/* Dropdown panel (Select2 v3 renders this at body level when opened) — */
+body > .select2-drop,
+body > .select2-drop-active {
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  box-shadow: var(--fc-shadow-md) !important;
+  background: var(--fc-bg-card) !important;
+}
+body > .select2-drop .select2-results {
+  padding: .25rem 0 !important;
+  margin: 0 !important;
+  font-size: var(--fc-fs-base) !important;
+}
+body > .select2-drop .select2-results .select2-result-label {
+  padding: .5rem .85rem !important;
+  color: var(--fc-text) !important;
+  line-height: 1.4 !important;
+}
+body > .select2-drop .select2-results .select2-highlighted .select2-result-label {
+  background: var(--fc-primary) !important;
+  color: #fff !important;
+}
+body > .select2-drop .select2-search input {
+  padding: .4rem .85rem !important;
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  font-size: var(--fc-fs-base) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
 /* ── Tabs (fctabber) ─────────────────────────────────────────────── */
 .com_flexicontent .fctabber.tabber,
 #flexicontent .fctabber.tabber,
