@@ -175,20 +175,21 @@ if ($js)
 				<?php
 					echo !empty($this->lists['scope']) ? $this->lists['scope'] : '';
 				?>
+				<label for="search" class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?></label>
 				<input type="text" name="search" id="search" placeholder="<?php echo !empty($this->scope_title) ? $this->scope_title : \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" value="<?php echo htmlspecialchars($this->lists['search'], ENT_QUOTES, 'UTF-8'); ?>" class="fcfield_textval" />
-				<button title="" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-search"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_GO'); ?></button>
+				<button type="button" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-search" aria-hidden="true"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_GO'); ?></button>
 
-				<div id="fc_filters_box_btn" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>" class="<?php echo $this->tooltip_class . ' ' . ($this->count_filters ? 'btn ' . $this->btn_iv_class : $out_class); ?>" onclick="fc_toggle_box_via_btn('fc-filters-box', this, 'btn-primary', false, undefined, 1);">
-					<?php echo FLEXI_J30GE ? '<i class="icon-filter"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>
+				<button type="button" id="fc_filters_box_btn" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>" aria-expanded="<?php echo !empty($tools_state->filters_box) ? 'true' : 'false'; ?>" aria-controls="fc-filters-box" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>" class="<?php echo $this->tooltip_class . ' ' . ($this->count_filters ? 'btn ' . $this->btn_iv_class : $out_class); ?>" onclick="fc_toggle_box_via_btn('fc-filters-box', this, 'btn-primary', false, undefined, 1);">
+					<?php echo FLEXI_J30GE ? '<i class="icon-filter" aria-hidden="true"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>
 					<?php echo ($this->count_filters  ? ' <sup>' . $this->count_filters . '</sup>' : ''); ?>
-				</div>
+				</button>
 
 				<div id="fc-filters-box" <?php if (!$this->count_filters || empty($tools_state->filters_box)) echo 'style="display:none;"'; ?> class="fcman-abs" onclick="var event = arguments[0] || window.event; event.stopPropagation();">
 
-					<div id="fc-filters-slide-btn" class="icon-arrow-up-2 btn btn-outline-secondary" title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_HIDE'); ?>" style="cursor: pointer;" onclick="fc_toggle_box_via_btn('fc-filters-box', document.getElementById('fc_filters_box_btn'), 'btn-primary');"></div>
+					<button type="button" id="fc-filters-slide-btn" class="icon-arrow-up-2 btn btn-outline-secondary" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_HIDE'); ?>" aria-expanded="true" aria-controls="fc-filters-box" onclick="fc_toggle_box_via_btn('fc-filters-box', document.getElementById('fc_filters_box_btn'), 'btn-primary');"></button>
 				</div>
 
-				<button title="" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_RESET_FILTERS'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; delAllFilters(); Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-cancel"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_CLEAR'); ?></button>
+				<button type="button" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_RESET_FILTERS'); ?>" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_RESET_FILTERS'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; delAllFilters(); Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-cancel" aria-hidden="true"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_CLEAR'); ?></button>
 			</div>
 
 		</div>
@@ -237,23 +238,24 @@ if ($js)
 
 
 	<table id="adminListTableFC<?php echo $this->view; ?>" class="adminlist table fcmanlist" itemscope itemtype="http://schema.org/WebPage">
+	<caption class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_GROUPS'); ?></caption>
 	<thead>
 		<tr>
-			<th class="col_num"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
-			<th class="col_cb left">
+			<th scope="col" class="col_num"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
+			<th scope="col" class="col_cb left">
 				<div class="group-fcset">
 					<input type="checkbox" name="checkall-toggle" id="checkall-toggle" value="" title="<?php echo \Joomla\CMS\Language\Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					<label for="checkall-toggle" class="green single"></label>
 				</div>
 			</th>
 
-			<th class="col_title hideOnDemandClass left">
+			<th scope="col" class="col_title hideOnDemandClass left">
 				<?php echo \Joomla\CMS\Language\Text::_('COM_USERS_HEADING_GROUP_TITLE'); ?>
 			</th>
-			<th class="col_usergrp hideOnDemandClass left">
+			<th scope="col" class="col_usergrp hideOnDemandClass left">
 				<?php echo \Joomla\CMS\Language\Text::_('COM_USERS_HEADING_USERS_IN_GROUP'); ?>
 			</th>
-			<th class="col_id center hideOnDemandClass">
+			<th scope="col" class="col_id center hideOnDemandClass">
 				<?php echo \Joomla\CMS\Language\Text::_('JGRID_HEADING_ID'); ?>
 			</th>
 		</tr>
@@ -277,7 +279,7 @@ if ($js)
 				<!--div class="adminlist-table-row"></div-->
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_($hlpname . '.grid_id', $i, $item->id); ?>
 			</td>
-			<td class="col_title ">
+			<th scope="row" class="col_title ">
 				<?php echo str_repeat('<span class="gi">|&mdash;</span>', $item->level) ?>
 				<?php if ($canEdit) : ?>
 				<a href="<?php echo \Joomla\CMS\Router\Route::_('index.php?option=com_flexicontent&task=group.edit&id='.$item->id);?>">
@@ -289,7 +291,7 @@ if ($js)
 					<div class="fltrt"><div class="button2-left smallsub"><div class="blank"><a href="<?php echo \Joomla\CMS\Router\Route::_('index.php?option=com_flexicontent&view=debuggroup&group_id='.(int) $item->id);?>">
 					<?php echo \Joomla\CMS\Language\Text::_('COM_USERS_DEBUG_GROUP');?></a></div></div></div>
 				<?php endif; ?>
-			</td>
+			</th>
 			<td class="col_usergrp left">
 				<?php echo '<span class="badge bg-info badge-info">'.$item->user_count.'</span>'; ?>
 				<?php

@@ -185,13 +185,14 @@ if ($js)
 				<?php
 					echo !empty($this->lists['scope']) ? $this->lists['scope'] : '';
 				?>
+				<label for="search" class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?></label>
 				<input type="text" name="search" id="search" placeholder="<?php echo !empty($this->scope_title) ? $this->scope_title : \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" value="<?php echo htmlspecialchars($this->lists['search'], ENT_QUOTES, 'UTF-8'); ?>" class="fcfield_textval" />
-				<button title="" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-search"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_GO'); ?></button>
+				<button type="button" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_SEARCH'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-search" aria-hidden="true"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_GO'); ?></button>
 
-				<div id="fc_filters_box_btn" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>" class="<?php echo $this->tooltip_class . ' ' . ($this->count_filters ? 'btn ' . $this->btn_iv_class : $out_class); ?>" onclick="fc_toggle_box_via_btn('fc-filters-box', this, 'btn-primary', false, undefined, 1);">
-					<?php echo FLEXI_J30GE ? '<i class="icon-filter"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>
+				<button type="button" id="fc_filters_box_btn" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>" aria-expanded="<?php echo !empty($tools_state->filters_box) ? 'true' : 'false'; ?>" aria-controls="fc-filters-box" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>" class="<?php echo $this->tooltip_class . ' ' . ($this->count_filters ? 'btn ' . $this->btn_iv_class : $out_class); ?>" onclick="fc_toggle_box_via_btn('fc-filters-box', this, 'btn-primary', false, undefined, 1);">
+					<?php echo FLEXI_J30GE ? '<i class="icon-filter" aria-hidden="true"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_FILTERS'); ?>
 					<?php echo ($this->count_filters  ? ' <sup>' . $this->count_filters . '</sup>' : ''); ?>
-				</div>
+				</button>
 
 				<div id="fc-filters-box" <?php if (!$this->count_filters || empty($tools_state->filters_box)) echo 'style="display:none;"'; ?> class="fcman-abs" onclick="var event = arguments[0] || window.event; event.stopPropagation();">
 
@@ -203,10 +204,10 @@ if ($js)
 					<?php echo $this->lists['filter_id']; ?>
 					<?php echo $this->lists['filter_date']; ?>
 
-					<div id="fc-filters-slide-btn" class="icon-arrow-up-2 btn btn-outline-secondary" title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_HIDE'); ?>" style="cursor: pointer;" onclick="fc_toggle_box_via_btn('fc-filters-box', document.getElementById('fc_filters_box_btn'), 'btn-primary');"></div>
+					<button type="button" id="fc-filters-slide-btn" class="icon-arrow-up-2 btn btn-outline-secondary" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_HIDE'); ?>" aria-expanded="true" aria-controls="fc-filters-box" onclick="fc_toggle_box_via_btn('fc-filters-box', document.getElementById('fc_filters_box_btn'), 'btn-primary');"></button>
 				</div>
 
-				<button title="" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_RESET_FILTERS'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; delAllFilters(); Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-cancel"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_CLEAR'); ?></button>
+				<button type="button" aria-label="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_RESET_FILTERS'); ?>" data-original-title="<?php echo \Joomla\CMS\Language\Text::_('FLEXI_RESET_FILTERS'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; delAllFilters(); Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-cancel" aria-hidden="true"></i>' : \Joomla\CMS\Language\Text::_('FLEXI_CLEAR'); ?></button>
 			</div>
 
 		</div>
@@ -255,6 +256,7 @@ if ($js)
 
 
 	<table id="adminListTableFC<?php echo $this->view; ?>" class="adminlist table fcmanlist" itemscope itemtype="http://schema.org/WebPage">
+	<caption class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_AUTHORS'); ?></caption>
 	<thead>
 		<tr>
 
@@ -262,14 +264,14 @@ if ($js)
 				<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?>
 			</th-->
 
-			<th class="col_cb left">
+			<th scope="col" class="col_cb left">
 				<div class="group-fcset">
 					<input type="checkbox" name="checkall-toggle" id="checkall-toggle" value="" title="<?php echo \Joomla\CMS\Language\Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					<label for="checkall-toggle" class="green single"></label>
 				</div>
 			</th>
 
-			<th class="hideOnDemandClass left nowrap">
+			<th scope="col" class="hideOnDemandClass left nowrap">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'FLEXI_NAME', 'a.name', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 				<?php if (strlen($this->getModel()->getState('search'))) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -278,11 +280,11 @@ if ($js)
 				<?php endif; ?>
 			</th>
 
-			<th class="hideOnDemandClass nowrap" >
+			<th scope="col" class="hideOnDemandClass nowrap" >
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'FLEXI_USER_NAME', 'a.username', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 			</th>
 
-			<th class="hideOnDemandClass nowrap">
+			<th scope="col" class="hideOnDemandClass nowrap">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'FLEXI_USER_LOGGED', 'loggedin', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_logged')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -291,7 +293,7 @@ if ($js)
 				<?php endif; ?>
 			</th>
 
-			<th class="hideOnDemandClass nowrap">
+			<th scope="col" class="hideOnDemandClass nowrap">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'COM_USERS_HEADING_ENABLED', 'a.block', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 				<?php if (strlen($this->getModel()->getState('filter_state'))) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -300,7 +302,7 @@ if ($js)
 				<?php endif; ?>
 			</th>
 
-			<th class="hideOnDemandClass nowrap hidden-phone">
+			<th scope="col" class="hideOnDemandClass nowrap hidden-phone">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'COM_USERS_HEADING_ACTIVATED', 'a.activation', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 				<?php if (strlen($this->getModel()->getState('filter_active'))) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -309,7 +311,7 @@ if ($js)
 				<?php endif; ?>
 			</th>
 
-			<th class="hideOnDemandClass nowrap">
+			<th scope="col" class="hideOnDemandClass nowrap">
 				<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_USERGROUPS' ); ?>
 				<?php if ($this->getModel()->getState('filter_usergrp')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -318,7 +320,7 @@ if ($js)
 				<?php endif; ?>
 			</th>
 
-			<th class="hideOnDemandClass nowrap">
+			<th scope="col" class="hideOnDemandClass nowrap">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'FLEXI_ITEMS', 'itemscount', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_itemscount')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -327,7 +329,7 @@ if ($js)
 				<?php endif; ?>
 			</th>
 
-			<th class="hideOnDemandClass nowrap">
+			<th scope="col" class="hideOnDemandClass nowrap">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'FLEXI_FILES_MBS', 'uploadssize', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_uploadssize')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -336,7 +338,7 @@ if ($js)
 				<?php endif; ?>
 			</th>
 
-			<th class="hideOnDemandClass left nowrap">
+			<th scope="col" class="hideOnDemandClass left nowrap">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort',   'FLEXI_USER_EMAIL', 'a.email', @$this->lists['order_Dir'], @$this->lists['order'] ); ?>
 			</th>
 
@@ -370,7 +372,7 @@ if ($js)
 				?>
 			</th>
 
-			<th class="hideOnDemandClass col_id center hidden-phone hidden-tablet">
+			<th scope="col" class="hideOnDemandClass col_id center hidden-phone hidden-tablet">
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.sort', 'FLEXI_ID', 'a.id', $this->lists['order_Dir'], $this->lists['order']); ?>
 				<?php if ($this->getModel()->getState('filter_id')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -452,10 +454,10 @@ if ($js)
 				<?php echo \Joomla\CMS\HTML\HTMLHelper::_($hlpname . '.grid_id', $i, $row->id); ?>
 			</td>
 
-			<td class="col_title">
+			<th scope="row" class="col_title">
 				<a href="<?php echo $edit_link; ?>">
 					<?php echo $row->name; ?></a>
-			</td>
+			</th>
 			<td>
 				<!-- <a class="modal" rel="{handler: 'iframe', size: {x: 800, y: 500}, onClose: function() {alert('hello');} }" href="<?php echo $edit_link; ?>"> -->
 				<?php echo $row->username; ?>
