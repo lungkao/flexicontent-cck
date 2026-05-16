@@ -113,13 +113,13 @@ if ( !$this->params->get('auto_title', 0) || $usetitle ) :  ob_start();  // titl
 			?>
 			<!-- tabber start -->
 			<div class="fctabber tabber-inline s-gray tabber-lang" id="fcform_tabset_<?php echo $tabSetCnt; ?>">
-				<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+				<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 					<h3 class="tabberheading"> <?php echo '-'.$this->itemlang->name.'-'; ?> </h3>
 					<?php echo $this->form->getInput('title');?>
 				</div>
 				<?php foreach ($this->row->item_translations as $t): ?>
 					<?php if ($this->itemlang->shortcode!=$t->shortcode && $t->shortcode!='*' && !in_array($t->code, $disable_langs)) : ?>
-						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 							<h3 class="tabberheading"> <?php echo $t->name; // $t->shortcode; ?> </h3>
 							<?php
 							$ff_id = 'jfdata_'.$t->shortcode.'_title';
@@ -177,13 +177,13 @@ if ($usealias) : ob_start();  // alias ?>
 			?>
 			<!-- tabber start -->
 			<div class="fctabber tabber-inline s-gray tabber-lang" id="fcform_tabset_<?php echo $tabSetCnt; ?>">
-				<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+				<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 					<h3 class="tabberheading"> <?php echo '-'.$this->itemlang->name.'-'; ?> </h3>
 					<?php echo $this->form->getInput('alias');?>
 				</div>
 				<?php foreach ($this->row->item_translations as $t): ?>
 					<?php if ($this->itemlang->shortcode!=$t->shortcode && $t->shortcode!='*' && !in_array($t->code, $disable_langs)) : ?>
-						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 							<h3 class="tabberheading"> <?php echo $t->name; // $t->shortcode; ?> </h3>
 							<?php
 							$ff_id = 'jfdata_'.$t->shortcode.'_alias';
@@ -1175,13 +1175,13 @@ if ( $typeid && $usemetadata ) : ob_start(); // metadata ?>
 					?>
 					<!-- tabber start -->
 					<div class="fctabber tabber-inline s-gray tabber-lang" id="fcform_tabset_<?php echo $tabSetCnt; ?>">
-						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 							<h3 class="tabberheading"> <?php echo '-'.$this->itemlang->name.'-'; ?> </h3>
 							<?php echo $this->form->getInput('metadesc'); ?>
 						</div>
 						<?php foreach ($this->row->item_translations as $t): ?>
 							<?php if ($this->itemlang->shortcode!=$t->shortcode && $t->shortcode!='*' && !in_array($t->code, $disable_langs)) : ?>
-								<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+								<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 									<h3 class="tabberheading"> <?php echo $t->name; // $t->shortcode; ?> </h3>
 									<?php
 									$ff_id = 'jfdata_'.$t->shortcode.'_metadesc';
@@ -1216,13 +1216,13 @@ if ( $typeid && $usemetadata ) : ob_start(); // metadata ?>
 					?>
 					<!-- tabber start -->
 					<div class="fctabber tabber-inline s-gray tabber-lang" id="fcform_tabset_<?php echo $tabSetCnt; ?>">
-						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 							<h3 class="tabberheading"> <?php echo '-'.$this->itemlang->name.'-'; ?> </h3>
 							<?php echo $this->form->getInput('metakey'); ?>
 						</div>
 						<?php foreach ($this->row->item_translations as $t): ?>
 							<?php if ($this->itemlang->shortcode!=$t->shortcode && $t->shortcode!='*' && !in_array($t->code, $disable_langs)) : ?>
-								<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+								<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 									<h3 class="tabberheading"> <?php echo $t->name; // $t->shortcode; ?> </h3>
 									<?php
 									$ff_id = 'jfdata_'.$t->shortcode.'_metakey';
@@ -1343,7 +1343,7 @@ if ($displayed_fieldSets) : ob_start();  // display_params ?>
 		$icon_class = $name === 'metafb' ? 'icon-users' : '';
 
 		if(count($displayed_fieldSets) > 1) : ?>
-		<div class="tabbertab fc-tabbed-displayparams-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+		<div class="tabbertab fc-tabbed-displayparams-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 			<h3 class="tabberheading"> <?php echo Text::_($label); ?> </h3>
 		<?php else : ?>
 		<fieldset class="flexi_params panelform">
@@ -1848,16 +1848,28 @@ if ($this->fields && $typeid) :
 			}
 			?>
 
-			<div class="control-group<?php echo $display_label_form === 2 ? ' fc_vertical' : ''; ?>" <?php echo $dataShowOn; ?> >
+			<?php
+			$_fcfId       = (int) $field->id;
+			$_fcfRequired = (bool) $field->parameters->get('required', 0);
+			$_descId      = 'desc_fcfield_' . $_fcfId;
+			$_errId       = 'err_fcfield_'  . $_fcfId;
+			?>
+			<div class="control-group<?php echo $display_label_form === 2 ? ' fc_vertical' : ''; ?>"
+			     role="group"
+			     aria-labelledby="label_fcfield_<?php echo $_fcfId; ?>"
+			     <?php echo $dataShowOn; ?> >
 
 				<?php ob_start(); /* label_html */ ?>
 				<div
 					class="control-label<?php echo $display_label_form === 2 ? ' fclabel_cleared' : ''; ?>"
-					id="label_outer_fcfield_<?php echo $field->id; ?>"
+					id="label_outer_fcfield_<?php echo $_fcfId; ?>"
 					style="<?php echo $display_label_form < 1 ? 'display:none;' : '' ?>"
 				>
-					<label id="label_fcfield_<?php echo $field->id; ?>" data-for="<?php echo 'custom_'.$field->name;?>" <?php echo $label_attrs;?> >
+					<label id="label_fcfield_<?php echo $_fcfId; ?>" data-for="<?php echo 'custom_'.$field->name;?>" <?php echo $label_attrs;?> >
 						<?php echo $field->label; ?>
+						<?php if ($_fcfRequired): ?>
+							<span class="visually-hidden"><?php echo Text::_('JREQUIRED'); ?></span>
+						<?php endif; ?>
 					</label>
 				</div>
 				<?php $rendered[$field->name] = (object) array('label_html' => ob_get_clean()); echo $rendered[$field->name]->label_html; ?>
@@ -1867,8 +1879,12 @@ if ($this->fields && $typeid) :
 				<?php endif; ?>
 
 				<?php ob_start(); /*input_html */ ?>
-				<div style="<?php echo $container_width . ($display_label_form !== 1 ? 'margin: 0' : ''); ?>" class="controls <?php echo $container_class; ?>" id="container_fcfield_<?php echo $field->id; ?>">
-					<?php echo ($field->description && $edithelp==3)  ?  sprintf( $alert_box, '', 'info', 'fc-nobgimage', $field->description )  :  ''; 
+				<div style="<?php echo $container_width . ($display_label_form !== 1 ? 'margin: 0' : ''); ?>" class="controls <?php echo $container_class; ?>" id="container_fcfield_<?php echo $_fcfId; ?>">
+					<?php
+					// Inline description (edithelp mode 3) — stable id so plugin inputs can aria-describedby it
+					if ($field->description && $edithelp == 3) {
+						echo '<div id="' . $_descId . '" class="fc-mssg fc-info fc-nobgimage">' . $field->description . '</div>';
+					}
 					?>
 
 
@@ -1883,7 +1899,7 @@ if ($this->fields && $typeid) :
 					<!-- tabber start -->
 					
 					<div class="fctabber tabber-inline s-gray tabber-lang" id="fcform_tabset_<?php echo $tabSetCnt; ?>">
-						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+						<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 							<h3 class="tabberheading"> <?php echo '- '.$this->itemlang->name.' -'; ?> </h3>
 							<?php
 								$field_tab_labels = & $field->tab_labels;
@@ -1893,7 +1909,7 @@ if ($this->fields && $typeid) :
 						</div>
 						<?php foreach ($this->row->item_translations as $t): ?>
 							<?php if ($this->itemlang->shortcode!=$t->shortcode && $t->shortcode!='*' && !in_array($t->code, $disable_langs)) : ?>
-								<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" >
+								<div class="tabbertab fc-tabbed-field-box" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0">
 									<h3 class="tabberheading"> <?php echo $t->name; // $t->shortcode; ?> </h3>
 									<?php
 									$field_tab_labels = & $t->fields->text->tab_labels;
@@ -1929,7 +1945,7 @@ if ($this->fields && $typeid) :
 							if (!isset($field->tab_labels[$i]))	continue;
 						?>
 
-						<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" style="padding: 0px;">
+						<div class="tabbertab" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" role="tabpanel" tabindex="0" style="padding: 0px;">
 							<h3 class="tabberheading"> <?php echo $field->tab_labels[$i]; // Current TAB LABEL ?> </h3>
 							<?php
 								echo $not_in_tabs;      // Output hidden fields (no tab created), by placing them inside the next appearing tab
@@ -1949,12 +1965,15 @@ if ($this->fields && $typeid) :
 					<?php echo $not_in_tabs;      // Output ENDING hidden fields, by placing them outside the tabbing area ?>
 
 				<?php endif; /* END MULTI-TABBED FIELD */ ?>
-				<?php 
-				// ADD PLACEHOLDER
-				if($field->description && $edithelp==4) {
-							echo  '<small class="form-text">'.$field->description.'</small>';
-					} ?>
+				<?php
+				// ADD PLACEHOLDER (edithelp mode 4) — stable id
+				if ($field->description && $edithelp == 4) {
+					echo '<small id="' . $_descId . '" class="form-text">' . $field->description . '</small>';
+				}
+				?>
 
+				<!-- Error region (populated by form validator; aria-live="polite" announces injected errors) -->
+				<div id="<?php echo $_errId; ?>" class="invalid-feedback fc-field-error" role="alert" aria-live="polite" hidden></div>
 
 				</div>
 				<?php $rendered[$field->name]->input_html = ob_get_clean(); echo $rendered[$field->name]->input_html; ?>

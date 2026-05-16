@@ -185,7 +185,11 @@ $tabCnt[$tabSetCnt] = 0;
 ?>
 
   <!-- tabber start -->
-  <div class="fctabber fields_tabset" id="fcform_tabset_<?php echo $tabSetCnt; ?>">
+  <div class="fctabber fields_tabset"
+       id="fcform_tabset_<?php echo $tabSetCnt; ?>"
+       role="region"
+       aria-label="<?php echo htmlspecialchars(Text::_('FLEXI_ITEM_EDITOR_TABS'), ENT_QUOTES); ?>">
+  <h2 class="visually-hidden"><?php echo Text::_('FLEXI_ITEM_EDITOR_SECTIONS'); ?></h2>
 
 
 	  <?php
@@ -199,8 +203,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $tab_ico = !empty($tab_icocss[$TAB_NAME]) ? $tab_icocss[$TAB_NAME] : 'icon-file-2';
 		  $tab_cls = isset($tab_classes[$TAB_NAME]) ? $tab_classes[$TAB_NAME] : '';
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php foreach($tab_fields[$TAB_NAME] as $fn => $i) : ?>
               <div class="fcclear"></div>
@@ -233,8 +237,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $tab_cls = isset($tab_classes[$TAB_NAME]) ? $tab_classes[$TAB_NAME] : '';
 
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php foreach($tab_fields[$TAB_NAME] as $fn => $i) : ?>
               <div class="fcclear"></div>
@@ -287,8 +291,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $use_flexbox  = $total_fields > 1 && !$tab_customized[$TAB_NAME];
 		  $n = 0;
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php
 			echo $use_flexbox ? '
@@ -345,8 +349,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  //echo "<h2>".$label. "</h2> " . "<h3>".$name. "</h3> ";
 		  ?>
         <!-- CUSTOM parameters TABs -->
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $icon_class; ?>">
-          <h3 class="tabberheading"> <?php echo Text::_($label); ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $icon_class; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo Text::_($label); ?> </h2>
 
           <div class="fc_tabset_inner">
 			  <?php foreach ($this->form->getFieldset($name) as $field) : ?>
@@ -391,8 +395,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $use_flexbox  = $total_fields > 1 && !$tab_customized[$TAB_NAME];
 		  $n = 0;
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" >
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php
 			echo $use_flexbox ? '
@@ -449,8 +453,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $use_flexbox  = $total_fields > 1 && !$tab_customized[$TAB_NAME];
 		  $n = 0;
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" >
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php
 			echo $use_flexbox ? '
@@ -504,8 +508,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $use_flexbox  = $total_fields > 1 && !$tab_customized[$TAB_NAME];
 		  $n = 0;
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" >
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php
 			echo $use_flexbox ? '
@@ -556,8 +560,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $tab_ico = !empty($tab_icocss[$TAB_NAME]) ? $tab_icocss[$TAB_NAME] : 'icon-eye-open';
 		  $tab_cls = isset($tab_classes[$TAB_NAME]) ? $tab_classes[$TAB_NAME] : '';
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php foreach($tab_fields[$TAB_NAME] as $fn => $i) : ?>
               <div class="fcclear"></div>
@@ -590,8 +594,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $tab_ico = !empty($tab_icocss[$TAB_NAME]) ? $tab_icocss[$TAB_NAME] : 'icon-palette';
 		  $tab_cls = isset($tab_classes[$TAB_NAME]) ? $tab_classes[$TAB_NAME] : '';
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
           <fieldset class="flexi_params fc_edit_container_full">
 
@@ -632,8 +636,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $use_flexbox  = $total_fields > 1 && !$tab_customized[$TAB_NAME];;
 		  $n = 0;
 		  ?>
-        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-          <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+        <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+          <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			<?php
 			echo $use_flexbox ? '
@@ -683,8 +687,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $tab_ico = !empty($tab_icocss[$TAB_NAME]) ? $tab_icocss[$TAB_NAME] : 'icon-bookmark';
 		  $tab_cls = isset($tab_classes[$TAB_NAME]) ? $tab_classes[$TAB_NAME] : '';
 		  ?>
-		  <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-			  <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+		  <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+			  <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			  <fieldset class="flexi_params fc_edit_container_full">
 
@@ -722,8 +726,8 @@ $tabCnt[$tabSetCnt] = 0;
 		  $tab_ico = !empty($tab_icocss[$TAB_NAME]) ? $tab_icocss[$TAB_NAME] : 'icon-bookmark';
 		  $tab_cls = isset($tab_classes[$TAB_NAME]) ? $tab_classes[$TAB_NAME] : '';
 		  ?>
-		  <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-			  <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+		  <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+			  <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 			  <fieldset class="flexi_params fc_edit_container_full">
 
@@ -760,8 +764,8 @@ $tabCnt[$tabSetCnt] = 0;
 	  $tab_ico = !empty($tab_icocss[$TAB_NAME]) ? $tab_icocss[$TAB_NAME] : 'icon-bookmark';
 	  $tab_cls = isset($tab_classes[$TAB_NAME]) ? $tab_classes[$TAB_NAME] : '';
 	  ?>
-	  <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>">
-		  <h3 class="tabberheading"> <?php echo $tab_lbl; ?> </h3>
+	  <div class="tabbertab <?php echo $tab_cls; ?>" id="fcform_tabset_<?php echo $tabSetCnt; ?>_tab_<?php echo $tabCnt[$tabSetCnt]++; ?>" data-icon-class="<?php echo $tab_ico; ?>" role="tabpanel" tabindex="0">
+		  <h2 class="tabberheading"> <?php echo $tab_lbl; ?> </h2>
 
 		  <fieldset class="flexi_params fc_edit_container_full">
 
