@@ -1092,14 +1092,18 @@ span.input-append > button[id$="_clear"]:hover,
 }
 
 /* ── Required badge (Joomla renders this as .label-warning) ─────── */
-/* Override the bright red Required badge to pill-outline style */
+/* Override the bright red Required badge to pill-outline style.
+   Scoped to spans/labels only — must NOT match div.select2-container
+   which has class "select2-container required use_select2_lib". */
 .com_flexicontent .control-label .label.required,
 .com_flexicontent .required-star,
 span.required,
 .jform_fccat + .required,
 input.required ~ .label,
-.com_flexicontent [class*="required"],
-.com_menus [class*="required"] {
+.com_flexicontent span[class*="required"],
+.com_flexicontent label[class*="required"],
+.com_menus span[class*="required"],
+.com_menus label[class*="required"] {
   display: inline-flex;
   align-items: center;
   font-size: .67rem !important;
