@@ -1494,19 +1494,23 @@ body.com_flexicontent #flexicontent.fcitem-form,
    was leaving selects narrow next to .inlineFormTip icons.
    Scope: admin item edit form only. */
 
-/* 1. .controls becomes a flex row so <select> + .inlineFormTip share width */
+/* 1. .controls becomes a flex row so <select> + .inlineFormTip share width.
+      nowrap: keep the info icon inline next to the dropdown instead of
+      wrapping below (was happening because .select2-container claims
+      100% width — flex would push the icon to the next line). */
 .com_flexicontent #flexicontent .control-group > .controls,
 .com_flexicontent .control-group > .controls.container_fcfield {
   display: flex !important;
   align-items: center !important;
-  flex-wrap: wrap !important;
+  flex-wrap: nowrap !important;
   gap: .5rem !important;
   width: 100% !important;
   min-width: 0 !important;
 }
 
 /* 2. Selects/inputs inside container_fcfield fill remaining row width.
-      Overrides legacy `max-width: 96%`. */
+      Overrides legacy `max-width: 96%`. Padding/height tuned to match
+      Joomla 5 Atum form-control rhythm (36px height). */
 .com_flexicontent #flexicontent .control-group > .controls.container_fcfield > select,
 .com_flexicontent #flexicontent .control-group > .controls.container_fcfield > input[type="text"],
 .com_flexicontent #flexicontent .control-group > .controls.container_fcfield > input[type="number"],
@@ -1516,10 +1520,10 @@ body.com_flexicontent #flexicontent.fcitem-form,
   min-width: 0 !important;
   max-width: none !important;
   width: auto !important;
-  padding: .5rem .875rem !important;
+  padding: .375rem .75rem !important;
   font-size: var(--fc-fs-base) !important;
-  line-height: 1.4 !important;
-  border: 1.5px solid var(--fc-border) !important;
+  line-height: 1.5 !important;
+  border: 1px solid var(--fc-border) !important;
   border-radius: var(--fc-radius-sm) !important;
   background: var(--fc-bg-card) !important;
   color: var(--fc-text) !important;
@@ -1558,7 +1562,7 @@ body.com_flexicontent #flexicontent.fcitem-form,
 
 /* 5. Equalise select height with text input rows (vertical rhythm) */
 .com_flexicontent #flexicontent .control-group > .controls.container_fcfield > select {
-  min-height: 2.5rem !important;
+  min-height: 2.25rem !important;
   appearance: auto !important;
 }
 
@@ -1608,21 +1612,21 @@ body.com_flexicontent #flexicontent.fcitem-form,
   vertical-align: middle;
 }
 
-/* The clickable trigger becomes an input-shaped rectangle. */
+/* The clickable trigger: input-shaped rectangle with proportional padding. */
 .com_flexicontent #flexicontent .control-group > .controls .select2-container > .select2-choice {
   display: flex !important;
   align-items: center !important;
   width: 100% !important;
-  min-height: 2.5rem !important;
-  padding: .4rem .85rem !important;
-  border: 1.5px solid var(--fc-border) !important;
+  min-height: 2.25rem !important;     /* 36px — matches native form-control */
+  padding: .375rem .75rem !important; /* tighter so text looks anchored, not floating */
+  border: 1px solid var(--fc-border) !important;
   border-radius: var(--fc-radius-sm) !important;
   background: var(--fc-bg-card) !important;
   background-image: none !important;
   color: var(--fc-text) !important;
   font-size: var(--fc-fs-base) !important;
   font-weight: 400 !important;
-  line-height: 1.4 !important;
+  line-height: 1.5 !important;
   text-decoration: none !important;
   text-shadow: none !important;
   box-shadow: none !important;
