@@ -85,7 +85,7 @@ endif;
 
 
 if ( !$this->params->get('auto_title', 0) || $usetitle ) :  ob_start();  // title ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_title-lbl">
 		<?php
 		$field = isset($this->fields['title']) ? $this->fields['title'] : false;
 		$field_description = $field && $field->description ? $field->description : Text::_($this->form->getField('title')->description);
@@ -152,7 +152,7 @@ endif;
 
 
 if ($usealias) : ob_start();  // alias ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_alias-lbl">
 		<?php
 		$field = isset($this->fields['alias']) ? $this->fields['alias'] : false;
 		$field_description = $field && $field->description ? $field->description : Text::_($this->form->getField('alias')->description);
@@ -216,7 +216,7 @@ endif;
 
 
 if ((!$this->menuCats || $this->menuCats->cancatid) && $usemaincat) : ob_start();  // category ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_catid-lbl">
 		<?php
 		// Field via coreprops field type
 		$field = isset($this->fields['core_category']) ? $this->fields['core_category'] : false;
@@ -261,7 +261,7 @@ endif;
 
 
 if ($uselang) : ob_start();  // lang ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_language-lbl">
 		<?php
 		// Field via coreprops field type
 		$field = isset($this->fields['core_lang']) ? $this->fields['core_lang'] : false;
@@ -305,7 +305,7 @@ endif;
 
 
 if ($tags_displayed) : ob_start();  // tags ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_tag-lbl">
 		<?php
 		$field = isset($this->fields['tags']) ? $this->fields['tags'] : false;
 		$field_description = $field && $field->description ? $field->description : Text::_($this->form->getField('tag')->description);  // Note: form element (XML file) is 'tag' not 'tags'
@@ -407,7 +407,7 @@ endif;
 
 
 if (!$typeid || $usetype) : ob_start();  // type ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_type_id-lbl">
 		<?php
 		$field = isset($this->fields['document_type']) ? $this->fields['document_type'] : false;
 		$field_description = $field && $field->description ? $field->description : Text::_($this->form->getField('type_id')->description);  // Note: form element (XML file) is 'type_id' not 'document_type'
@@ -450,7 +450,7 @@ endif;
 if (!$is_autopublished) :  // state and vstate (= approval of new document version) ?>
 
 	<?php if ($usestate) : ob_start();  // state ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_state-lbl">
 		<?php
 		$field = isset($this->fields['state']) ? $this->fields['state'] : false;
 		$field_description = $field && $field->description ? $field->description : Text::_($this->form->getField('state')->description);
@@ -504,7 +504,7 @@ if (!$is_autopublished) :  // state and vstate (= approval of new document versi
 		// User can publish and versioning is ON with auto approval  OFF
 		?>
 
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_vstate-lbl">
 			<?php
 			$label_attrs = 'class="' . $tip_class . $lbl_class . $lbl_extra_class . '" title="'.flexicontent_html::getToolTip('FLEXI_PUBLIC_DOCUMENT_CHANGES', 'FLEXI_PUBLIC_DOCUMENT_CHANGES_DESC', 1, 1).'"';
 			ob_start();
@@ -543,7 +543,7 @@ if (!$is_autopublished) :  // state and vstate (= approval of new document versi
 		// Versioning OFF: that change are applied immediately and that existing item is overwritten immediately
 	?>
 		<?php ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_vstate-lbl">
 			<?php ob_start(); ?>
 				<div class="control-label" id="jform_vstate-lbl-outer">
 				</div>
@@ -573,7 +573,7 @@ endif;
 
 
 if ($useaccess) : ob_start();  // access ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_access-lbl">
 		<?php
 		$field = isset($this->fields['core_access']) ? $this->fields['core_access'] : false;
 		$field = isset($this->fields['core_access_' . $typeid]) ? $this->fields['core_access_' . $typeid] : $field;
@@ -644,7 +644,7 @@ endif;
 
 
 if ($typeid && $allow_subscribers_notify && $this->subscribers) :  ob_start();  // notify ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_notify-lbl">
 		<?php
 		$label_attrs = 'class="' . $tip_class . $lbl_class  . $lbl_extra_class . '" title="'.flexicontent_html::getToolTip('FLEXI_NOTIFY_FAVOURING_USERS', 'FLEXI_NOTIFY_NOTES', 1, 1).'"';
 		ob_start();
@@ -677,7 +677,7 @@ endif;
 
 
 if ($typeid && $allow_owner_notify && $this->row->created_by != $user->id) :  ob_start();  // notify_owner ?>
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_notify_owner-lbl">
 		<?php
 		$label_attrs = 'class="' . $tip_class . $lbl_class . $lbl_extra_class . '" title="'.flexicontent_html::getToolTip('FLEXI_NOTIFY_OWNER', 'FLEXI_NOTIFY_OWNER_DESC', 1, 1).'"';
 		ob_start();
@@ -717,7 +717,7 @@ endif;
 
 if ($usefeatured) : ob_start();  // featured ?>
 
-	<div class="control-group">
+	<div class="control-group" role="group" aria-labelledby="jform_featured-lbl">
 		<?php
 		$field = isset($this->fields['core_featured']) ? $this->fields['core_featured'] : false;
 		$field = isset($this->fields['core_featured_' . $typeid]) ? $this->fields['core_featured_' . $typeid] : $field;
@@ -763,7 +763,7 @@ if ( $secondary_displayed || !empty($this->lists['featured_cid']) ) : ob_start()
 		<?php if ($secondary_displayed) : /* optionally via MENU SPECIFIED categories subset (instead of categories with CREATE perm) */ ?>
 
 			<?php ob_start(); ?>
-			<div class="control-group">
+			<div class="control-group" role="group" aria-labelledby="jform_cid-lbl">
 				<?php
 				$field = isset($this->fields['categories']) ? $this->fields['categories'] : false;
 				$field_description = $field && $field->description ? $field->description : ($isSite ? Text::_('FLEXI_CATEGORIES_NOTES') : '');
@@ -796,7 +796,7 @@ if ( $secondary_displayed || !empty($this->lists['featured_cid']) ) : ob_start()
 		<?php if ( !empty($this->lists['featured_cid']) ) : ?>
 
 			<?php ob_start(); ?>
-			<div class="control-group">
+			<div class="control-group" role="group" aria-labelledby="jform_featured_cid-lbl">
 
 				<?php ob_start(); ?>
 				<div class="control-label" id="jform_featured_cid-lbl-outer">
