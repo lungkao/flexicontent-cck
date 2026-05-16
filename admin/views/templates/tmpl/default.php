@@ -110,21 +110,22 @@ $list_total_cols = 8;
 	-->
 	
 	<table id="adminListTableFCtemplates" class="adminlist table fcmanlist" style="width: 100% !important;">
-	
+	<caption class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_TEMPLATES'); ?></caption>
+
 	<thead>
 		<tr>
-			<th><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
-			<th class="left">
+			<th scope="col"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
+			<th scope="col" class="left">
 				<input type="checkbox" name="checkall-toggle" id="checkall-toggle" value="" title="<?php echo \Joomla\CMS\Language\Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 				<label for="checkall-toggle" class="green single"></label>
 			</th>
-			<th></th>
-			<th class="title" style="text-align:left;"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TEMPLATE_NAME' ); ?></th>
-			<th colspan="2" style="text-align: left">
+			<th scope="col"></th>
+			<th scope="col" class="title" style="text-align:left;"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TEMPLATE_NAME' ); ?></th>
+			<th scope="col" colspan="2" style="text-align: left">
 				<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_SINGLE_CONTENT' ); ?><br/>
 				<span class="badge text-white bg-info">ITEM Layout</span>
 			</th>
-			<th colspan="2" style="text-align: left">
+			<th scope="col" colspan="2" style="text-align: left">
 				<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CONTENT_LISTS' ); ?><br/>
 				<span class="badge text-white bg-info">CATEGORY Layout</span>
 			</th>
@@ -172,14 +173,14 @@ $list_total_cols = 8;
 					<?php echo $copyTmpl_icon; ?>
 				</span>
 			</td>
-			<td>
+			<th scope="row">
 				<?php echo htmlspecialchars($row->name, ENT_QUOTES, 'UTF-8'); ?>
 				<?php if (in_array($row->name, $basetemplates)) :?>
 					<!--<span class="icon-lock"></span>-->
 				<?php else: ?>
-					<span class="icon-user"></span><span class="badge bg-dark text-white"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_USER').' - '.\Joomla\CMS\Language\Text::_('FLEXI_CREATED'); ?></span>
+					<span class="icon-user" aria-hidden="true"></span><span class="badge bg-dark text-white"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_USER').' - '.\Joomla\CMS\Language\Text::_('FLEXI_CREATED'); ?></span>
 				<?php endif; ?>
-			</td>
+			</th>
 			<td>
 				<?php echo !empty($row->items)
 					? '<a class="' . $this->btn_sm_class . ' hasTooltip" href="'.$itemlink.'" title="'.$edit_layout.'">'.$editSingle_icon.'</a>'
@@ -217,7 +218,7 @@ $list_total_cols = 8;
 	<tfoot>
 		<tr>
 			<td colspan="<?php echo $list_total_cols; ?>" style="text-align: left;background-color:transparent !important;">
-				<table class="admintable" style="margin: 0 auto !important;">
+				<table class="admintable" role="presentation" style="margin: 0 auto !important;">
 					<tr>
 						<td>
 						<?php echo '<span style="font-size: 14px;">'.$copyTmpl_icon.'</span>'; ?>
@@ -255,7 +256,7 @@ $list_total_cols = 8;
 </div>
 
 <div id="howto_box" style="margin:10px 0% 24px 0%; width: 100%;">
-		<table class="fc-table-list" style="margin: 0; min-width: unset; width: 100%;">
+		<table class="fc-table-list" role="presentation" style="margin: 0; min-width: unset; width: 100%;">
 			<tr>
 				<th>Configure display of your fields <span class="badge text-white bg-dark">item</span> view and <span class="badge text-white bg-dark">multi-item</span> views</th>
 			</tr>
