@@ -313,7 +313,7 @@ div fieldset.panelform table {
 	width: 100%;
 }
 div table.adminform {
-	font-size: 11px;
+	font-size: var(--fc-fs-sm, .875rem);
 	background-color: #FFFFFF;
 	border: 1px solid #D5D5D5;
 	border-collapse: collapse;
@@ -321,7 +321,7 @@ div table.adminform {
 	width: 100%;
 }
 div table.adminform td {
-	font-size: 11px;
+	font-size: var(--fc-fs-sm, .875rem);
 	padding: 2px 2px;
 	text-align: right;
 }
@@ -335,7 +335,7 @@ table.admintable td .controls label {
 	padding: 0px !important;
 }
 div table.admintable {
-	font-size: 11px;
+	font-size: var(--fc-fs-sm, .875rem);
 	border-collapse: separate;
 	border-spacing: 2px !important;
 }
@@ -353,7 +353,7 @@ div table.admintable td.paramlist_key {
 	color: #666666;
 	font-family: arial;
 	font-weight: normal;
-	font-size: 11px;
+	font-size: var(--fc-fs-sm, .875rem);
 	text-align: left;
 	width: 140px;
 	padding: 2px 4px 2px 4px;
@@ -381,7 +381,7 @@ dl.tabs dt {
 	padding: 4px 10px;
 }
 dl.tabs dt h3 {
-	font-size: 11px !important;
+	font-size: var(--fc-fs-sm, .875rem) !important;
 	margin: 0px !important;
 	line-height: 20px;
 }

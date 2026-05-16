@@ -10,7 +10,7 @@ body fieldset.fc-formbox {
 body fieldset.fc-formbox .btn-group :active,
 body fieldset.fc-formbox .btn-group .active {
 	box-shadow: inset 0px 0px 5px #c1c1c1;
-	outline: none;
+	outline-offset: 2px;
 }
 #fc-fileman-addfiles {
 	margin-bottom: 32px;
@@ -621,7 +621,7 @@ body .fc_file_uploader .plupload_container:not(.fc_uploader_hide_preview) .fc_pl
 	background: darkgreen;
 	color: white;
 	box-shadow: inset 0px 0px 5px #c1c1c1;
-	outline: none;
+	outline-offset: 2px;
 	border: 1px solid white;
 }
 body .fc_file_uploader .plupload_container ul.plupload_filelist > li {
@@ -764,7 +764,7 @@ body .fc_file_uploader .plupload_scroll ul.plupload_filelist > li .plupload_file
 body .fc_file_uploader .plupload_scroll ul.plupload_filelist > li.plupload_uploading .plupload_file_action > a:before {
 	color: darkorange;
 	content: "\e022";
-	outline: 0;
+	outline-offset: 2px;
 	background-image: none;
 }
 body .fc_file_uploader .plupload_scroll ul.plupload_filelist > li.plupload_failed .plupload_file_action > a:before {
@@ -772,7 +772,7 @@ body .fc_file_uploader .plupload_scroll ul.plupload_filelist > li.plupload_faile
 	padding: 5px 3px 7px;
 	color: #FFD800;
 	content: "\48";
-	outline: 0;
+	outline-offset: 2px;
 	background-image: none;
 	-webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
 	box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
@@ -780,7 +780,7 @@ body .fc_file_uploader .plupload_scroll ul.plupload_filelist > li.plupload_faile
 body .fc_file_uploader .plupload_scroll ul.plupload_filelist > li.plupload_done .plupload_file_action > a:before {
 	color: green;
 	content: "\47";
-	outline: 0;
+	outline-offset: 2px;
 	background-image: none;
 	-webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
 	box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);

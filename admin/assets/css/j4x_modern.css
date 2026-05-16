@@ -26,10 +26,27 @@
   --fc-shadow-sm:      0 1px 2px rgba(0,0,0,.06);
   --fc-shadow:         0 1px 4px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.05);
   --fc-shadow-md:      0 4px 12px rgba(0,0,0,.1), 0 8px 24px rgba(0,0,0,.06);
-  --fc-shadow-focus:   0 0 0 3px rgba(37,99,235,.2);
   --fc-transition:     .17s cubic-bezier(.4,0,.2,1);
   --fc-font:           'Inter var','Inter',system-ui,-apple-system,sans-serif;
   --fc-font-mono:      'JetBrains Mono','Fira Code',monospace;
+
+  /* ── Typography scale (Batch 2 — 16px baseline, WCAG AA) ─────── */
+  --fc-fs-xs:          .8125rem;  /* 13px — badges, pagination, meta only */
+  --fc-fs-sm:          .875rem;   /* 14px — secondary labels, dense tables */
+  --fc-fs-base:        1rem;      /* 16px — body, table cells, inputs */
+  --fc-fs-lg:          1.125rem;  /* 18px — section headings */
+  --fc-fs-xl:          1.25rem;   /* 20px — page title */
+  --fc-lh-tight:       1.3;       /* dense tables */
+  --fc-lh-base:        1.5;       /* body */
+  --fc-lh-relaxed:     1.65;      /* Thai diacritics, long-form */
+
+  /* ── Focus ring (Batch 2 — WCAG 2.4.7 / 2.4.11 / 2.4.13) ─────── */
+  --fc-focus-color:        #1d4ed8;             /* 7.1:1 on white, 4.6:1 on #f8fafc */
+  --fc-focus-color-on-dark:#93c5fd;             /* 8.3:1 on Atum dark header */
+  --fc-focus-width:        2px;
+  --fc-focus-offset:       2px;
+  --fc-shadow-focus:       0 0 0 var(--fc-focus-width) var(--fc-focus-color),
+                           0 0 0 calc(var(--fc-focus-width) + 2px) rgba(255,255,255,.85);
 }
 
 /* ── Base ───────────────────────────────────────────────────────── */
@@ -37,6 +54,35 @@
 .com_flexicontent {
   font-family: var(--fc-font);
   color: var(--fc-text);
+  font-size: var(--fc-fs-base);
+  line-height: var(--fc-lh-base);
+}
+
+/* ── Universal focus ring (Batch 2) ──────────────────────────────
+   Applies to every focusable descendant. Uses :focus-visible so
+   mouse clicks don't show the ring — only keyboard focus does.
+   Atum dark contexts get a lighter ring via descendant selectors. */
+#flexicontent :focus-visible,
+.com_flexicontent :focus-visible,
+#adminForm :focus-visible {
+  outline: var(--fc-focus-width) solid var(--fc-focus-color);
+  outline-offset: var(--fc-focus-offset);
+  box-shadow: var(--fc-shadow-focus);
+}
+
+.subhead-dark #flexicontent :focus-visible,
+#sidebar-wrapper :focus-visible,
+.header-dark :focus-visible {
+  outline-color: var(--fc-focus-color-on-dark);
+}
+
+/* Thai diacritic readability bump (+12.5%) */
+#flexicontent:lang(th),
+.com_flexicontent:lang(th),
+#flexicontent [lang^="th"],
+.com_flexicontent [lang^="th"] {
+  font-size: var(--fc-fs-lg);     /* 18px effective base */
+  line-height: var(--fc-lh-relaxed);
 }
 
 /* ── Toolbar refinements ────────────────────────────────────────── */
@@ -195,8 +241,8 @@ table.fcmanlist thead th a,
 .com_flexicontent .filter-search-bar input {
   border: 1px solid var(--fc-border);
   border-radius: var(--fc-radius-sm);
-  padding: .45rem .85rem;
-  font-size: .875rem;
+  padding: .4rem .85rem;
+  font-size: var(--fc-fs-base);
   background: var(--fc-bg);
   color: var(--fc-text);
   height: 36px;
@@ -211,7 +257,7 @@ table.fcmanlist thead th a,
 #adminForm .js-stools input:focus {
   border-color: var(--fc-primary);
   box-shadow: var(--fc-shadow-focus);
-  outline: none;
+  outline-offset: 2px;
   background: #fff;
 }
 
@@ -237,7 +283,7 @@ table.fcmanlist thead th a,
   border: 1px solid var(--fc-border);
   border-radius: var(--fc-radius-sm);
   padding: .4rem .75rem;
-  font-size: .875rem;
+  font-size: var(--fc-fs-base);
   height: 36px;
   background: var(--fc-bg);
   color: var(--fc-text);
@@ -249,7 +295,7 @@ table.fcmanlist thead th a,
 #adminForm #filter_form input:focus,
 #adminForm #filter_form select:focus {
   border-color: var(--fc-primary);
-  outline: none;
+  outline-offset: 2px;
   background: #fff;
 }
 
@@ -281,7 +327,8 @@ table.fcmanlist thead th a,
 .com_flexicontent table.adminlist tbody td,
 #adminForm table tbody td {
   color: var(--fc-text);
-  font-size: .875rem;
+  font-size: var(--fc-fs-base);
+  line-height: var(--fc-lh-tight);
 }
 
 .com_flexicontent table.adminlist tbody td a,
@@ -370,7 +417,7 @@ table.fcmanlist thead th a,
 .com_flexicontent #flexicontent #jform_title:focus {
   border-color: var(--fc-primary) !important;
   box-shadow: var(--fc-shadow-focus) !important;
-  outline: none !important;
+  outline-offset: 2px !important;
 }
 
 /* ── Tab navigation ─────────────────────────────────────────────── */
@@ -492,8 +539,8 @@ table.fcmanlist thead th a,
 .com_flexicontent #flexicontent select {
   border: 1px solid var(--fc-border);
   border-radius: var(--fc-radius-sm) !important;
-  padding: .45rem .85rem;
-  font-size: .875rem;
+  padding: .4rem .85rem;
+  font-size: var(--fc-fs-base);
   background: var(--fc-bg);
   color: var(--fc-text);
   transition: border-color var(--fc-transition), box-shadow var(--fc-transition), background var(--fc-transition);
@@ -505,16 +552,16 @@ table.fcmanlist thead th a,
 .com_flexicontent #flexicontent select:focus {
   border-color: var(--fc-primary) !important;
   box-shadow: var(--fc-shadow-focus) !important;
-  outline: none !important;
+  outline-offset: 2px !important;
   background: #fff !important;
 }
 
 /* ── Buttons ────────────────────────────────────────────────────── */
 .com_flexicontent .btn {
   border-radius: var(--fc-radius-sm);
-  font-size: .835rem;
+  font-size: var(--fc-fs-sm);
   font-weight: 500;
-  padding: .45rem 1rem;
+  padding: .38rem 1rem;
   transition: all var(--fc-transition);
   display: inline-flex;
   align-items: center;
@@ -626,7 +673,7 @@ table.fcmanlist thead th a,
   border-color: var(--fc-primary);
   box-shadow: var(--fc-shadow-focus);
   background: #fff;
-  outline: none;
+  outline-offset: 2px;
 }
 
 .com_flexicontent .select2-container--default .select2-selection--multiple {
@@ -845,7 +892,7 @@ table.fcmanlist thead th a,
   border-color: var(--fc-primary) !important;
   box-shadow: var(--fc-shadow-focus) !important;
   background: #fff !important;
-  outline: none !important;
+  outline-offset: 2px !important;
 }
 
 /* Select filters (#limit + all selects) */
@@ -1132,7 +1179,7 @@ input.fc_hidden_value {
 .com_flexicontent .control-group textarea:focus {
   border-color: var(--fc-primary) !important;
   box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
-  outline: none !important;
+  outline-offset: 2px !important;
   background: #fff !important;
 }
 
@@ -1150,7 +1197,7 @@ input.fc_hidden_value {
 }
 .com_menus .control-group input[type="text"]:focus {
   border-color: var(--fc-primary) !important;
-  outline: none !important;
+  outline-offset: 2px !important;
 }
 
 /* ── Edit (pencil) button ───────────────────────────────────────── */
@@ -1263,7 +1310,7 @@ span.input-append > a[id$="_edit"]:hover,
 .com_flexicontent input.form-control[required]:focus {
   border-color: var(--fc-primary) !important;
   box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
-  outline: none !important;
+  outline-offset: 2px !important;
 }
 
 /* ── DOCUMENT TYPE select — no red border ─────────────────────────── */
@@ -1280,7 +1327,7 @@ span.input-append > a[id$="_edit"]:hover,
 #adminForm select.required:focus {
   border-color: var(--fc-primary) !important;
   box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
-  outline: none !important;
+  outline-offset: 2px !important;
 }
 
 /* ── TITLE label pill badge — neutral not red ─────────────────────── */
@@ -1418,7 +1465,7 @@ body.com_flexicontent #flexicontent.fcitem-form,
 #flexicontent .controls select:focus {
   border-color: var(--fc-primary) !important;
   box-shadow: 0 0 0 3px rgba(37,99,235,.12) !important;
-  outline: none !important;
+  outline-offset: 2px !important;
 }
 
 /* ── Tabs (fctabber) ─────────────────────────────────────────────── */
