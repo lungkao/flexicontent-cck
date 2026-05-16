@@ -1484,6 +1484,101 @@ body.com_flexicontent #flexicontent.fcitem-form,
   outline-offset: 2px !important;
 }
 
+/* ── B6: Field row layout — controls + info-icon alignment ─────────
+   Fixes cramped dropdowns in right column (doc type / state / access)
+   where legacy `form div.container_fcfield > select { max-width: 96% }`
+   was leaving selects narrow next to .inlineFormTip icons.
+   Scope: admin item edit form only. */
+
+/* 1. .controls becomes a flex row so <select> + .inlineFormTip share width */
+.com_flexicontent #flexicontent .control-group > .controls,
+.com_flexicontent .control-group > .controls.container_fcfield {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: .5rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* 2. Selects/inputs inside container_fcfield fill remaining row width.
+      Overrides legacy `max-width: 96%`. */
+.com_flexicontent #flexicontent .control-group > .controls.container_fcfield > select,
+.com_flexicontent #flexicontent .control-group > .controls.container_fcfield > input[type="text"],
+.com_flexicontent #flexicontent .control-group > .controls.container_fcfield > input[type="number"],
+.com_flexicontent #flexicontent .control-group > .controls.container_fcfield > textarea,
+.com_flexicontent #flexicontent .control-group > .controls.container_fcfield > .select2-container {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+  padding: .5rem .875rem !important;
+  font-size: var(--fc-fs-base) !important;
+  line-height: 1.4 !important;
+  border: 1.5px solid var(--fc-border) !important;
+  border-radius: var(--fc-radius-sm) !important;
+  background: var(--fc-bg-card) !important;
+  color: var(--fc-text) !important;
+  box-sizing: border-box !important;
+}
+
+/* 3. Info-icon tooltip — breathing room + fixed clickable size */
+.com_flexicontent #flexicontent .control-group > .controls .inlineFormTip,
+.com_flexicontent .control-group > .controls .inlineFormTip {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  color: var(--fc-text-muted) !important;
+  cursor: help !important;
+  transition: background var(--fc-transition), color var(--fc-transition) !important;
+}
+.com_flexicontent #flexicontent .control-group > .controls .inlineFormTip:hover,
+.com_flexicontent .control-group > .controls .inlineFormTip:hover {
+  background: var(--fc-primary-light, rgba(37,99,235,.08)) !important;
+  color: var(--fc-primary) !important;
+}
+
+/* 4. Neutralise legacy ::before padding on info-icon glyph */
+.com_flexicontent #flexicontent .control-group > .controls .inlineFormTip > [class^="icon-"]:before,
+.com_flexicontent #flexicontent .control-group > .controls .inlineFormTip > [class*=" icon-"]:before {
+  padding: 0 !important;
+  font-size: 1rem !important;
+  line-height: 1 !important;
+}
+
+/* 5. Equalise select height with text input rows (vertical rhythm) */
+.com_flexicontent #flexicontent .control-group > .controls.container_fcfield > select {
+  min-height: 2.5rem !important;
+  appearance: auto !important;
+}
+
+/* 6. Equal flex distribution for two-column form layout */
+.com_flexicontent #flexicontent .fc_form_flex_box {
+  gap: 1.25rem !important;
+}
+.com_flexicontent #flexicontent .fc_form_flex_box > .fc_form_flex_box_item.use_flex_grow {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+/* 7. Label-control proximity + label-to-icon spacing */
+.com_flexicontent #flexicontent .control-group > .control-label {
+  margin-bottom: .375rem !important;
+  display: block !important;
+}
+.com_flexicontent #flexicontent .control-group > .control-label > label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .375rem !important;
+}
+
 /* ── Tabs (fctabber) ─────────────────────────────────────────────── */
 .com_flexicontent .fctabber.tabber,
 #flexicontent .fctabber.tabber,
