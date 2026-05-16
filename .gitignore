@@ -25,3 +25,7 @@ logs/
 
 # Zip packages
 *.zip
+ignored/
+
+# PHPUnit cache
+tests/.phpunit.result.cache
