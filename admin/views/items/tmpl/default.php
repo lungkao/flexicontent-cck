@@ -531,9 +531,10 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 	echo '
 		<div class="tabbertab ' . $type_class . '" id="type_tab_all" style="padding-left: 0; padding-right: 0; border-left: 0; border-right: 0; border-bottom: 0;">
-			<h3 class="tabberheading ' . $__tip_class . '" ' . $__tip_props . '
+			<button type="button" class="tabberheading ' . $__tip_class . '" ' . $__tip_props . '
+				aria-pressed="' . (empty($filter_type) ? 'true' : 'false') . '"
 				onmouseup="jQuery(\'#filter_assockey\').removeAttr(\'checked\'); jQuery(\'#filter_type\').val([]); jQuery(\'#filter_type\').trigger(\'change\')"
-			>' . Text::_('FLEXI_ALL') . '</h3>
+			>' . Text::_('FLEXI_ALL') . '</button>
 		</div>
 		';
 
@@ -546,8 +547,8 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 		$__tip_class = ''; //' hasTooltip';
 		echo '
 			<div class="tabbertab ' . $type_class . '" id="type_tab_all" style="padding-left: 0; padding-right: 0; border-left: 0; border-right: 0; border-bottom: 0;">
-				<h3 class="tabberheading ' . $__tip_class . '" ' . $__tip_props . '
-				>' . $_name . '</h3>
+				<span class="tabberheading ' . $__tip_class . '" role="status" ' . $__tip_props . '
+				>' . $_name . '</span>
 			</div>
 			';
 	}
@@ -571,9 +572,9 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 			$type_class = ' subtypes-header';
 			echo '
 				<div class="tabbertab ' . $type_class . '" id="type_tab_break_subtype" style="padding:0; border: 0;">
-					<h3 class="tabberheading ' . $type_class . '"
+					<span class="tabberheading ' . $type_class . '"
 						data-data_attr_a="' . (int) $itemType->id . '"
-					> Subtypes: </h3>
+					> Subtypes: </span>
 			';
 			echo '</div>';
 		}
@@ -587,10 +588,11 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 		}
 		echo '
 			<div class="tabbertab ' . $type_class . '" id="type_tab_' . (int) $itemType->id . '" style="padding-left: 0; padding-right: 0; border-left: 0; border-right: 0; border-bottom: 0;">
-				<h3 class="tabberheading ' . $__tip_class . $type_class . '" ' . $__tip_props . '
+				<button type="button" class="tabberheading ' . $__tip_class . $type_class . '" ' . $__tip_props . '
+					aria-pressed="' . ($single_type && in_array($itemType->id, $filter_type) ? 'true' : 'false') . '"
 					data-data_attr_a="' . (int) $itemType->id . '"
 					onmouseup="jQuery(\'#filter_assockey\').removeAttr(\'checked\'); jQuery(\'#filter_type\').val([this.getAttribute(\'data-data_attr_a\')]); jQuery(\'#filter_type\').trigger(\'change\')"
-				>' . Text::_( $itemType->name ) . '</h3>
+				>' . Text::_( $itemType->name ) . '</button>
 		';
 		echo '</div>';
 
@@ -683,13 +685,14 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 				<?php
 					echo !empty($this->lists['scope']) ? $this->lists['scope'] : '';
 				?>
+				<label for="search" class="visually-hidden"><?php echo Text::_('FLEXI_SEARCH'); ?></label>
 				<input type="text" name="search" id="search" placeholder="<?php echo !empty($this->scope_title) ? $this->scope_title : Text::_('FLEXI_SEARCH'); ?>" value="<?php echo htmlspecialchars($this->lists['search'], ENT_QUOTES, 'UTF-8'); ?>" class="fcfield_textval" />
-				<button title="" data-original-title="<?php echo Text::_('FLEXI_SEARCH'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-search"></i>' : Text::_('FLEXI_GO'); ?></button>
+				<button type="button" aria-label="<?php echo Text::_('FLEXI_SEARCH'); ?>" data-original-title="<?php echo Text::_('FLEXI_SEARCH'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-search" aria-hidden="true"></i>' : Text::_('FLEXI_GO'); ?></button>
 
-				<div id="fc_filters_box_btn" data-original-title="<?php echo Text::_('FLEXI_FILTERS'); ?>" class="<?php echo $this->tooltip_class . ' ' . ($this->count_filters ? 'btn ' . $this->btn_iv_class : $out_class); ?>" onclick="fc_toggle_box_via_btn('fc-filters-box', this, 'btn-primary', false, undefined, 1);">
-					<?php echo FLEXI_J30GE ? '<i class="icon-filter"></i>' : Text::_('FLEXI_FILTERS'); ?>
+				<button type="button" id="fc_filters_box_btn" aria-label="<?php echo Text::_('FLEXI_FILTERS'); ?>" aria-expanded="<?php echo !empty($tools_state->filters_box) ? 'true' : 'false'; ?>" aria-controls="fc-filters-box" data-original-title="<?php echo Text::_('FLEXI_FILTERS'); ?>" class="<?php echo $this->tooltip_class . ' ' . ($this->count_filters ? 'btn ' . $this->btn_iv_class : $out_class); ?>" onclick="fc_toggle_box_via_btn('fc-filters-box', this, 'btn-primary', false, undefined, 1);">
+					<?php echo FLEXI_J30GE ? '<i class="icon-filter" aria-hidden="true"></i>' : Text::_('FLEXI_FILTERS'); ?>
 					<?php echo ($this->count_filters  ? ' <sup>' . $this->count_filters . '</sup>' : ''); ?>
-				</div>
+				</button>
 
 				<div id="fc-filters-box" <?php if (!$this->count_filters || empty($tools_state->filters_box)) echo 'style="display:none;"'; ?> class="fcman-abs" onclick="var event = arguments[0] || window.event; event.stopPropagation();">
 					<?php
@@ -736,10 +739,10 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 					}
 					?>
 
-					<div id="fc-filters-slide-btn" class="icon-arrow-up-2 btn btn-outline-secondary" title="<?php echo Text::_('FLEXI_HIDE'); ?>" style="cursor: pointer;" onclick="fc_toggle_box_via_btn('fc-filters-box', document.getElementById('fc_filters_box_btn'), 'btn-primary');"></div>
+					<button type="button" id="fc-filters-slide-btn" class="icon-arrow-up-2 btn btn-outline-secondary" aria-label="<?php echo Text::_('FLEXI_HIDE'); ?>" aria-expanded="true" aria-controls="fc-filters-box" onclick="fc_toggle_box_via_btn('fc-filters-box', document.getElementById('fc_filters_box_btn'), 'btn-primary');"></button>
 				</div>
 
-				<button title="" data-original-title="<?php echo Text::_('FLEXI_RESET_FILTERS'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; delAllFilters(); Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-cancel"></i>' : Text::_('FLEXI_CLEAR'); ?></button>
+				<button type="button" aria-label="<?php echo Text::_('FLEXI_RESET_FILTERS'); ?>" data-original-title="<?php echo Text::_('FLEXI_RESET_FILTERS'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; delAllFilters(); Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-cancel" aria-hidden="true"></i>' : Text::_('FLEXI_CLEAR'); ?></button>
 			</div>
 
 		</div>
@@ -749,15 +752,15 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 			<div class="btn-group">
 				<?php if (!isset($disable_columns['cats']) && $max_cats_cnt > 1): ?>
-					<div id="fc-toggle-cats_btn" class="<?php echo $out_class . ' ' . $this->tooltip_class; ?>  hidden-phone" title="<?php echo Text::_('FLEXI_SECONDARY_CATEGORIES'); ?>" onclick="jQuery(this).data('box_showing', !jQuery(this).data('box_showing')); jQuery(this).data('box_showing') ? jQuery('.fc_assignments_box.fc_cats').show(400) : jQuery('.fc_assignments_box.fc_cats').hide(400);" ><span class="icon-tree-2"></span></div>
+					<button type="button" id="fc-toggle-cats_btn" class="<?php echo $out_class . ' ' . $this->tooltip_class; ?>  hidden-phone" aria-label="<?php echo Text::_('FLEXI_SECONDARY_CATEGORIES'); ?>" aria-expanded="false" title="<?php echo Text::_('FLEXI_SECONDARY_CATEGORIES'); ?>" onclick="jQuery(this).data('box_showing', !jQuery(this).data('box_showing')); jQuery(this).attr('aria-expanded', jQuery(this).data('box_showing') ? 'true' : 'false'); jQuery(this).data('box_showing') ? jQuery('.fc_assignments_box.fc_cats').show(400) : jQuery('.fc_assignments_box.fc_cats').hide(400);" ><span class="icon-tree-2" aria-hidden="true"></span></button>
 				<?php endif; ?>
 				<?php if (!isset($disable_columns['tags']) && $max_tags_cnt > 1): ?>
-					<div id="fc-toggle-tags_btn" class="<?php echo $out_class . ' ' . $this->tooltip_class; ?>  hidden-phone hidden-tablet" title="<?php echo Text::_('FLEXI_TAGS'); ?>" onclick="jQuery(this).data('box_showing', !jQuery(this).data('box_showing')); jQuery(this).data('box_showing') ? jQuery('.fc_assignments_box.fc_tags').show(400) : jQuery('.fc_assignments_box.fc_tags').hide(400);" ><span class="icon-tags"></span></div>
+					<button type="button" id="fc-toggle-tags_btn" class="<?php echo $out_class . ' ' . $this->tooltip_class; ?>  hidden-phone hidden-tablet" aria-label="<?php echo Text::_('FLEXI_TAGS'); ?>" aria-expanded="false" title="<?php echo Text::_('FLEXI_TAGS'); ?>" onclick="jQuery(this).data('box_showing', !jQuery(this).data('box_showing')); jQuery(this).attr('aria-expanded', jQuery(this).data('box_showing') ? 'true' : 'false'); jQuery(this).data('box_showing') ? jQuery('.fc_assignments_box.fc_tags').show(400) : jQuery('.fc_assignments_box.fc_tags').hide(400);" ><span class="icon-tags" aria-hidden="true"></span></button>
 				<?php endif; ?>
 
-				<div id="fc_mainChooseColBox_btn" class="<?php echo $this->tooltip_class . ' ' . $out_class; ?> hidden-phone" onclick="fc_toggle_box_via_btn('mainChooseColBox', this, 'btn-primary');" title="<?php echo flexicontent_html::getToolTip('FLEXI_COLUMNS', 'FLEXI_ABOUT_AUTO_HIDDEN_COLUMNS', 1, 1); ?>">
-					<span class="icon-contract"></span><sup id="columnchoose_totals"></sup>
-				</div>
+				<button type="button" id="fc_mainChooseColBox_btn" class="<?php echo $this->tooltip_class . ' ' . $out_class; ?> hidden-phone" aria-label="<?php echo Text::_('FLEXI_COLUMNS'); ?>" aria-expanded="false" aria-controls="mainChooseColBox" onclick="fc_toggle_box_via_btn('mainChooseColBox', this, 'btn-primary');" title="<?php echo flexicontent_html::getToolTip('FLEXI_COLUMNS', 'FLEXI_ABOUT_AUTO_HIDDEN_COLUMNS', 1, 1); ?>">
+					<span class="icon-contract" aria-hidden="true"></span><sup id="columnchoose_totals"></sup>
+				</button>
 
 				<?php if (!empty($this->minihelp) && FlexicontentHelperPerm::getPerm()->CanConfig): ?>
 				<div id="fc-mini-help_btn" class="<?php echo $out_class . ' ' . $this->tooltip_class; ?> hidden-phone hidden-tablet" title="<?php echo Text::_('FLEXI_IMAN_ABOUT_ADDING_MORE_COLUMNS_AND_FILTERS'); ?>" onclick="fc_toggle_box_via_btn('fc-mini-help', this, 'btn-primary');" >
@@ -861,6 +864,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 	<div class="fcclear"></div>
 
 	<table id="<?php echo $this->data_tbl_id; ?>" class="adminlist table fcmanlist" itemscope itemtype="http://schema.org/WebPage">
+	<caption class="visually-hidden"><?php echo Text::_('FLEXI_ITEMS'); ?></caption>
 	<thead>
 		<tr>
 			<?php $colposition = 0; ?>
@@ -869,7 +873,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 				<?php echo Text::_( 'FLEXI_NUM' ); ?>
 			</th-->
 
-			<th class="col_order center hidden-phone "><?php $colposition++; ?>
+			<th scope="col" class="col_order center hidden-phone "><?php $colposition++; ?>
 				<?php
 				echo $canOrder ? $image_ordering_tip : '';
 				echo str_replace('_FLEXI_ORDER_',
@@ -881,17 +885,17 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 				<span class="column_toggle_lbl" style="display:none;"><?php echo Text::_( 'FLEXI_ORDER' ); ?></span>
 			</th>
 
-			<th class="col_cb left"><?php $colposition++; ?>
+			<th scope="col" class="col_cb left"><?php $colposition++; ?>
 				<div class="group-fcset">
 					<input type="checkbox" name="checkall-toggle" id="checkall-toggle" value="" title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					<label for="checkall-toggle" class="green single"></label>
 				</div>
 			</th>
 
-			<th class="left"><?php $colposition++; ?>
+			<th scope="col" class="left"><?php $colposition++; ?>
 			</th>
 
-			<th class="col_status hideOnDemandClass nowrap left" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_status hideOnDemandClass nowrap left" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'FLEXI_STATUS', 'a.' . $this->state_propname, $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_state') || $this->getModel()->getState('filter_catsinstate') != 1) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -900,7 +904,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 				<?php endif; ?>
 			</th>
 
-			<th class="col_title hideOnDemandClass nowrap left" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_title hideOnDemandClass nowrap left" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'FLEXI_TITLE', 'a.' . $this->title_propname, $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php if (strlen($this->getModel()->getState('search'))) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -911,7 +915,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['author'])) : ?>
-			<th class="col_authors hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_authors hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'FLEXI_AUTHOR', 'a.created_by', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_author')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -923,7 +927,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['lang'])) : ?>
-			<th class="col_lang hideOnDemandClass nowrap hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_lang hideOnDemandClass nowrap hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'FLEXI_LANGUAGE', 'a.language', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_lang')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -935,13 +939,13 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if ($useAssocs && !isset($disable_columns['assocs'])) : ?>
-			<th class="col_assocs_count"><?php $colposition++; ?>
-				<div id="fc-toggle-assocs_btn" style="padding: 4px 0 2px 6px;" class="<?php echo $out_class . ' ' . $this->tooltip_class; ?>" title="<?php echo Text::_('FLEXI_ASSOCIATIONS'); ?>" onclick="jQuery('#columnchoose_<?php echo $this->data_tbl_id . '_'. $colposition; ?>_label').click();" >
-					<span class="icon-flag"></span>
-				</div>
+			<th scope="col" class="col_assocs_count"><?php $colposition++; ?>
+				<button type="button" id="fc-toggle-assocs_btn" style="padding: 4px 0 2px 6px;" class="<?php echo $out_class . ' ' . $this->tooltip_class; ?>" aria-label="<?php echo Text::_('FLEXI_ASSOCIATIONS'); ?>" title="<?php echo Text::_('FLEXI_ASSOCIATIONS'); ?>" onclick="jQuery('#columnchoose_<?php echo $this->data_tbl_id . '_'. $colposition; ?>_label').click();" >
+					<span class="icon-flag" aria-hidden="true"></span>
+				</button>
 			</th>
 
-			<th class="col_assocs hideOnDemandClass nowrap hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_assocs hideOnDemandClass nowrap hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo Text::_('FLEXI_ASSOCIATIONS'); ?>
 				<?php if ($this->getModel()->getState('filter_assockey')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -953,7 +957,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!$single_type || !isset($disable_columns['single_type'])): ?>
-			<th class="col_type hideOnDemandClass nowrap hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_type hideOnDemandClass nowrap hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'FLEXI_TYPE_NAME', 'type_name', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_type')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -965,21 +969,21 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['template'])): ?>
-			<th class="col_template hideOnDemandClass nowrap left hidden-phone hidden-tablet" colspan="2" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_template hideOnDemandClass nowrap left hidden-phone hidden-tablet" colspan="2" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo Text::_('FLEXI_TEMPLATE'); ?>
 			</th>
 			<?php endif; ?>
 
 
 			<?php foreach($this->extra_fields as $field) :?>
-				<th class="hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+				<th scope="col" class="hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 					<?php echo $field->label; ?>
 				</th>
 			<?php endforeach; ?>
 
 
 			<?php if (!isset($disable_columns['access'])): ?>
-			<th class="col_access hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_access hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'FLEXI_ACCESS', 'a.access', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php if ($this->getModel()->getState('filter_access')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -991,7 +995,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['cats'])): ?>
-			<th class="col_cats hideOnDemandClass nowrap left hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_cats hideOnDemandClass nowrap left hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo $categories_tip; ?>
 				<?php echo Text::_( 'FLEXI_CATEGORIES' ); ?>
 				<?php if ($this->getModel()->getState('filter_cats') || $this->getModel()->getState('filter_subcats') == 0) : ?>
@@ -1004,7 +1008,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['tags'])): ?>
-			<th class="col_tag hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_tag hideOnDemandClass nowrap left hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo Text::_( 'FLEXI_TAGS' ); ?>
 				<?php if ($this->getModel()->getState('filter_tag')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -1016,7 +1020,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['created'])): ?>
-			<th class="col_created hideOnDemandClass nowrap hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_created hideOnDemandClass nowrap hidden-phone" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort',   'FLEXI_CREATED', 'a.created', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php
 				if ($this->date == '1') :
@@ -1034,7 +1038,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['modified'])) : ?>
-			<th class="col_revised hideOnDemandClass nowrap hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_revised hideOnDemandClass nowrap hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort',   'FLEXI_REVISED', 'a.modified', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php
 				if ($this->date == '2') :
@@ -1052,28 +1056,28 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 
 			<?php if (!isset($disable_columns['hits'])) : ?>
-			<th class="col_hits hideOnDemandClass center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_hits hideOnDemandClass center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'JGLOBAL_HITS', 'a.hits', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<?php endif; ?>
 
 
 			<?php if (!isset($disable_columns['votes'])) : ?>
-			<th class="col_votes hideOnDemandClass center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_votes hideOnDemandClass center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'JGLOBAL_VOTES', 'rating_count', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<?php endif; ?>
 
 
 			<?php if (!isset($disable_columns['ratings'])) : ?>
-			<th class="col_ratings hideOnDemandClass center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_ratings hideOnDemandClass center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'JGLOBAL_RATINGS', 'rating', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<?php endif; ?>
 
 
 			<?php if (!isset($disable_columns['id'])) : ?>
-			<th class="col_id hideOnDemandClass nowrap center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="col" class="col_id hideOnDemandClass nowrap center hidden-phone hidden-tablet" style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php echo HTMLHelper::_('grid.sort', 'FLEXI_ID', 'a.id', $this->lists['order_Dir'], $this->lists['order']); ?>
 				<?php if ($this->getModel()->getState('filter_id')) : ?>
 				<span <?php echo $rem_filt_tip; ?>>
@@ -1226,7 +1230,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 				</div>
 			</td>
 
-			<td class="col_title " style="<?php echo $this->hideCol($colposition++); ?>" >
+			<th scope="row" class="col_title " style="<?php echo $this->hideCol($colposition++); ?>" >
 				<?php
 				/**
 				 * Display an edit pencil or a check-in button if: either (a) current user has Global
@@ -1264,7 +1268,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 				<div class="small break-word">
 				<?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($row->alias)); ?>
                 </div>
-			</td>
+			</th>
 
 
 			<?php if (!isset($disable_columns['author'])) : ?>
