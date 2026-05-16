@@ -729,6 +729,8 @@ if ($js)
 
 	<div id="flexicontent" class="flexicontent">
 
+		<h1 class="visually-hidden"><?php echo $isFilesElement ? Text::_('FLEXI_FILES_REGISTRY') : Text::_('FLEXI_FILEMANAGER'); ?></h1>
+
 		<div class="<?php echo FLEXI_J40GE ? 'row' : 'row-fluid'; ?>" id="fileman">
 
 			<?php if (!empty( $this->sidebar) && FLEXI_J40GE == false) : ?>
@@ -786,6 +788,7 @@ if ($js)
 													<?php
 													echo !empty($this->lists['scope']) ? $this->lists['scope'] : '';
 													?>
+													<label for="search" class="visually-hidden"><?php echo Text::_('FLEXI_SEARCH'); ?></label>
 													<input type="text" name="search" id="search" placeholder="<?php echo !empty($this->scope_title) ? $this->scope_title : Text::_('FLEXI_SEARCH'); ?>" value="<?php echo htmlspecialchars($this->lists['search'], ENT_QUOTES, 'UTF-8'); ?>" class="fcfield_textval" />
 													<button title="" data-original-title="<?php echo Text::_('FLEXI_SEARCH'); ?>" class="<?php echo $btn_class . (FLEXI_J40GE ? ' btn-outline-dark ' : ' ') . $this->tooltip_class; ?>" onclick="if (!!document.adminForm.limitstart) document.adminForm.limitstart.value=0; Joomla.submitform();"><?php echo FLEXI_J30GE ? '<i class="icon-search"></i>' : Text::_('FLEXI_GO'); ?></button>
 
@@ -2407,24 +2410,23 @@ $jMedia_file_displayData['mediaTypeNames'] = is_array($jMedia_file_displayData['
 	</script>
 
 	<!-- Modal -->
-	<div class="modal fade" id="copyUrlModal" tabindex="-1" role="dialog" aria-labelledby="copyUrlModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
+	<div class="modal fade" id="copyUrlModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="copyUrlModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h3 class="modal-title" id="copyUrlModalLabel">
-						The following URL has been copied to the clipboard.
-					</h3>
+					<h2 class="modal-title h5" id="copyUrlModalLabel">
+						<?php echo Text::_('FLEXI_FILE_URL_COPIED_TO_CLIPBOARD'); ?>
+					</h2>
 					<button type="button" class="btn-close novalidate" data-bs-dismiss="modal"
-					        aria-label="Close"></button>
+					        aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
 				</div>
 				<div class="modal-body p-3">
-					<div class="linkbox">The link</div>
+					<div class="linkbox"><?php echo Text::_('FLEXI_THE_LINK'); ?></div>
 					<br><br>
-					Please note that access level of the file will be checked. <br>
-					E.g. Add download links of "Public" access files to "Public" content items.
+					<?php echo Text::_('FLEXI_FILE_URL_ACL_NOTE'); ?>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo Text::_('JCLOSE'); ?></button>
 				</div>
 			</div>
 		</div>

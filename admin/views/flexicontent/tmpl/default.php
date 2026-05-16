@@ -86,6 +86,8 @@ $items_task = 'task=items.';
 
 <div id="flexicontent" class="flexicontent">
 
+<h1 class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_CONTROL_PANEL'); ?></h1>
+
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 
 <div class="<?php echo FLEXI_J40GE ? 'row' : 'row-fluid'; ?>">
@@ -183,7 +185,7 @@ $items_task = 'task=items.';
 
 		<?php if (empty($skip_content_fieldset)): ?>
 		<fieldset class="fc-board-set">
-			<h3 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_CONTENT_EDITING' );?></h3>
+			<h2 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_CONTENT_EDITING' );?></h2>
 
 			<div class="fc-board-set-inner"><?php
 			if (!isset($sbtns['items']))
@@ -268,7 +270,7 @@ $items_task = 'task=items.';
 
 		<?php if (empty($skip_types_fieldset)): ?>
 		<fieldset class="fc-board-set">
-			<h3 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_TYPES_N_FIELDS' );?></h3>
+			<h2 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_TYPES_N_FIELDS' );?></h2>
 
 			<div class="fc-board-set-inner"><?php
 			$add_sep = false;
@@ -326,7 +328,7 @@ $items_task = 'task=items.';
 
 		<?php if (empty($skip_viewing_fieldset)): ?>
 		<fieldset class="fc-board-set">
-			<h3 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_CONTENT_VIEWING' );?></h3>
+			<h2 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_CONTENT_VIEWING' );?></h2>
 
 			<div class="fc-board-set-inner"><?php
 			$add_sep = false;
@@ -379,7 +381,7 @@ $items_task = 'task=items.';
 
 		<?php if (empty($skip_users_fieldset)): ?>
 		<fieldset class="fc-board-set">
-			<h3 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_USERS_N_GROUPS' );?></h3>
+			<h2 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_USERS_N_GROUPS' );?></h2>
 
 			<div class="fc-board-set-inner"><?php
 			if ($this->perms->CanAuthors)
@@ -412,7 +414,7 @@ $items_task = 'task=items.';
 
 		<?php if (empty($skip_expert_fieldset)): ?>
 		<fieldset class="fc-board-set">
-			<h3 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_EXPERT_USAGE' );?></h3>
+			<h2 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NAV_SD_EXPERT_USAGE' );?></h2>
 
 			<div class="fc-board-set-inner"><?php
 			$add_sep = false;
@@ -453,7 +455,7 @@ $items_task = 'task=items.';
 
 		<?php if ($this->params->get('support_url')): ?>
 		<fieldset class="fc-board-set">
-			<h3 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_HELP' );?></h3>
+			<h2 class="fc-board-header"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_HELP' );?></h2>
 
 			<div class="fc-board-set-inner"><?php
 			$link = $this->params->get('support_url');
@@ -495,7 +497,7 @@ $items_task = 'task=items.';
 			");
 			echo '
 			<fieldset class="fc-board-set">
-				<h3 class="fc-board-header">'.\Joomla\CMS\Language\Text::_( 'FLEXI_UPDATE_CHECK' ).'</h3>
+				<h2 class="fc-board-header">'.\Joomla\CMS\Language\Text::_( 'FLEXI_UPDATE_CHECK' ).'</h2>
 				<div class="fc-board-set-inner">
 					<div id="displayfversion" style="float: left;"></div>
 				</div>
@@ -807,7 +809,7 @@ $items_task = 'task=items.';
 
 			<?php ob_start(); ?>
 			<div id="fc-dash-credits">
-			<?php echo !$hide_fc_license_credits ? '<fieldset class="fc-board-set"><h3 class="fc-board-header">'.\Joomla\CMS\Language\Text::_( 'About FLEXIcontent' ).'</h3>' : ''; ?>
+			<?php echo !$hide_fc_license_credits ? '<fieldset class="fc-board-set"><h2 class="fc-board-header">'.\Joomla\CMS\Language\Text::_( 'About FLEXIcontent' ).'</h2>' : ''; ?>
 				<div class="fc-board-set-inner">
 				<?php
 					$logo_style = ';';

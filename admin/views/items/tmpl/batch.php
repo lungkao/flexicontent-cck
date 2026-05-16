@@ -234,6 +234,11 @@ ob_start(); ?>
 
 
 <div id="flexicontent" class="flexicontent">
+
+<h1 class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_(
+	$this->behaviour == 'translate' ? 'FLEXI_TRANSLATE_OPTIONS' : 'FLEXI_BATCH_OPTIONS'
+); ?></h1>
+
 <form action="index.php" method="post"  name="adminForm" id="adminForm" class="form-validate form-horizontal">
 
 
