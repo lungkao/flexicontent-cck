@@ -42,9 +42,18 @@ class CsvColumnMappingTest extends TestCase
 	{
 		foreach ($columns as $i => $col)
 		{
-			if (isset($col_map[$col]))
+			// Mirror client-side sanitization: alphanumeric + underscore only, max 64.
+			// Empty result falls back to col_<index> (same as parseCsv() JS logic).
+			$col_key = preg_replace('/[^A-Za-z0-9_]/', '_', $col);
+			$col_key = $col_key !== '' ? substr($col_key, 0, 64) : ('col_' . $i);
+
+			// Accept both sanitized key (new client) and raw header (legacy).
+			$lookup  = isset($col_map[$col_key]) ? $col_key
+			         : (isset($col_map[$col]) ? $col : null);
+
+			if ($lookup !== null)
 			{
-				$mapped = trim($col_map[$col]);
+				$mapped = trim($col_map[$lookup]);
 				$columns[$i] = ($mapped === '' || $mapped === '__skip__')
 					? ('__skip_' . $i . '__')
 					: $mapped;
@@ -52,6 +61,18 @@ class CsvColumnMappingTest extends TestCase
 		}
 
 		return $columns;
+	}
+
+	/**
+	 * Sanitize a raw CSV header into an HTML-name-safe key.
+	 * Mirrors parseCsv() JS in admin/views/import/tmpl/import.php and
+	 * the lookup-key logic in importcsv() (Batch 1 fix B1).
+	 */
+	private function safeColumnKey(string $rawHeader, int $index): string
+	{
+		$safe = preg_replace('/[^A-Za-z0-9_]/', '_', $rawHeader);
+
+		return $safe !== '' ? substr($safe, 0, 64) : ('col_' . $index);
 	}
 
 	/**
@@ -432,5 +453,94 @@ class CsvColumnMappingTest extends TestCase
 		$this->assertSame(['title', 'text', 'state', 'language'], $mapped);
 		$this->assertSame(-99,   $conf['state'],    'state col must set state=-99');
 		$this->assertSame('-99', $conf['language'], 'language col must set language=-99');
+	}
+
+
+	// ────────────────────────────────────────────────────────────────────────
+	// Tests: Batch 1 fix B1 — sanitized lookup keys
+	//   Headers containing [, ], ", ', spaces, or other non-[A-Za-z0-9_] chars
+	//   could break HTML name attribute parsing (PHP $_POST[col_map] nesting).
+	//   Client + server both sanitize headers to alphanumeric + underscore.
+	// ────────────────────────────────────────────────────────────────────────
+
+	/** @test */
+	public function safe_key_strips_brackets_and_quotes(): void
+	{
+		$this->assertSame('foo_bar_', $this->safeColumnKey('foo[bar]', 0));
+		$this->assertSame('_quoted_', $this->safeColumnKey('"quoted"', 1));
+		$this->assertSame('col_w_space', $this->safeColumnKey('col w space', 2));
+	}
+
+	/** @test */
+	public function safe_key_replaces_specials_with_underscores(): void
+	{
+		// Specials become '_', not stripped — matches JS regex behavior
+		$this->assertSame('___',   $this->safeColumnKey('!!!', 5));
+		$this->assertSame('a_b_c', $this->safeColumnKey('a b@c', 0));
+	}
+
+	/** @test */
+	public function safe_key_falls_back_to_index_for_empty_header(): void
+	{
+		// Only truly empty headers (already filtered out client-side) fall back.
+		$this->assertSame('col_0', $this->safeColumnKey('', 0));
+		$this->assertSame('col_7', $this->safeColumnKey('', 7));
+	}
+
+	/** @test */
+	public function safe_key_truncates_to_64_chars(): void
+	{
+		$long = str_repeat('a', 100);
+		$key  = $this->safeColumnKey($long, 0);
+		$this->assertSame(64, strlen($key));
+	}
+
+	/** @test */
+	public function safe_key_preserves_existing_safe_headers(): void
+	{
+		$this->assertSame('title',    $this->safeColumnKey('title', 0));
+		$this->assertSame('catid',    $this->safeColumnKey('catid', 1));
+		$this->assertSame('user_id',  $this->safeColumnKey('user_id', 2));
+	}
+
+	/** @test */
+	public function column_map_lookup_uses_sanitized_key_for_injection_safe_headers(): void
+	{
+		// Header has bracket — client sends col_map[foo_bar_], server must match.
+		$columns = ['foo[bar]'];
+		$col_map = ['foo_bar_' => 'title'];
+
+		$result = $this->applyColumnMap($columns, $col_map);
+
+		$this->assertSame('title', $result[0],
+			'Server must resolve mapping via sanitized key when raw header contains special chars');
+	}
+
+	/** @test */
+	public function column_map_lookup_falls_back_to_raw_header_for_legacy_clients(): void
+	{
+		// Legacy client (or test harness) sends raw header — server still resolves it.
+		$columns = ['Product Name'];
+		$col_map = ['Product Name' => 'title'];
+
+		$result = $this->applyColumnMap($columns, $col_map);
+
+		$this->assertSame('title', $result[0],
+			'Legacy raw-header keys must continue to resolve (backward compat)');
+	}
+
+	/** @test */
+	public function sanitized_key_wins_over_raw_when_both_present(): void
+	{
+		// Defensive: if both keys are submitted, the sanitized one is authoritative.
+		$columns = ['foo[bar]'];
+		$col_map = [
+			'foo_bar_'  => 'title',
+			'foo[bar]'  => '__skip__',
+		];
+
+		$result = $this->applyColumnMap($columns, $col_map);
+
+		$this->assertSame('title', $result[0]);
 	}
 }

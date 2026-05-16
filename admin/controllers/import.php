@@ -207,6 +207,61 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 
 
 	/**
+	 * AJAX endpoint: return FC custom fields for a given content type as JSON.
+	 *
+	 * Used by the single-page import wizard (Alpine.js) to populate the
+	 * FC-field dropdown options without a full page reload.
+	 *
+	 * URL: index.php?option=com_flexicontent&controller=import&task=getfieldsajax
+	 *       &type_id=N&TOKEN=1
+	 *
+	 * @return void  (outputs JSON and exits)
+	 * @since  4.0
+	 */
+	public function getfieldsajax()
+	{
+		$app     = \Joomla\CMS\Factory::getApplication();
+		$type_id = (int) $app->input->getInt('type_id', 0);
+
+		if (!\Joomla\CMS\Session\Session::checkToken('request'))
+		{
+			http_response_code(403);
+			header('Content-Type: application/json; charset=utf-8');
+			echo json_encode(['error' => \Joomla\CMS\Language\Text::_('JINVALID_TOKEN')]);
+			$app->close();
+			return;
+		}
+
+		$fields = [];
+
+		if ($type_id > 0)
+		{
+			$db = \Joomla\CMS\Factory::getDbo();
+			$q  = $db->getQuery(true)
+				->select($db->qn(['fi.id', 'fi.name', 'fi.label', 'fi.field_type']))
+				->from($db->qn('#__flexicontent_fields', 'fi'))
+				->join('INNER',
+					$db->qn('#__flexicontent_fields_type_relations', 'ftrel')
+					. ' ON ' . $db->qn('ftrel.field_id') . ' = ' . $db->qn('fi.id')
+					. ' AND ' . $db->qn('ftrel.type_id') . ' = ' . $type_id
+				)
+				->where($db->qn('fi.field_type') . ' NOT IN ('
+					. implode(',', array_map([$db, 'quote'], ['separator', 'coreprops']))
+					. ')'
+				)
+				->order($db->qn('fi.ordering') . ' ASC, ' . $db->qn('fi.name') . ' ASC');
+
+			$fields = $db->setQuery($q)->loadObjectList();
+		}
+
+		$app->allowCache(false);
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode(['fields' => $fields]);
+		$app->close();
+	}
+
+
+	/**
 	 * Execute the import task, display a log-like AJAX-based layout,
 	 * to display results including any warnings
 	 * LAYOUT: -- import_process.php --
@@ -422,44 +477,59 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 					$app->redirect($link);
 				}
 
-				// ── For mapped imports (mapinitcsv): override config from session preview ─
+				// ── For mapped imports (mapinitcsv): column map + file resolution ──────
 				$_col_map = [];
 
 				if ($task === 'mapinitcsv')
 				{
-					$_preview = unserialize($session->get('csvimport_preview', '', 'flexicontent'));
-
-					if (empty($_preview) || empty($_preview['tmpfile']) || !is_file($_preview['tmpfile']))
-					{
-						$app->enqueueMessage('Preview session expired. Please upload the file again.', 'error');
-						$app->redirect($link);
-					}
-
-					// Use the temp file saved during previewcsv
-					$csvfile = $_preview['tmpfile'];
-
-					// Collect column mapping submitted from import_map.php
+					// Column mapping is always from POST (both single-page and Step-2 flows)
 					$_col_map = $jinput->get('col_map', [], 'array');
 
-					// Force ignore_unused_cols so unmapped columns are silently skipped
+					// Force ignore_unused_cols so unmapped/skipped columns are silently ignored
 					$conf['ignore_unused_cols'] = 1;
 
-					// Override missing conf values from session preview (handles maincat etc.)
-					foreach (['type_id','maincat','maincat_col','seccats','seccats_col',
-					          'language','state','access','tags_col','created_by_col','modified_by_col',
-					          'metadesc_col','metakey_col','custom_ititle_col','modified_col','created_col',
-					          'publish_up_col','publish_down_col','items_per_step','media_folder','docs_folder',
-					          'field_separator','enclosure_char','record_separator','mval_separator','mprop_separator'] as $_pk)
+					// ── Try session preview first (traditional 3-step flow) ──────────────
+					$_preview = unserialize($session->get('csvimport_preview', '', 'flexicontent'));
+
+					if (!empty($_preview) && !empty($_preview['tmpfile']) && is_file($_preview['tmpfile']))
 					{
-						if (empty($conf[$_pk]) && !empty($_preview[$_pk]))
+						// Step-2 flow: use the tmp file saved by previewcsv
+						$csvfile = $_preview['tmpfile'];
+
+						// Fill any conf values that were not submitted via POST
+						// (e.g. maincat, seccats, separators carried from Step-1 as hidden fields)
+						foreach (['type_id','maincat','maincat_col','seccats','seccats_col',
+						          'language','state','access','tags_col','created_by_col','modified_by_col',
+						          'metadesc_col','metakey_col','custom_ititle_col','modified_col','created_col',
+						          'publish_up_col','publish_down_col','items_per_step','media_folder','docs_folder',
+						          'field_separator','enclosure_char','record_separator','mval_separator','mprop_separator'] as $_pk)
 						{
-							$conf[$_pk] = $_preview[$_pk];
+							if (empty($conf[$_pk]) && !empty($_preview[$_pk]))
+							{
+								$conf[$_pk] = $_preview[$_pk];
+							}
+						}
+					}
+					else
+					{
+						// ── Single-page wizard flow: CSV file submitted directly ────────────
+						$csvfile = @$_FILES['csvfile']['tmp_name'] ?? '';
+
+						if (!$csvfile || !is_file($csvfile))
+						{
+							$app->enqueueMessage(
+								'Please upload a CSV file (session preview expired or no file selected).',
+								'error'
+							);
+							$app->redirect($link);
+
+							return;
 						}
 					}
 				}
 				else
 				{
-					// Retrieve the uploaded CSV file (normal flow)
+					// Retrieve the uploaded CSV file (normal initcsv / testcsv flow)
 					$csvfile = @$_FILES["csvfile"]["tmp_name"];
 				}
 
@@ -561,9 +631,19 @@ class FlexicontentControllerImport extends FlexicontentControllerBaseAdmin
 				{
 					foreach ($conf['columns'] as $i => $col)
 					{
-						if (isset($_col_map[$col]))
+						// Match client-side sanitization (see parseCsv() in view tmpl):
+						// alphanumeric + underscore only, truncated to 64 chars.
+						// Empty → fallback to indexed key matching client logic.
+						$col_key = preg_replace('/[^A-Za-z0-9_]/', '_', $col);
+						$col_key = $col_key !== '' ? substr($col_key, 0, 64) : ('col_' . $i);
+
+						// Accept both sanitized key (new client) and raw header (legacy/test).
+						$lookup  = isset($_col_map[$col_key]) ? $col_key
+						         : (isset($_col_map[$col]) ? $col : null);
+
+						if ($lookup !== null)
 						{
-							$mapped = trim($_col_map[$col]);
+							$mapped = trim($_col_map[$lookup]);
 							// '__skip__' → rename to a unique token so it falls through as unused column
 							$conf['columns'][$i] = ($mapped === '' || $mapped === '__skip__')
 								? ('__skip_' . $i . '__')
