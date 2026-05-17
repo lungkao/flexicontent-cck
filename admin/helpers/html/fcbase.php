@@ -81,10 +81,13 @@ abstract class JHtmlFcbase
 			$disabled_btn   = '<span class="fc_icon_disabled"></span>';
 		}
 
+		$icon_label = \Joomla\CMS\Language\Text::_('FLEXI_PREVIEW', true);
+
 		$attribs = ''
 			. ' class="fc-preview-btn ntxt ' . $disabled_class . ' ' .  static::$btn_mbar_class . ' ' . static::$btn_sm_class . ' ' . static::$tooltip_class . '"'
 			. ' title="' . flexicontent_html::getToolTip('FLEXI_PREVIEW', 'FLEXI_DISPLAY_ENTRY_IN_FRONTEND_DESC', 1, 1) . '"'
-			. ($link ? ' href="' . $link .'"' : '')
+			. ' aria-label="' . htmlspecialchars($icon_label, ENT_QUOTES, 'UTF-8') . '"'
+			. ($link ? ' href="' . $link .'"' : ' role="img"')
 			. ($link ? ' target="' . $target . '"' : '');
 
 		$tag = $link ? 'a' : 'span';
@@ -92,7 +95,7 @@ abstract class JHtmlFcbase
 		return '
 		<' . $tag . ' ' . $attribs . '>
 			' . $disabled_btn . '
-			<span class="' . $config['iconClass'] . '"></span>
+			<span class="' . $config['iconClass'] . '" aria-hidden="true"></span>
 		</' . $tag . '> ';
 	}
 
@@ -112,22 +115,26 @@ abstract class JHtmlFcbase
 
 		if (!$row->checked_out)
 		{
-			return '<span class="icon-pencil"></span>';
+			return '<span class="icon-pencil" aria-hidden="true"></span>'
+				. '<span class="sr-only">' . \Joomla\CMS\Language\Text::_('JNOTCHECKEDOUT') . '</span>';
 		}
 
 		if (!$row->canCheckin)
 		{
-			return '<span class="icon-lock ' . static::$tooltip_class . '" title="' . \Joomla\CMS\HTML\HTMLHelper::tooltipText('', 'FLEXI_RECORD_CHECKED_OUT_DIFF_USER', true, false) . '"></span> ';
+			$_lock_lbl = \Joomla\CMS\Language\Text::_('FLEXI_RECORD_CHECKED_OUT_DIFF_USER', true);
+			return '<span class="icon-lock ' . static::$tooltip_class . '" title="' . \Joomla\CMS\HTML\HTMLHelper::tooltipText('', 'FLEXI_RECORD_CHECKED_OUT_DIFF_USER', true, false) . '" aria-label="' . htmlspecialchars($_lock_lbl, ENT_QUOTES, 'UTF-8') . '" role="img"></span> ';
 		}
 
 		$_tip_title = $row->checked_out == $user->id
 			? \Joomla\CMS\Language\Text::sprintf('FLEXI_CLICK_TO_RELEASE_YOUR_LOCK_DESC', $row->editor, $row->checked_out_time)
 			: \Joomla\CMS\Language\Text::sprintf('FLEXI_CLICK_TO_RELEASE_FOREIGN_LOCK_DESC', $row->editor, $row->checked_out_time);
 
-		return 
+		$_checkin_label = \Joomla\CMS\Language\Text::_('JLIB_HTML_CHECKIN', true);
+
+		return
 		($row->checked_out != $user->id ? '<input id="cb'.$i.'" type="checkbox" value="'.$row->id.'" name="cid[]" style="display:none!important;">' : '') . '
-		<a class="btn btn-micro btn-outline-secondary ntxt ' . static::$tooltip_class . '" title="' . \Joomla\CMS\HTML\HTMLHelper::tooltipText('', $_tip_title, true, false) . '" href="javascript:;" onclick="var ccb=document.getElementById(\'cb'.$i.'\'); ccb.checked=1; ccb.form.task.value=\'' . static::$ctrl . '.checkin\'; ccb.form.submit();">
-			<span class="icon-checkedout"></span>
+		<a class="btn btn-micro btn-outline-secondary ntxt ' . static::$tooltip_class . '" title="' . \Joomla\CMS\HTML\HTMLHelper::tooltipText('', $_tip_title, true, false) . '" aria-label="' . htmlspecialchars($_checkin_label, ENT_QUOTES, 'UTF-8') . '" href="javascript:;" onclick="var ccb=document.getElementById(\'cb'.$i.'\'); ccb.checked=1; ccb.form.task.value=\'' . static::$ctrl . '.checkin\'; ccb.form.submit();">
+			<span class="icon-checkedout" aria-hidden="true"></span>
 		</a>
 		';
 	}
@@ -400,17 +407,21 @@ abstract class JHtmlFcbase
 			$target_attr = '	target="' . $target . '"';
 		}
 
+		$edit_layout_label = \Joomla\CMS\Language\Text::_('FLEXI_EDIT_LAYOUT_N_GLOBAL_PARAMETERS', true);
+
 		$attribs = ''
 			. ' class="fc-edit-layout-btn ntxt ' .  static::$btn_mbar_class . ' ' . static::$btn_sm_class . ' ' . static::$tooltip_class . '"'
 			. ' title="'.flexicontent_html::getToolTip( 'FLEXI_EDIT_LAYOUT_N_GLOBAL_PARAMETERS', null, 1, 1).'"'
+			. ' aria-label="' . htmlspecialchars($edit_layout_label, ENT_QUOTES, 'UTF-8') . '"'
 			. ' href="' . $layout_url .'"'
 			. $target_attr;
 
 		return !empty($isDisabled) ? '
-		<span class="fc_icon_disabled"></span><span class="icon-pencil"></span>
+		<span class="fc_icon_disabled" aria-hidden="true"></span><span class="icon-pencil" aria-hidden="true"></span>
+		<span class="sr-only">' . htmlspecialchars($edit_layout_label, ENT_QUOTES, 'UTF-8') . ' (' . \Joomla\CMS\Language\Text::_('JDISABLED') . ')</span>
 		' : '
 		<a ' . $attribs . '>
-			<span class="icon-pencil"></span>
+			<span class="icon-pencil" aria-hidden="true"></span>
 		</a> ';
 	}
 
@@ -441,8 +452,10 @@ abstract class JHtmlFcbase
 		return '
 		<a href="javascript:;" onclick="var checkAllToggle = document.adminForm.elements[\'checkall-toggle\']; checkAllToggle.checked=true; Joomla.checkAll(checkAllToggle); Joomla.submitform(\'' . $config->task_value . '\');" '
 				. ' class="saveorder btn btn-small btn-primary' . ($config->custom_tip ? ' hasTooltip' : '') . '" '
-				. ' title="' . \Joomla\CMS\Language\Text::_($config->custom_tip ?: '') . '" style="padding: 6px 7px 4px 8px;">
-			<span class="' . $config->icon_class . '"></span>
+				. ' title="' . \Joomla\CMS\Language\Text::_($config->custom_tip ?: '') . '"'
+				. ' aria-label="' . htmlspecialchars(\Joomla\CMS\Language\Text::_($config->custom_tip ?: 'JLIB_HTML_SAVE_ORDER', true), ENT_QUOTES, 'UTF-8') . '"'
+				. ' style="padding: 6px 7px 4px 8px;">
+			<span class="' . $config->icon_class . '" aria-hidden="true"></span>
 			<span class="hidden-phone">' . \Joomla\CMS\Language\Text::_($config->custom_txt ?: '') . '</span>
 		</a>';
 	}
@@ -474,8 +487,10 @@ abstract class JHtmlFcbase
 		return '
 		<a href="javascript:;" onclick="' . $config->click_attr . '" data-placement="bottom" '
 				. ' class="saveorder btn btn-small' . ($config->custom_tip ? ' hasTooltip' : '') . '" '
-				. ' title="' . \Joomla\CMS\Language\Text::_($config->custom_tip ?: '') . '" style="padding: 6px 4px 4px 6px;">
-			<span class="' . $config->icon_class . '"></span>
+				. ' title="' . \Joomla\CMS\Language\Text::_($config->custom_tip ?: '') . '"'
+				. ' aria-label="' . htmlspecialchars(\Joomla\CMS\Language\Text::_($config->custom_tip ?: 'FLEXI_MANUAL_ORDER', true), ENT_QUOTES, 'UTF-8') . '"'
+				. ' style="padding: 6px 4px 4px 6px;">
+			<span class="' . $config->icon_class . '" aria-hidden="true"></span>
 			<span class="hidden-phone">' . \Joomla\CMS\Language\Text::_($config->custom_txt ?: '') . '</span>
 		</a>';
 	}
@@ -513,7 +528,7 @@ abstract class JHtmlFcbase
 
 		if (!empty($text))
 		{
-			echo '<span class="icon-info ' . static::$tooltip_class . '" title="' . flexicontent_html::getToolTip(\Joomla\CMS\Language\Text::_('FLEXI_FIELD_DESCRIPTION', true), $text, 0, 1) . '"></span>';
+			echo '<span class="icon-info ' . static::$tooltip_class . '" title="' . flexicontent_html::getToolTip(\Joomla\CMS\Language\Text::_('FLEXI_FIELD_DESCRIPTION', true), $text, 0, 1) . '" aria-hidden="true"></span>';
 		}
 	}
 

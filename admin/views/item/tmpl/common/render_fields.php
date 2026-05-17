@@ -103,7 +103,7 @@ if ( !$this->params->get('auto_title', 0) || $usetitle ) :  ob_start();  // titl
 		<div class="controls container_fcfield container_fcfield_id_6 container_fcfield_name_title input-fcmax" id="container_fcfield_6">
 
 		<?php if ( $this->params->get('auto_title', 0) ): ?>
-			<?php echo $this->row->title . ' <div class="fc-nobgimage fc-info fc-mssg-inline hasTooltip" title="' . Text::_('FLEXI_SET_TO_AUTOMATIC_VALUE_ON_SAVE', true) . '"><span class="icon-info"></span> ' . Text::_('FLEXI_AUTO', true) . '</div>' ; ?>
+			<?php echo $this->row->title . ' <div class="fc-nobgimage fc-info fc-mssg-inline hasTooltip" title="' . Text::_('FLEXI_SET_TO_AUTOMATIC_VALUE_ON_SAVE', true) . '"><span class="icon-info" aria-hidden="true"></span> ' . Text::_('FLEXI_AUTO', true) . '</div>' ; ?>
 		<?php elseif ( isset($this->row->item_translations) ) : ?>
 
 			<?php
@@ -1455,7 +1455,7 @@ if ($typeid && $selecttheme) : ?>
 
 				$form_layout = $tmpl->params;
 				$slider_title = '
-					<span class="btn"><i class="icon-edit"></i>
+					<span class="btn"><i class="icon-edit" aria-hidden="true"></i>
 						' . Text::_('FLEXI_PARAMETERS_THEMES_SPECIFIC') . ' : ' . $tmpl->name . '
 					</span>';
 				$slider_id = $tmpl->name . '-' . $groupname . '-options';

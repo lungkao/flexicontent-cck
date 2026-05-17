@@ -347,7 +347,7 @@ if (FLEXI_J40GE) \Joomla\CMS\Toolbar\ToolbarHelper::inlinehelp();
 
 									$form_layout = $tmpl->params;
 									$slider_title = '
-										<span class="btn"><i class="icon-edit"></i>
+										<span class="btn"><i class="icon-edit" aria-hidden="true"></i>
 											' . \Joomla\CMS\Language\Text::_('FLEXI_PARAMETERS_THEMES_SPECIFIC') . ' : ' . $tmpl->name . '
 										</span>';
 									$slider_id = $tmpl->name . '-' . $groupname . '-options';

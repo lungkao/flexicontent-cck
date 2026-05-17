@@ -251,13 +251,13 @@ ob_start(); ?>
 		 onclick="fc_toggle_box_via_btn(jQuery('#advanced_ops_box'), this, '', jQuery(this).next(), 0); return false;" 
 		 title="<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ADVANCED_OPTIONS' ); ?> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_HIDE' ); ?>"
 		>
-			<i class="icon-uparrow"></i> <i class="icon-cog"></i>
+			<i class="icon-uparrow" aria-hidden="true"></i> <i class="icon-cog" aria-hidden="true"></i>
 		</span>
 		<span id="advanced_ops_show_vals_btn" class="btn btn-success fc-show-vals-btn"
 		 onclick="fc_toggle_box_via_btn(jQuery('#advanced_ops_box'), this, '', jQuery(this).prev(), 1); return false;"
 		 title="<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ADVANCED_OPTIONS' ); ?> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_SHOW' ); ?>"
 		>
-			<i class="icon-downarrow"></i> <i class="icon-cog"></i>
+			<i class="icon-downarrow" aria-hidden="true"></i> <i class="icon-cog" aria-hidden="true"></i>
 		</span>
 	</div>
 <?php endif; ?>

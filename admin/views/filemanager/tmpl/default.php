@@ -79,7 +79,7 @@ $btn_class = 'btn';
 $ico_class = 'fc-man-icon-s';
 $out_class = FLEXI_J40GE ? 'btn btn-outline-dark' : 'btn';
 
-$hint_image = '<i class="icon-info"></i>';//HTMLHelper::image ( 'administrator/components/com_flexicontent/assets/images/comments.png', Text::_( 'FLEXI_NOTES' ), 'style="vertical-align:top;"' );
+$hint_image = '<i class="icon-info" aria-hidden="true"></i>';//HTMLHelper::image ( 'administrator/components/com_flexicontent/assets/images/comments.png', Text::_( 'FLEXI_NOTES' ), 'style="vertical-align:top;"' );
 $warn_image = '<i class="icon-warning"></i>';//HTMLHelper::image ( 'administrator/components/com_flexicontent/assets/images/note.gif', Text::_( 'FLEXI_NOTES' ), 'style="vertical-align:top;"' );
 $conf_image = '<i class="icon-cog"></i>';
 
@@ -1653,7 +1653,7 @@ if ($js)
 											$show_server_limit = $server_limit_exceeded && ! $enable_multi_uploader;  // plupload JS overcomes server limitations so we will not display it, if using plupload
 
 											echo '
-					<span id="fc_dispInfoBox_btn" class="' . $this->btn_sm_class . '" onclick="fc_toggle_box_via_btn(\'upload_info_box\', this, \'btn-primary\');"><i class="icon-info"></i>'. Text::_( 'FLEXI_FILES_INFO_UPLOAD' ).'</span>
+					<span id="fc_dispInfoBox_btn" class="' . $this->btn_sm_class . '" onclick="fc_toggle_box_via_btn(\'upload_info_box\', this, \'btn-primary\');"><i class="icon-info" aria-hidden="true"></i>'. Text::_( 'FLEXI_FILES_INFO_UPLOAD' ).'</span>
 					'.
 												($enable_multi_uploader ? '
 						<span class="' . $this->btn_sm_class . ' ' . $this->tooltip_class.'" onclick="jQuery(\'#fc-fileman-formbox-1\').toggle(); jQuery(\'#fc-fileman-formbox-2\').toggle(); setTimeout(function(){ '.$uploader_tag_id.'.autoResize(\''.$up_sfx_n.'\'); }, 100);"
@@ -1729,7 +1729,7 @@ if ($js)
 					</div>
 
 					<div class="fc-mssg-inline fc-nobgimage fc-success" style="margin: 8px 0;">
-						<span class="icon-info"></span>
+						<span class="icon-info" aria-hidden="true"></span>
 						' . Text::_('FLEXI_FILES_CLICK_TO_EDIT_PROPERTIES') . '
 					</div>
 
@@ -2227,7 +2227,7 @@ $jMedia_file_displayData['mediaTypeNames'] = is_array($jMedia_file_displayData['
 																	<option value="MBs">MBs</option>
 																	<option value="GBs">GBs</option>
 																</select>
-																<span class="hasTooltip" title="<?php echo flexicontent_html::getToolTip('FLEXI_SIZE', 'FLEXI_SIZE_IN_FORM', 1, 1); ?>"><i class="icon-info"></i></span>
+																<span class="hasTooltip" title="<?php echo flexicontent_html::getToolTip('FLEXI_SIZE', 'FLEXI_SIZE_IN_FORM', 1, 1); ?>"><i class="icon-info" aria-hidden="true"></i></span>
 															</td>
 														</tr>
 

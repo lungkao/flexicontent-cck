@@ -79,21 +79,36 @@ abstract class JHtmlFcfields extends JHtmlFcbase
 			$disabled_btn   = '<span class="fc_icon_disabled"></span>';
 		}
 
+		// Compute accessible name from current group state
+		if (isset($row->grouping_field) && $row->parameters->get('use_ingroup'))
+		{
+			$aria_label = \Joomla\CMS\Language\Text::sprintf('FLEXI_FIELD_GROUPED_INSIDE', $row->grouping_field->label, true);
+		}
+		elseif ($row->field_type === 'fieldgroup')
+		{
+			$aria_label = \Joomla\CMS\Language\Text::_('FLEXI_FIELDGROUP', true);
+		}
+		else
+		{
+			$aria_label = \Joomla\CMS\Language\Text::_('FLEXI_FIELD_NOT_GROUPED', true);
+		}
+
 		$attribs = ''
 			. ' class="fc-preview-btn ntxt ' . $disabled_class . ' ' .  static::$btn_mbar_class . ' ' . static::$btn_sm_class . ' ' . static::$tooltip_class . '"'
 			. ' title="' . $icon_tip . '" '
+			. ' aria-label="' . htmlspecialchars($aria_label, ENT_QUOTES, 'UTF-8') . '" '
 			. ($link ? ' href="' . $link .'" ' : '')
 			. ($link ? ' target="_blank" ' : '')
-			. ($onclick ? ' data-href="' . $link .'" ' : '')
-			. ($onclick ? ' onclick="' . $onclick .'" ' : '')
+			. ($onclick && $link ? ' data-href="' . $link .'" ' : '')
+			. ($onclick ? ' onclick="' . $onclick .'" tabindex="0" role="' . ($link ? 'link' : 'button') . '" ' : '')
 		;
 
-		$tag = $link || $onclick ? 'a' : 'span';
+		$tag = $link ? 'a' : ($onclick ? 'span' : 'span');
 
 		return '
 		<' . $tag . ' ' . $attribs . '>
 			' . $disabled_btn . '
-			<span class="' . $icon_class . '"></span>
+			<span class="' . $icon_class . '" aria-hidden="true"></span>
 		</' . $tag . '> ';
 	}
 
@@ -135,9 +150,20 @@ abstract class JHtmlFcfields extends JHtmlFcbase
 			$disabled_btn   = '<span class="fc_icon_disabled' /*. (!$is_cascadeable ? ' fc_icon_na' : '')*/ . '"></span>';
 		}
 
+		if (isset($row->master_field) && $row->parameters->get('cascade_after'))
+		{
+			$aria_label = \Joomla\CMS\Language\Text::sprintf('FLEXI_VALGRP_DEPENDS_ON_MASTER_FIELD', $title, true);
+		}
+		else
+		{
+			$_is_cascadeable_for_label = in_array($row->field_type, array('select', 'selectmultiple', 'radio', 'radioimage', 'checkbox', 'checkboximage'));
+			$aria_label = \Joomla\CMS\Language\Text::_($_is_cascadeable_for_label ? 'FLEXI_VALGRP_NO_MASTER_FIELD' : 'FLEXI_VALGRP_MASTER_FIELD_NOT_APPICABLE', true);
+		}
+
 		$attribs = ''
 			. ' class="fc-preview-btn ntxt ' . $disabled_class . ' ' .  static::$btn_mbar_class . ' ' . static::$btn_sm_class . ' ' . static::$tooltip_class . '"'
 			. ' title="' . $icon_tip . '" '
+			. ' aria-label="' . htmlspecialchars($aria_label, ENT_QUOTES, 'UTF-8') . '" '
 			. ($link ? ' href="' . $link .'" ' : '')
 			. ($link ? ' target="_blank" ' : '');
 
@@ -146,7 +172,7 @@ abstract class JHtmlFcfields extends JHtmlFcbase
 		return '
 		<' . $tag . ' ' . $attribs . '>
 			' . $disabled_btn . '
-			<span class="' . $icon_class . '"></span>
+			<span class="' . $icon_class . '" aria-hidden="true"></span>
 		</' . $tag . '> ';
 	}
 

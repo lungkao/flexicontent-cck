@@ -427,7 +427,7 @@ var $proxy_option   = null;
 				$app->setUserState( $option.'.fields.notice_ft_min_word_len', $notice_ft_min_word_len+1 );
 				$app->enqueueMessage("NOTE : Database limits minimum search word length (ft_min_word_len) to ".$ft_min_word_len, 'message');
 				$app->enqueueMessage('Please enable: "Searching small/common words":
-					<a class="btn" href="index.php?option=com_config&view=component&component=com_flexicontent&path=&"><span class="icon-options"></span>Configuration</a>
+					<a class="btn" href="index.php?option=com_config&view=component&component=com_flexicontent&path=&"><span class="icon-options" aria-hidden="true"></span>Configuration</a>
 					and then click to re-INDEX both search indexes', 'notice');
 			}
 		}

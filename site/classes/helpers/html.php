@@ -3432,8 +3432,19 @@ class flexicontent_html
 				0, 1
 			);
 
+			$action_label = \Joomla\CMS\Language\Text::_('FLEXI_CLICK_TO_CHANGE_STATE', true);
+			$current_state_text = $state_text ?: '';
+
 			$output = '
-			<div class="statetoggler ' . $button_classes . ' ' . $tooltip_class . '" ' . ($tooltip_placement ? ' data-placement="' . $tooltip_placement . '"' : '') . ' title="' . $tooltip_title . '" onclick="fc_statehandler_singleton.toggleSelector(this)">
+			<div class="statetoggler ' . $button_classes . ' ' . $tooltip_class . '" '
+				. ($tooltip_placement ? ' data-placement="' . $tooltip_placement . '"' : '')
+				. ' title="' . $tooltip_title . '"'
+				. ' role="button"'
+				. ' tabindex="0"'
+				. ' aria-haspopup="menu"'
+				. ' aria-label="' . htmlspecialchars($action_label . ($current_state_text ? ' — ' . $current_state_text : ''), ENT_QUOTES, 'UTF-8') . '"'
+				. ' onclick="fc_statehandler_singleton.toggleSelector(this)"'
+				. ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();fc_statehandler_singleton.toggleSelector(this);}">
 				<div class="statetoggler_inner">
 					<div id="row' . $record->id . '" class="stateopener ntxt">
 						' . $stateicon . '
