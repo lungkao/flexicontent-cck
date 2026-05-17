@@ -347,8 +347,11 @@ var move_within_ordering_groups_limits = <?php echo '"'.Text::_('FLEXI_MOVE_WITH
 	var unassociated_items = <?php echo $this->unassociated; ?>;
 	function bindItems()
 	{
-		jQuery('#log-bind').html('<img src="components/com_flexicontent/assets/images/ajax-loader.gif" />');
+		jQuery('#log-bind').html('<img src="components/com_flexicontent/assets/images/ajax-loader.gif" alt="" />');
 		jQuery('#orphan_items_mssg').html("<?php echo Text::_( 'FLEXI_ITEMS_TO_BIND', true ); ?>");
+		if (window.flexicontent && flexicontent.announce) {
+			flexicontent.announce("<?php echo Text::_( 'FLEXI_BIND_IN_PROGRESS', true ); ?>");
+		}
 
     var postData = jQuery('#bindToTypeBox').serializeArray();
     var taskURL  = jQuery('#bindToTypeBox').attr("data-action");
@@ -370,11 +373,17 @@ var move_within_ordering_groups_limits = <?php echo '"'.Text::_('FLEXI_MOVE_WITH
 				if (unassociated_items > 0)
 				{
 					jQuery('#orphan_items_count').html(unassociated_items);
+					if (window.flexicontent && flexicontent.announce) {
+						flexicontent.announce("<?php echo Text::_( 'FLEXI_REMAINING', true ); ?> " + unassociated_items);
+					}
 					bindItems();
 				}
 				else
 				{
 					jQuery('#orphan_items_count').html('0');
+					if (window.flexicontent && flexicontent.announce) {
+						flexicontent.announce("<?php echo Text::_( 'FLEXI_BIND_COMPLETED', true ); ?>");
+					}
 					if(confirm("<?php echo Text::_( 'FLEXI_ITEMS_REFRESH_CONFIRM',true ); ?>"))
 					{
 						location.href = 'index.php?option=com_flexicontent&view=items';
@@ -384,7 +393,12 @@ var move_within_ordering_groups_limits = <?php echo '"'.Text::_('FLEXI_MOVE_WITH
 			},
 			error: function(jqXHR, textStatus, errorThrown)
 			{
-			    //if fails
+				if (window.flexicontent && flexicontent.announce) {
+					flexicontent.announce(
+						"<?php echo Text::_( 'FLEXI_BIND_FAILED', true ); ?>",
+						{ assertive: true }
+					);
+				}
 			}
 		});
 	}
@@ -405,7 +419,10 @@ jQuery(document).ready(function(){
 		var action = jQuery('#fixCatBox').data('action') + '&default_cat=' + default_cat.val();
 
 		jQuery(this).parent().remove();
-		jQuery('#log-fixcat').html('<img src="components/com_flexicontent/assets/images/ajax-loader.gif" />');
+		jQuery('#log-fixcat').html('<img src="components/com_flexicontent/assets/images/ajax-loader.gif" alt="" />');
+		if (window.flexicontent && flexicontent.announce) {
+			flexicontent.announce("<?php echo Text::_( 'FLEXI_FIXING_IN_PROGRESS', true ); ?>");
+		}
 		event.stopImmediatePropagation();
 
     jQuery.ajax(
@@ -416,11 +433,19 @@ jQuery(document).ready(function(){
 			success:function(data, textStatus, jqXHR)
 			{
 				jQuery('#log-fixcat').html(data);
+				if (window.flexicontent && flexicontent.announce) {
+					flexicontent.announce("<?php echo Text::_( 'FLEXI_FIX_COMPLETED', true ); ?>");
+				}
 				fetchcounter('badcat_items_count', 'getBadCatItems');
 			},
 			error: function(jqXHR, textStatus, errorThrown)
 			{
-			    //if fails
+				if (window.flexicontent && flexicontent.announce) {
+					flexicontent.announce(
+						"<?php echo Text::_( 'FLEXI_FIX_FAILED', true ); ?>",
+						{ assertive: true }
+					);
+				}
 			}
 		});
 	});
@@ -617,13 +642,17 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 ?>
 
 
+	<?php /* B7: shared SR announcer (polite + assertive). Idempotent. */ ?>
+	<?php require_once JPATH_ADMINISTRATOR . '/components/com_flexicontent/tmpl_inc/announcer.php'; ?>
+
+
 	<?php if ($this->unassociated && !$this->badcatitems) : ?>
 		<div class="fc-mssg fc-success" style="margin-bottom: 32px;">
 
 			<?php echo Text::_( 'FLEXI_UNASSOCIATED_WARNING' ); ?>
 
 			<br/><br/>
-			<span id="log-bind"></span>
+			<span id="log-bind" role="status" aria-live="polite" aria-atomic="true"></span>
 			<span class="badge" style="border-radius: 3px;" id="orphan_items_count"><?php echo $this->unassociated; ?></span>
 			<span id="orphan_items_mssg"><?php echo Text::_( 'FLEXI_ITEMS' ); ?></span>
 
@@ -654,7 +683,7 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 			<?php echo Text::_( 'Items with invalid or missing main category' ); ?>
 			<br><br>
-			<span id="log-fixcat"></span>
+			<span id="log-fixcat" role="status" aria-live="polite" aria-atomic="true"></span>
 			<span id="badcat_items_count" class="badge" style="border-radius: 3px;"><?php echo $this->badcatitems; ?></span>
 			<?php echo Text::_( 'FLEXI_ITEMS' ); ?>
 
@@ -887,7 +916,10 @@ elseif ($this->max_tab_types && count($this->itemTypes) > 1)
 
 			<th scope="col" class="col_cb left"><?php $colposition++; ?>
 				<div class="group-fcset">
-					<input type="checkbox" name="checkall-toggle" id="checkall-toggle" value="" title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+					<input type="checkbox" name="checkall-toggle" id="checkall-toggle" value=""
+					title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>"
+					aria-controls="<?php echo $this->data_tbl_id; ?>"
+					onclick="Joomla.checkAll(this); if (window.flexicontent && flexicontent.announce) { var n = document.querySelectorAll('#<?php echo $this->data_tbl_id; ?> input[name^=&quot;cid&quot;]:checked').length; flexicontent.announce(n + ' <?php echo Text::_('FLEXI_ITEMS_SELECTED', true); ?>'); }" />
 					<label for="checkall-toggle" class="green single"></label>
 				</div>
 			</th>

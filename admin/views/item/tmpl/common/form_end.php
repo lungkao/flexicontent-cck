@@ -68,6 +68,71 @@ defined('_JEXEC') or die('Restricted access');
 	</div>  <!-- class="container-fluid row" -->
 </div>  <!-- id="flexicontent" -->
 
+<?php /* B7: shared SR announcer (polite + assertive). Idempotent. */ ?>
+<?php require_once JPATH_ADMINISTRATOR . '/components/com_flexicontent/tmpl_inc/announcer.php'; ?>
+<script>
+(function () {
+	/**
+	 * B7 — per-field error region bridge.
+	 * Joomla formvalidator adds .invalid + aria-invalid to inputs but
+	 * writes error text to the input's title attribute (browser tooltip)
+	 * rather than into a sibling error region. This bridge mirrors the
+	 * message into the existing #err_fcfield_<id> region added in B4
+	 * so role="alert" + aria-live="polite" fires.
+	 */
+	function findErrEl(input) {
+		var container = input.closest && input.closest('.control-group');
+		if (!container) { return null; }
+		var labelLink = container.querySelector('[id^="label_fcfield_"]');
+		if (!labelLink) { return null; }
+		var fid = labelLink.id.replace('label_fcfield_', '');
+		return document.getElementById('err_fcfield_' + fid);
+	}
+	function reportError(input) {
+		var errEl = findErrEl(input);
+		if (!errEl) { return; }
+		var msg = input.getAttribute('data-validation-text')
+			|| input.validationMessage
+			|| input.title
+			|| "<?php echo \Joomla\CMS\Language\Text::_('JLIB_FORM_FIELD_INVALID', true); ?>";
+		errEl.textContent = msg;
+		errEl.hidden = false;
+		input.setAttribute('aria-invalid', 'true');
+		var existing = input.getAttribute('aria-describedby') || '';
+		if (existing.indexOf(errEl.id) === -1) {
+			input.setAttribute('aria-describedby', (existing ? existing + ' ' : '') + errEl.id);
+		}
+	}
+	function clearError(input) {
+		var errEl = findErrEl(input);
+		if (!errEl) { return; }
+		errEl.textContent = '';
+		errEl.hidden = true;
+		input.removeAttribute('aria-invalid');
+	}
+	document.addEventListener('invalid', function (e) {
+		if (e.target instanceof Element) { reportError(e.target); }
+	}, true);
+	document.addEventListener('input', function (e) {
+		var t = e.target;
+		if (t && t.matches && t.matches('.invalid, [aria-invalid="true"]')) {
+			if (t.checkValidity && t.checkValidity()) { clearError(t); }
+		}
+	}, true);
+	document.addEventListener('submit', function (e) {
+		var form = e.target;
+		if (!form || !form.querySelectorAll) { return; }
+		var firstInvalid = form.querySelector(':invalid, .invalid, [aria-invalid="true"]');
+		if (firstInvalid && window.flexicontent && flexicontent.announce) {
+			flexicontent.announce(
+				"<?php echo \Joomla\CMS\Language\Text::_('FLEXI_FORM_HAS_ERRORS', true); ?>",
+				{ assertive: true }
+			);
+		}
+	}, true);
+})();
+</script>
+
 <?php
 //keep session alive while editing
 \Joomla\CMS\HTML\HTMLHelper::_('behavior.keepalive');
