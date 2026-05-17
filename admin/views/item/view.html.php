@@ -2527,7 +2527,45 @@ var $proxy_option = null;
 
 
 		if ( $print_logging_info ) $start_microtime = microtime(true);
-		parent::display($tpl);
+
+		// ── Pro Templates layout (alpha-5+) ──────────────────────────
+		// If a Pro Layout is assigned to this item (priority: item > menu
+		// > category > type > global), render it instead of the legacy
+		// template. Falls back to legacy on any failure.
+		$_proLayout = null;
+		if (is_file(JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Resolver.php')
+			&& is_file(JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Renderer.php'))
+		{
+			require_once JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Resolver.php';
+			require_once JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Renderer.php';
+
+			$_proContext = \FlexicontentProTemplateResolver::contextFromItem($this->item, 'item');
+			$_proLayout  = \FlexicontentProTemplateResolver::resolve($_proContext);
+		}
+
+		if ($_proLayout && !empty($_proLayout->layout_decoded))
+		{
+			try {
+				$_proRenderer = new \FlexicontentProTemplateRenderer();
+				echo $_proRenderer->render($_proLayout->layout_decoded, $this->item, 'item');
+			} catch (\Throwable $_proErr) {
+				// On any renderer failure, fall back to legacy template
+				$_proLayout = null;
+				if ($print_logging_info) {
+					\Joomla\CMS\Log\Log::add(
+						'Pro Templates renderer error: ' . $_proErr->getMessage(),
+						\Joomla\CMS\Log\Log::WARNING,
+						'com_flexicontent'
+					);
+				}
+			}
+		}
+
+		if (!$_proLayout)
+		{
+			parent::display($tpl);
+		}
+
 		if ( $print_logging_info ) $fc_run_times['template_render'] = round(1000000 * 10 * (microtime(true) - $start_microtime)) / 10;
 	}
 
