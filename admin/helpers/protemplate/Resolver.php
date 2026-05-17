@@ -181,6 +181,37 @@ class FlexicontentProTemplateResolver
 	}
 
 	/**
+	 * Build a render context for a FLEXIcontent category view.
+	 * Category-level layouts have no item_id, so the priority chain
+	 * collapses to: menu > category > global. Type is not used at
+	 * category scope.
+	 *
+	 * @param  object|int  $category  Category object (must have ->id) or raw id
+	 * @param  string      $view      View name (informational, default 'category')
+	 *
+	 * @return array                  Context array suitable for resolve()
+	 */
+	public static function contextFromCategory($category, string $view = 'category'): array
+	{
+		$app    = \Joomla\CMS\Factory::getApplication();
+		$active = method_exists($app, 'getMenu') && $app->getMenu()
+			? $app->getMenu()->getActive()
+			: null;
+
+		$catId = is_object($category)
+			? (int) ($category->id ?? 0)
+			: (int) $category;
+
+		return [
+			'item_id' => 0,
+			'cat_id'  => $catId,
+			'type_id' => 0,
+			'menu_id' => $active ? (int) $active->id : 0,
+			'view'    => $view,
+		];
+	}
+
+	/**
 	 * Test-only: clear in-process cache. Production code does not need this.
 	 */
 	public static function clearCache(): void

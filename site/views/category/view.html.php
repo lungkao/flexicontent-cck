@@ -1123,7 +1123,64 @@ class FlexicontentViewCategory extends \Joomla\CMS\MVC\View\HtmlView
 		$print_logging_info = $params->get('print_logging_info');
 		if ( $print_logging_info ) { global $fc_run_times; $start_microtime = microtime(true); }
 
-		parent::display($tpl);
+		// ── Pro Templates layout for category view (alpha-5+) ──────────
+		// Resolver priority at category scope: menu > category > global.
+		// Renderer runs in 'category' context: no <h1> emitted (the
+		// category view owns the page H1 via legacy template / system),
+		// section headings start at <h2>.
+		$_proLayout = null;
+		if (is_file(JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Resolver.php')
+			&& is_file(JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Renderer.php'))
+		{
+			require_once JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Resolver.php';
+			require_once JPATH_ADMINISTRATOR . '/components/com_flexicontent/helpers/protemplate/Renderer.php';
+
+			$_proCat     = $this->category ?? null;
+			$_proContext = \FlexicontentProTemplateResolver::contextFromCategory($_proCat, 'category');
+			$_proLayout  = \FlexicontentProTemplateResolver::resolve($_proContext);
+		}
+
+		if ($_proLayout && !empty($_proLayout->layout_decoded))
+		{
+			try {
+				// Adapt category into an item-like shape so the existing
+				// renderer's article blocks (title/introtext/image_intro)
+				// can pull from the right properties. Renderer in
+				// 'category' context skips per-item-only blocks.
+				$_proSource = (object) [
+					'id'             => (int) ($this->category->id ?? 0),
+					'title'          => (string) ($this->category->title ?? ''),
+					'introtext'      => (string) ($this->category->description ?? ''),
+					'fulltext'       => '',
+					'images'         => (object) [
+						'image_intro'     => (string) ($this->category->image ?? ''),
+						'image_intro_alt' => (string) ($this->category->image_alt ?? ''),
+					],
+					'created'        => (string) ($this->category->created_time ?? ''),
+					'modified'       => (string) ($this->category->modified_time ?? ''),
+					'category_title' => (string) ($this->category->title ?? ''),
+					'category_route' => '',
+					'tags'           => [],
+				];
+
+				$_proRenderer = new \FlexicontentProTemplateRenderer();
+				echo $_proRenderer->render($_proLayout->layout_decoded, $_proSource, 'category');
+			} catch (\Throwable $_proErr) {
+				$_proLayout = null;
+				if ($print_logging_info) {
+					\Joomla\CMS\Log\Log::add(
+						'Pro Templates renderer error (category): ' . $_proErr->getMessage(),
+						\Joomla\CMS\Log\Log::WARNING,
+						'com_flexicontent'
+					);
+				}
+			}
+		}
+
+		if (!$_proLayout)
+		{
+			parent::display($tpl);
+		}
 
 		if ( $print_logging_info ) @$fc_run_times['template_render'] += round(1000000 * 10 * (microtime(true) - $start_microtime)) / 10;
 	}
