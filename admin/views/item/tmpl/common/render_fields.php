@@ -1060,7 +1060,7 @@ if ($usepublicationdetails) : // timezone_info, publication_details ?>
 	?>
 
 	<?php ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_publish_up-lbl">
 			<div class="control-label" id="publish_up-lbl-outer"><?php echo str_replace('class="', 'class="' . $lbl_class . ' label-fcinner ', $this->form->getLabel('publish_up')); ?></div>
 			<div class="controls container_fcfield"><?php echo /*$this->perms['canpublish'] || $this->perms['editpublishupdown']*/ $this->form->getInput('publish_up'); ?></div>
 		</div>
@@ -1072,7 +1072,7 @@ if ($usepublicationdetails) : // timezone_info, publication_details ?>
 	?>
 
 	<?php ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_publish_down-lbl">
 			<div class="control-label" id="publish_down-lbl-outer"><?php echo str_replace('class="', 'class="' . $lbl_class . ' label-fcinner ', $this->form->getLabel('publish_down')); ?></div>
 			<div class="controls container_fcfield"><?php echo /*$this->perms['canpublish'] || $this->perms['editpublishupdown']*/ $this->form->getInput('publish_down'); ?></div>
 		</div>
@@ -1084,7 +1084,7 @@ if ($usepublicationdetails) : // timezone_info, publication_details ?>
 	?>
 
 	<?php if ($usepublicationdetails === 2) : ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_created_by-lbl">
 			<div class="control-label" id="created_by-lbl-outer"><?php echo str_replace('class="', 'class="' . $lbl_class . ' label-fcinner ', $this->form->getLabel('created_by')); ?></div>
 			<div class="controls container_fcfield"><?php echo /*$this->perms['editcreator']*/ $this->form->getInput('created_by'); ?></div>
 		</div>
@@ -1097,7 +1097,7 @@ if ($usepublicationdetails) : // timezone_info, publication_details ?>
 	?>
 
 	<?php if ($usepublicationdetails === 2) : ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_created-lbl">
 			<div class="control-label" id="created-lbl-outer"><?php echo str_replace('class="', 'class="' . $lbl_class . ' label-fcinner ', $this->form->getLabel('created')); ?></div>
 			<div class="controls container_fcfield"><?php echo /*$this->perms['editcreationdate']*/ $this->form->getInput('created'); ?></div>
 		</div>
@@ -1110,7 +1110,7 @@ if ($usepublicationdetails) : // timezone_info, publication_details ?>
 	?>
 
 	<?php ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_created_by_alias-lbl">
 			<div class="control-label" id="created_by_alias-lbl-outer"><?php echo str_replace('class="', 'class="' . $lbl_class . ' label-fcinner ', $this->form->getLabel('created_by_alias')); ?></div>
 			<div class="controls container_fcfield"><?php echo /*$this->perms['editcreator']*/ $this->form->getInput('created_by_alias'); ?></div>
 		</div>
@@ -1122,7 +1122,7 @@ if ($usepublicationdetails) : // timezone_info, publication_details ?>
 	?>
 
 	<?php if ($usepublicationdetails === 2) : ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_modified_by-lbl">
 			<div class="control-label" id="modified_by-lbl-outer"><?php echo str_replace('class="', 'class="' . $lbl_class . ' label-fcinner ', $this->form->getLabel('modified_by')); ?></div>
 			<div class="controls container_fcfield"><?php echo $this->form->getInput('modified_by'); ?></div>
 		</div>
@@ -1135,7 +1135,7 @@ if ($usepublicationdetails) : // timezone_info, publication_details ?>
 	?>
 
 	<?php if ($usepublicationdetails === 2) : ob_start(); ?>
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_modified-lbl">
 			<div class="control-label" id="modified-lbl-outer"><?php echo str_replace('class="', 'class="' . $lbl_class . ' label-fcinner ', $this->form->getLabel('modified')); ?></div>
 			<div class="controls container_fcfield"><?php echo $this->form->getInput('modified'); ?></div>
 		</div>
@@ -1162,7 +1162,7 @@ if ( $typeid && $usemetadata ) : ob_start(); // metadata ?>
 
 		<?php if ( $usemetadata >= 1) : ?>
 
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_metadesc-lbl">
 			<div class="control-label">
 				<?php echo $this->form->getLabel('metadesc'); ?>
 			</div>
@@ -1202,7 +1202,7 @@ if ( $typeid && $usemetadata ) : ob_start(); // metadata ?>
 			</div>
 		</div>
 
-		<div class="control-group">
+		<div class="control-group" role="group" aria-labelledby="jform_metakey-lbl">
 			<div class="control-label">
 				<?php echo $this->form->getLabel('metakey'); ?>
 			</div>
@@ -1256,7 +1256,7 @@ if ( $typeid && $usemetadata ) : ob_start(); // metadata ?>
 				</span>
 
 			<?php else: ?>
-			<div class="control-group">
+			<div class="control-group" role="group" aria-labelledby="<?php echo $field->id; ?>-lbl">
 				<div class="control-label">
 					<?php echo $field->label; ?>
 				</div>
@@ -1299,7 +1299,7 @@ if ($typeid && $useseoconf) : ob_start(); // seoconf ?>
 				</span>
 
 			<?php else: ?>
-			<div class="control-group">
+			<div class="control-group" role="group" aria-labelledby="<?php echo $field->id; ?>-lbl">
 				<div class="control-label">
 					<?php echo $field->label; ?>
 				</div>

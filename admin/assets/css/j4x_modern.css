@@ -1747,6 +1747,31 @@ body > .select2-drop .select2-search input {
   box-sizing: border-box !important;
 }
 
+/* ── B7 inline error region — show when populated by formvalidator ── */
+.com_flexicontent [id^="err_fcfield_"] {
+  display: block;
+  margin-top: .25rem;
+  padding: .375rem .625rem;
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--fc-danger, #b91c1c);
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-left: 3px solid var(--fc-danger, #b91c1c);
+  border-radius: 4px;
+  line-height: 1.4;
+}
+.com_flexicontent [id^="err_fcfield_"][hidden] {
+  display: none !important;
+}
+.com_flexicontent [id^="err_fcfield_"]:empty {
+  display: none !important;
+}
+/* Defeat Bootstrap's display:none on .invalid-feedback when used as a live region */
+.com_flexicontent .invalid-feedback[role="alert"]:not([hidden]):not(:empty) {
+  display: block !important;
+}
+
 /* ── Tabs (fctabber) ─────────────────────────────────────────────── */
 .com_flexicontent .fctabber.tabber,
 #flexicontent .fctabber.tabber,

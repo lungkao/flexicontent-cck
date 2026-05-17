@@ -47,6 +47,8 @@ $ctrl_users = "task=users.";
 
 <?php endif;?>
 
+	<h1 class="visually-hidden"><?php echo \Joomla\CMS\Language\Text::_('FLEXI_STATISTICS'); ?></h1>
+
 
 <?php
 	// BOF: Load echart libraries
@@ -92,13 +94,9 @@ $ctrl_users = "task=users.";
 <?php endif; ?>
 
 
-	<table class="fc-table-list fc-tbl-short" style="margin:20px 0 20px 0; width:100%; box-sizing: border-box;">
-	<tr>
-		<th style="font-size:18px;">
-			<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TOTAL_NUM_OF' ); ?>
-		</th>
-	</tr>
-	</table>
+	<h2 class="fc-stats-heading" style="font-size:18px; margin:20px 0;">
+		<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TOTAL_NUM_OF' ); ?>
+	</h2>
 
 	<!-- SITE TOTALS -->
 	<a href="index.php?option=com_flexicontent&amp;view=items"       class="btn btn-small"><?php echo $this->genstats[0]; ?> <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ITEMS' ) ?></a>
@@ -196,13 +194,9 @@ $ctrl_users = "task=users.";
 
 	<hr>
 
-	<table class="fc-table-list fc-tbl-short" style="margin:120px 0 20px 0; width:100%; box-sizing: border-box;">
-	<tr>
-		<th style="font-size:18px;">
-			<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ITEMS' ); ?> - <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CREATION_DATE' ); ?>
-		</th>
-	</tr>
-	</table>
+	<h2 class="fc-stats-heading" style="font-size:18px; margin:60px 0 20px 0;">
+		<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ITEMS' ); ?> &mdash; <?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_CREATION_DATE' ); ?>
+	</h2>
 
 
 <?php
@@ -293,13 +287,9 @@ $ctrl_users = "task=users.";
 
 
 	<hr>
-	<table class="fc-table-list fc-tbl-short" style="margin:120px 0 20px 0; width:100%; box-sizing: border-box;">
-	<tr>
-		<th style="font-size:18px;">
-			<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ITEM_STATES_CHART' ); ?>
-		</th>
-	</tr>
-	</table>
+	<h2 class="fc-stats-heading" style="font-size:18px; margin:60px 0 20px 0;">
+		<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_ITEM_STATES_CHART' ); ?>
+	</h2>
 
 
 	<div class="row-fluid">
@@ -378,13 +368,9 @@ $ctrl_users = "task=users.";
 
 
 	<hr>
-	<table class="fc-table-list fc-tbl-short" style="margin:120px 0 20px 0; width:100%; box-sizing: border-box;">
-	<tr>
-		<th style="font-size:18px;">
-			<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_GENERAL_STATS' ); ?>
-		</th>
-	</tr>
-	</table>
+	<h2 class="fc-stats-heading" style="font-size:18px; margin:60px 0 20px 0;">
+		<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_GENERAL_STATS' ); ?>
+	</h2>
 
 
 	<!-- Most and less Popular-->
@@ -398,9 +384,9 @@ $ctrl_users = "task=users.";
 				<table class="adminlist  table table-hover table-striped">
 					<thead>
 						<tr>
-							<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
-							<th class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_HITS' ); ?></th>
-							<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
+							<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
+							<th scope="col" class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_HITS' ); ?></th>
+							<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -440,9 +426,9 @@ $ctrl_users = "task=users.";
 				<table class="adminlist  table table-hover table-striped">
 					<thead>
 						<tr>
-							<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
-							<th class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_HITS' ); ?></th>
-							<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
+							<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
+							<th scope="col" class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_HITS' ); ?></th>
+							<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -485,8 +471,8 @@ $ctrl_users = "task=users.";
 						<table class="adminlist  table table-hover table-striped">
 					<thead>
 						<tr>
-							<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
-							<th class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
+							<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
+							<th scope="col" class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -522,13 +508,9 @@ $ctrl_users = "task=users.";
 
 	<div class="fcclear"></div>
 
-	<table class="fc-table-list fc-tbl-short" style="margin:120px 0 20px 0; width:100%; box-sizing: border-box;">
-	<tr>
-		<th style="font-size:18px;">
-			<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING_STATS' ); ?>
-		</th>
-	</tr>
-	</table>
+	<h2 class="fc-stats-heading" style="font-size:18px; margin:60px 0 20px 0;">
+		<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING_STATS' ); ?>
+	</h2>
 
 
 	<!-- Most and less Popular-->
@@ -544,8 +526,8 @@ $ctrl_users = "task=users.";
 						<table class="adminlist table table-hover table-striped">
 							<thead>
 								<tr>
-									<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
-									<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
+									<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
+									<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -582,8 +564,8 @@ $ctrl_users = "task=users.";
 								<table class="adminlist table table-hover table-striped">
 									<thead>
 										<tr>
-											<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
-											<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
+											<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_TITLE' ); ?></th>
+											<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_RATING' ); ?></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -697,13 +679,9 @@ $ctrl_users = "task=users.";
 
 	<div class="fcclear"></div>
 	<hr>
-	<table class="fc-table-list fc-tbl-short" style="margin:120px 0 20px 0; width:100%; box-sizing: border-box;">
-	<tr>
-		<th style="font-size:18px;">
-			<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_USER_STATS' ); ?>
-		</th>
-	</tr>
-	</table>
+	<h2 class="fc-stats-heading" style="font-size:18px; margin:60px 0 20px 0;">
+		<?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_USER_STATS' ); ?>
+	</h2>
 
 	<!-- Most and less Popular-->
 	<div class="row-fluid">
@@ -714,8 +692,8 @@ $ctrl_users = "task=users.";
 					<table class="adminlist  table table-hover table-striped">
 						<thead>
 							<tr>
-								<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_USER' ); ?></th>
-								<th class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
+								<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_USER' ); ?></th>
+								<th scope="col" class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -751,8 +729,8 @@ $ctrl_users = "task=users.";
 					<table class="adminlist table table-hover table-striped">
 						<thead>
 							<tr>
-								<th class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_USER' ); ?></th>
-								<th class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
+								<th scope="col" class="left"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_USER' ); ?></th>
+								<th scope="col" class="center"><?php echo \Joomla\CMS\Language\Text::_( 'FLEXI_NUM' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>

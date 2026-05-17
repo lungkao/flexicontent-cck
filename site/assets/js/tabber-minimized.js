@@ -254,6 +254,7 @@ tabberObj.prototype.init = function(e)
 	/* Create a new UL list to hold the tab headings */
 	DOM_ul = document.createElement("ul");
 	DOM_ul.className = this.classNav;
+	DOM_ul.setAttribute('role', 'tablist');
 
 	var decode_entities = document.createElement("textarea");  // used to decode html entities
 
@@ -415,6 +416,15 @@ tabberObj.prototype.init = function(e)
 			DOM_a.id = aId;
 		}
 
+		/* ARIA tablist semantics — pair with role="tabpanel" emitted in PHP */
+		DOM_a.setAttribute('role', 'tab');
+		DOM_a.setAttribute('aria-selected', 'false');
+		DOM_a.setAttribute('tabindex', '-1');
+		if (t.div && t.div.id) {
+			DOM_a.setAttribute('aria-controls', t.div.id);
+		}
+		DOM_a.onkeydown = this.navKeydown;
+
 		/* Add the link to the list element */
 		if (t.headingPrefixTxt) {
 			var span = document.createElement("span");
@@ -519,6 +529,34 @@ tabberObj.prototype.navClick = function(event)
 };
 
 
+/**
+ * Keyboard handler for tabs — Left/Right/Home/End per WAI-ARIA APG.
+ * Auto-activates on focus move (matches click behaviour).
+ */
+tabberObj.prototype.navKeydown = function(event)
+{
+	var a = this;
+	if (!a.tabber) { return true; }
+	var self = a.tabber;
+	var len = self.tabs.length;
+	var idx = a.tabberIndex;
+	var newIdx = -1;
+	var key = event.key || event.keyCode;
+
+	if (key === 'ArrowRight' || key === 39) { newIdx = (idx + 1) % len; }
+	else if (key === 'ArrowLeft' || key === 37) { newIdx = (idx - 1 + len) % len; }
+	else if (key === 'Home' || key === 36) { newIdx = 0; }
+	else if (key === 'End' || key === 35) { newIdx = len - 1; }
+	else { return true; }
+
+	event.preventDefault();
+	self.tabShow(newIdx);
+	var nextA = self.tabs[newIdx].li.getElementsByTagName('a')[0];
+	if (nextA) { nextA.focus(); }
+	return false;
+};
+
+
 tabberObj.prototype.tabHideAll = function()
 {
 	var i; /* counter */
@@ -600,12 +638,19 @@ tabberObj.prototype.tabShow = function(tabberIndex)
 
 tabberObj.prototype.navSetActive = function(tabberIndex)
 {
-	/* Note: this method does *not* enforce the rule
-		 that only one nav item can be active at a time.
-	*/
-
 	/* Set classNavActive for the navigation list item */
 	this.tabs[tabberIndex].li.className = this.classNavActive;
+
+	/* ARIA: reset all tabs to unselected, then mark active. Selected
+	   gets tabindex=0 (in focus order); others -1 (skip in tab order,
+	   but reachable via arrow keys per APG roving-tabindex pattern). */
+	for (var k = 0; k < this.tabs.length; k++) {
+		var ak = this.tabs[k].li.getElementsByTagName('a')[0];
+		if (!ak) { continue; }
+		var isActive = (k === tabberIndex);
+		ak.setAttribute('aria-selected', isActive ? 'true' : 'false');
+		ak.setAttribute('tabindex', isActive ? '0' : '-1');
+	}
 
 	return this;
 };
